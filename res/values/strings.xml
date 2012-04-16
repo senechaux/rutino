@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, RutinoActivity!</string>
     <string name="app_name">Rutino</string>
-
+    <string name="no_wallets">No Wallets Yet</string>
+    <string name="create_wallet">Add Wallet</string>
+    <string name="update_wallet">Edit Wallet</string>
+    <string name="delete_wallet">Delete Wallet</string>
+    <string name="title">Title</string>
+    <string name="body">Body</string>
+    <string name="confirm">Confirm</string>
 </resources>
