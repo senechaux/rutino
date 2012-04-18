@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,7 +34,7 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wallet_list);
-        registerForContextMenu(getListView());
+		registerForContextMenu(getListView());
 
 		findViewById(R.id.createWallet).setOnClickListener(
 				new View.OnClickListener() {
@@ -67,7 +68,11 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		Wallet wallet = (Wallet) item;
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		ArrayAdapter<Wallet> adapter = (ArrayAdapter<Wallet>) getListAdapter();
+		Wallet wallet = adapter.getItem(info.position);
+
 		switch (item.getItemId()) {
 		case R.id.edit_wallet:
 			WalletEdit.callMe(WalletList.this, wallet.getId());
@@ -79,6 +84,7 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
+			adapter.remove(wallet);
 			return true;
 		}
 		return super.onContextItemSelected(item);
