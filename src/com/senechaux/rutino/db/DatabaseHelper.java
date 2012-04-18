@@ -1,44 +1,53 @@
 package com.senechaux.rutino.db;
 
+import java.sql.SQLException;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class DatabaseHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "data";
-    public static final int DATABASE_VERSION = 1;
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
+import com.senechaux.rutino.R;
+import com.senechaux.rutino.db.entities.Wallet;
 
-    public static final String TABLE_WALLETS = "wallets";
-	public static final String WALLETS_ID = "_id";
-	public static final String WALLETS_TITLE = "title";
-	public static final String WALLETS_BODY = "body";
-	private static final String TAG = "Rutino";
+public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-	/**
-	 * Database creation sql statement
-	 */
-	private static final String DATABASE_CREATE = "create table "+ TABLE_WALLETS +" (" 
-			+ WALLETS_ID + " integer primary key autoincrement, "
-			+ WALLETS_TITLE +" text not null, " 
-			+ WALLETS_BODY + " text not null);";
+	private static final String DATABASE_NAME = "rutino.db";
+	private static final int DATABASE_VERSION = 1;
+
+	private Dao<Wallet, Integer> walletDao;
 
 	public DatabaseHelper(Context context) {
-		super(context, DATABASE_NAME, null,
-				DATABASE_VERSION);
+		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(DATABASE_CREATE);
+	public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
+		try {
+			TableUtils.createTable(connectionSource, Wallet.class);
+		} catch (SQLException e) {
+			Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
+		}
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-				+ newVersion + ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_WALLETS);
-		onCreate(db);
+	public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
+		try {
+			TableUtils.dropTable(connectionSource, Wallet.class, true);
+			onCreate(sqliteDatabase, connectionSource);
+		} catch (SQLException e) {
+			Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
+					+ newVer, e);
+		}
+	}
+
+	public Dao<Wallet, Integer> getWalletDao() throws SQLException {
+		if (walletDao == null) {
+			walletDao = getDao(Wallet.class);
+		}
+		return walletDao;
 	}
 }
-

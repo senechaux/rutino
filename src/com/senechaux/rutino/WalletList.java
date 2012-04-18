@@ -1,107 +1,153 @@
 package com.senechaux.rutino;
 
-import android.app.ListActivity;
+import java.sql.SQLException;
+import java.util.List;
+
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
+import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.WalletDbAdapter;
+import com.senechaux.rutino.db.entities.Wallet;
 
-public class WalletList extends ListActivity {
-    private WalletDbAdapter mDbHelper;
+public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallets_list);
-        mDbHelper = new WalletDbAdapter(this);
-        mDbHelper.open();
-        fillData();
+	// private final DateFormat df = new SimpleDateFormat("M/dd/yy HH:mm");
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.wallet_list);
         registerForContextMenu(getListView());
-    }
 
-    private void fillData() {
-        Cursor walletsCursor = mDbHelper.readAllWallets();
-        startManagingCursor(walletsCursor);
+		findViewById(R.id.createWallet).setOnClickListener(
+				new View.OnClickListener() {
+					public void onClick(View view) {
+						WalletEdit.callMe(WalletList.this);
+					}
+				});
+	}
 
-        // Create an array to specify the fields we want to display in the list (only TITLE)
-        String[] from = new String[]{DatabaseHelper.WALLETS_TITLE};
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		new MenuInflater(this).inflate(R.menu.wallet_menu, menu);
+		return (super.onCreateOptionsMenu(menu));
+	}
 
-        // and an array of the fields we want to bind those fields to (in this case just walletTitle)
-        int[] to = new int[]{R.id.walletTitle};
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.insert_wallet:
+			WalletEdit.callMe(WalletList.this);
+			return true;
+		}
+		return super.onMenuItemSelected(featureId, item);
+	}
 
-        // Now create a simple cursor adapter and set it to display
-        SimpleCursorAdapter wallets = 
-            new SimpleCursorAdapter(this, R.layout.wallets_row, walletsCursor, from, to);
-        setListAdapter(wallets);
-    }
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		new MenuInflater(this).inflate(R.menu.wallet_context, menu);
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-    	new MenuInflater(this).inflate(R.menu.wallet_menu, menu);
-    	return(super.onCreateOptionsMenu(menu));
-    }
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		Wallet wallet = (Wallet) item;
+		switch (item.getItemId()) {
+		case R.id.edit_wallet:
+			WalletEdit.callMe(WalletList.this, wallet.getId());
+			return true;
+		case R.id.delete_wallet:
+			try {
+				getHelper().getWalletDao().deleteById(wallet.getId());
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+			return true;
+		}
+		return super.onContextItemSelected(item);
+	}
 
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.insert_wallet:
-                createWallet();
-                return true;
-        }
-        return super.onMenuItemSelected(featureId, item);
-    }
+	@Override
+	protected void onResume() {
+		super.onResume();
+		try {
+			fillList();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-            ContextMenuInfo menuInfo) {
-    	new MenuInflater(this).inflate(R.menu.wallet_context, menu);
-    }
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Wallet wallet = (Wallet) l.getAdapter().getItem(position);
+		// CounterScreen.callMe(WalletList.this, wallet.getId());
+		WalletEdit.callMe(WalletList.this, wallet.getId());
+	}
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        switch(item.getItemId()) {
-        case R.id.delete_wallet:
-            mDbHelper.deleteWallet(info.id);
-            fillData();
-            return true;
-        case R.id.edit_wallet:
-            Intent i = new Intent(this, WalletEdit.class);
-            i.putExtra(DatabaseHelper.WALLETS_ID, info.id);
-            startActivityForResult(i, Constants.ACTIVITY_EDIT_WALLET);
-            return true;
-        }
-        return super.onContextItemSelected(item);
-    }
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		try {
+			fillList();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
 
-    private void createWallet() {
-        Intent i = new Intent(this, WalletEdit.class);
-        startActivityForResult(i, Constants.ACTIVITY_CREATE_WALLET);
-    }
+	private void fillList() throws SQLException {
+		Log.i(WalletList.class.getName(), "Show list again");
+		Dao<Wallet, Integer> dao = getHelper().getWalletDao();
+		QueryBuilder<Wallet, Integer> builder = dao.queryBuilder();
+		// builder.orderBy(Wallet.DATE_FIELD_NAME, false).limit(30L);
+		List<Wallet> list = dao.query(builder.prepare());
+		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this,
+				R.layout.wallet_row, list);
+		setListAdapter(arrayAdapter);
+	}
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Intent i = new Intent(this, WalletEdit.class);
-        i.putExtra(DatabaseHelper.WALLETS_ID, id);
-        startActivityForResult(i, Constants.ACTIVITY_EDIT_WALLET);
-    }
+	private class WalletAdapter extends ArrayAdapter<Wallet> {
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        fillData();
-    }
+		public WalletAdapter(Context context, int textViewResourceId,
+				List<Wallet> items) {
+			super(context, textViewResourceId, items);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View v = convertView;
+			if (v == null) {
+				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				v = vi.inflate(R.layout.wallet_row, null);
+			}
+			Wallet wallet = getItem(position);
+			fillText(v, R.id.walletName, wallet.getName());
+			return v;
+		}
+
+		private void fillText(View v, int id, String text) {
+			TextView textView = (TextView) v.findViewById(id);
+			textView.setText(text == null ? "" : text);
+		}
+	}
 }
