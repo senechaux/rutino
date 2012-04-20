@@ -16,11 +16,20 @@ import com.senechaux.rutino.db.entities.Wallet;
 
 public class WalletEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 
-	private static final String WALLET_ID = "walletId";
-
 	private EditText walletName;
 	private EditText walletDesc;
 	private Button createWallet;
+	private Wallet wallet;
+
+	public static void callMe(Context c) {
+		c.startActivity(new Intent(c, WalletEdit.class));
+	}
+
+	public static void callMe(Context c, Wallet wallet) {
+		Intent intent = new Intent(c, WalletEdit.class);
+		intent.putExtra(Wallet.OBJ, wallet);
+		c.startActivity(intent);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,11 +40,12 @@ public class WalletEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		walletName = (EditText) findViewById(R.id.walletName);
 		walletDesc = (EditText) findViewById(R.id.walletDesc);
 		createWallet = (Button) findViewById(R.id.walletConfirm);
+		wallet = (Wallet) getIntent().getSerializableExtra(Wallet.OBJ);
 
 		createWallet.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				try {
-					Wallet wallet = saveToObj();
+					saveToObj();
 					Dao<Wallet, Integer> walletDao = getHelper().getWalletDao();
 					boolean alreadyCreated = false;
 					if (wallet.getId() != null) {
@@ -49,7 +59,8 @@ public class WalletEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 						finish();
 					} else {
 						walletDao.create(wallet);
-						// CounterScreen.callMe(WalletEdit.this, wallet.getId());
+						// CounterScreen.callMe(WalletEdit.this,
+						// wallet.getId());
 						finish();
 					}
 				} catch (SQLException e) {
@@ -57,66 +68,41 @@ public class WalletEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 				}
 			}
 		});
+
 		reInit(savedInstanceState);
-	}
-
-	public static void callMe(Context c) {
-		c.startActivity(new Intent(c, WalletEdit.class));
-	}
-
-	public static void callMe(Context c, Integer walletCountId) {
-		Intent intent = new Intent(c, WalletEdit.class);
-		intent.putExtra(WALLET_ID, walletCountId);
-		c.startActivity(intent);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Wallet w = saveToObj();
-		outState.putSerializable("WALLET", w);
+		saveToObj();
+		outState.putSerializable(Wallet.OBJ, wallet);
 	}
 
 	private void reInit(Bundle savedInstanceState) {
 		try {
-			Dao<Wallet, Integer> walletDao = getHelper().getWalletDao();
-
 			if (savedInstanceState != null) {
-				loadFromObj((Wallet) savedInstanceState.get(WALLET_ID));
-			} else {
-				int walletId = getWalletId();
-
-				if (walletId > -1) {
-					Wallet wallet = walletDao.queryForId(walletId);
-					if (wallet != null) {
-						loadFromObj(wallet);
-					}
-				}
+				wallet = (Wallet) savedInstanceState.get(Wallet.OBJ);
+			}
+			if (wallet != null) {
+				loadFromObj();
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private Wallet saveToObj() {
-		Wallet c = new Wallet();
-
-		int walletCountId = getWalletId();
-		if (walletCountId > -1) {
-			c.setId(walletCountId);
-		}
-		c.setName(walletName.getText().toString());
-		c.setDesc(walletDesc.getText().toString());
-		return c;
+	private void saveToObj() {
+		if (wallet == null)
+			wallet = new Wallet();
+		wallet.setName(walletName.getText().toString());
+		wallet.setDesc(walletDesc.getText().toString());
+		return;
 	}
 
-	private int getWalletId() {
-		return getIntent().getIntExtra(WALLET_ID, -1);
-	}
-
-	private void loadFromObj(Wallet c) throws SQLException {
-		walletName.setText(c.getName());
-		walletDesc.setText(c.getDesc());
+	private void loadFromObj() throws SQLException {
+		walletName.setText(wallet.getName());
+		walletDesc.setText(wallet.getDesc());
 	}
 
 }

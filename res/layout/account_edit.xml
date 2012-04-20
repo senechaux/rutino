@@ -15,7 +15,7 @@
             android:text="@string/name" />
 
         <EditText
-            android:id="@+id/walletName"
+            android:id="@+id/accountName"
             android:inputType="textAutoComplete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -27,7 +27,7 @@
         android:text="@string/description" />
 
     <EditText
-        android:id="@+id/walletDesc"
+        android:id="@+id/accountDesc"
         android:inputType="textAutoComplete"
         android:layout_width="match_parent"
         android:layout_height="0dip"
@@ -35,7 +35,7 @@
         android:scrollbars="vertical" />
 
     <Button
-        android:id="@+id/walletConfirm"
+        android:id="@+id/accountConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/confirm" />

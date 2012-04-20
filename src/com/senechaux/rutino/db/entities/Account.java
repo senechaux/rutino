@@ -6,22 +6,26 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class Wallet implements Serializable {
-	private static final long serialVersionUID = 2033099084510674771L;
-
-    public static final String OBJ = "wallet";
+public class Account implements Serializable {
+	private static final long serialVersionUID = 8818426783186993288L;
+	
+    public static final String OBJ = "account";
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String DESC = "desc";
+    public static final String WALLET_ID = "wallet_id";
 
-    @DatabaseField(generatedId = true)
+	@DatabaseField(generatedId = true)
 	private Integer id;
 	@DatabaseField
 	String name;
 	@DatabaseField
 	String desc;
+	@DatabaseField(canBeNull = false, foreign = true)
+	Wallet wallet;
+	
 
-	public Wallet() {
+	public Account() {
 		super();
 	}
 
@@ -49,9 +53,18 @@ public class Wallet implements Serializable {
 		this.desc = desc;
 	}
 
+	public Wallet getWallet() {
+		return wallet;
+	}
+
+	public void setWallet(Wallet wallet) {
+		this.wallet = wallet;
+	}
+
 	@Override
 	public String toString() {
-		return "Wallet [id=" + id + ", name=" + name + ", desc=" + desc + "]";
+		return "Account [id=" + id + ", name=" + name + ", desc=" + desc
+				+ ", wallet=" + wallet + "]";
 	}
 
 }

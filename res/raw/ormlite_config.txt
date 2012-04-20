@@ -1,6 +1,28 @@
 #
-# generated on 2012/04/17 06:35:20
+# generated on 2012/04/19 01:23:41
 #
+# --table-start--
+dataClass=com.senechaux.rutino.db.entities.Account
+tableName=account
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=name
+# --field-end--
+# --field-start--
+fieldName=desc
+# --field-end--
+# --field-start--
+fieldName=wallet
+canBeNull=false
+foreign=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
 # --table-start--
 dataClass=com.senechaux.rutino.db.entities.Wallet
 tableName=wallet

@@ -24,48 +24,53 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
+import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Wallet;
 
-public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
+public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
+	private Wallet walletFather;
 
-	// private final DateFormat df = new SimpleDateFormat("M/dd/yy HH:mm");
-
-	public static void callMe(Context c) {
-		c.startActivity(new Intent(c, WalletList.class));
+	public static void callMe(Context c, Wallet wallet) {
+		Intent intent = new Intent(c, AccountList.class);
+		intent.putExtra(Wallet.OBJ, wallet);
+		c.startActivity(intent);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.wallet_list);
+		setContentView(R.layout.account_list);
+		walletFather = (Wallet) getIntent().getSerializableExtra(Wallet.OBJ);
 		registerForContextMenu(getListView());
 
-		findViewById(R.id.createWallet).setOnClickListener(
+		findViewById(R.id.createAccount).setOnClickListener(
 				new View.OnClickListener() {
 					public void onClick(View view) {
-						WalletEdit.callMe(WalletList.this);
+						AccountEdit.callMe(AccountList.this, walletFather);
 					}
 				});
+
+		reInit(savedInstanceState);
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Wallet wallet = (Wallet) l.getAdapter().getItem(position);
-		AccountList.callMe(WalletList.this, wallet);
+		Account account = (Account) l.getAdapter().getItem(position);
+		AccountEdit.callMe(AccountList.this, account);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		new MenuInflater(this).inflate(R.menu.wallet_menu, menu);
+		new MenuInflater(this).inflate(R.menu.account_menu, menu);
 		return (super.onCreateOptionsMenu(menu));
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.insert_wallet:
-			WalletEdit.callMe(WalletList.this);
+		case R.id.insert_account:
+			AccountEdit.callMe(AccountList.this, walletFather);
 			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
@@ -74,31 +79,37 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		new MenuInflater(this).inflate(R.menu.wallet_context, menu);
+		new MenuInflater(this).inflate(R.menu.account_context, menu);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		ArrayAdapter<Wallet> adapter = (ArrayAdapter<Wallet>) getListAdapter();
-		Wallet wallet = adapter.getItem(info.position);
+		ArrayAdapter<Account> adapter = (ArrayAdapter<Account>) getListAdapter();
+		Account account = adapter.getItem(info.position);
 
 		switch (item.getItemId()) {
-		case R.id.edit_wallet:
-			WalletEdit.callMe(WalletList.this, wallet);
+		case R.id.edit_account:
+			AccountEdit.callMe(AccountList.this, account);
 			return true;
-		case R.id.delete_wallet:
+		case R.id.delete_account:
 			try {
-				getHelper().getWalletDao().deleteById(wallet.getId());
+				getHelper().getAccountDao().deleteById(account.getId());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
-			adapter.remove(wallet);
+			adapter.remove(account);
 			return true;
 		}
 		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putSerializable(Wallet.OBJ, walletFather);
 	}
 
 	@Override
@@ -112,35 +123,41 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 		}
 	}
 
-// CREO QUE ESTO NO SE EJECUTA. SOLO SE EJECUTARÍA SI SE LLAMASE A UNA ACTIVITY CON startActivityForResult()
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode,
-//			Intent intent) {
-//		super.onActivityResult(requestCode, resultCode, intent);
-//		try {
-//			fillList();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			throw new RuntimeException(e);
-//		}
-//	}
-//
+	// @Override
+	// protected void onActivityResult(int requestCode, int resultCode,
+	// Intent intent) {
+	// super.onActivityResult(requestCode, resultCode, intent);
+	// try {
+	// fillList();
+	// } catch (SQLException e) {
+	// e.printStackTrace();
+	// throw new RuntimeException(e);
+	// }
+	// }
+	
 	private void fillList() throws SQLException {
-		Log.i(WalletList.class.getName(), "Show list again");
-		Dao<Wallet, Integer> dao = getHelper().getWalletDao();
-		QueryBuilder<Wallet, Integer> builder = dao.queryBuilder();
-		// builder.orderBy(Wallet.DATE_FIELD_NAME, false).limit(30L);
-		List<Wallet> list = dao.query(builder.prepare());
-		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this,
-				R.layout.wallet_row, list);
+		Log.i(AccountList.class.getName(), "Show list again");
+		Dao<Account, Integer> dao = getHelper().getAccountDao();
+		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
+		qb.where().eq(Account.WALLET_ID, walletFather.getId());
+		// builder.orderBy(Account.DATE_FIELD_NAME, false).limit(30L);
+		List<Account> list = dao.query(qb.prepare());
+		ArrayAdapter<Account> arrayAdapter = new AccountAdapter(this,
+				R.layout.account_row, list);
 		setListAdapter(arrayAdapter);
 	}
 
-	// CLASE PRIVADA PARA MOSTRAR LA LISTA
-	private class WalletAdapter extends ArrayAdapter<Wallet> {
+	private void reInit(Bundle savedInstanceState) {
+		if (savedInstanceState != null) {
+			walletFather = (Wallet) savedInstanceState.get(Wallet.OBJ);
+		}
+	}
 
-		public WalletAdapter(Context context, int textViewResourceId,
-				List<Wallet> items) {
+	// CLASE PRIVADA PARA MOSTRAR LA LISTA
+	private class AccountAdapter extends ArrayAdapter<Account> {
+
+		public AccountAdapter(Context context, int textViewResourceId,
+				List<Account> items) {
 			super(context, textViewResourceId, items);
 		}
 
@@ -149,10 +166,10 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			View v = convertView;
 			if (v == null) {
 				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = vi.inflate(R.layout.wallet_row, null);
+				v = vi.inflate(R.layout.account_row, null);
 			}
-			Wallet wallet = getItem(position);
-			fillText(v, R.id.walletName, wallet.getName());
+			Account account = getItem(position);
+			fillText(v, R.id.accountName, account.getName());
 			return v;
 		}
 

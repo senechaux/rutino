@@ -11,6 +11,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.senechaux.rutino.R;
+import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -19,6 +20,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 
 	private Dao<Wallet, Integer> walletDao;
+	private Dao<Account, Integer> accountDao;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -28,6 +30,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
 		try {
 			TableUtils.createTable(connectionSource, Wallet.class);
+			TableUtils.createTable(connectionSource, Account.class);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
 		}
@@ -37,6 +40,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
 		try {
 			TableUtils.dropTable(connectionSource, Wallet.class, true);
+			TableUtils.dropTable(connectionSource, Account.class, true);
 			onCreate(sqliteDatabase, connectionSource);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
@@ -50,4 +54,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return walletDao;
 	}
+
+	public Dao<Account, Integer> getAccountDao() throws SQLException {
+		if (accountDao == null) {
+			accountDao = getDao(Account.class);
+		}
+		return accountDao;
+	}
+
 }
