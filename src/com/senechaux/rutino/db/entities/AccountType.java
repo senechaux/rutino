@@ -6,23 +6,29 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class Wallet implements Serializable {
-	private static final long serialVersionUID = 2033099084510674771L;
+public class AccountType implements Serializable {
+	private static final long serialVersionUID = 3402493996218035934L;
 
-    public static final String OBJ = "wallet";
-    public static final String ID = "id";
-    public static final String NAME = "name";
-    public static final String DESC = "desc";
+	public static final String OBJ = "accountType";
+	public static final String ID = "id";
+	public static final String NAME = "name";
+	public static final String DESC = "desc";
 
-    @DatabaseField(generatedId = true)
+	@DatabaseField(generatedId = true)
 	private Integer id;
 	@DatabaseField(canBeNull = false)
 	String name;
 	@DatabaseField
 	String desc;
 
-	public Wallet() {
+	public AccountType() {
 		super();
+	}
+
+	public AccountType(String name, String desc) {
+		super();
+		this.name = name;
+		this.desc = desc;
 	}
 
 	public Integer getId() {
@@ -51,7 +57,7 @@ public class Wallet implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Wallet [id=" + id + ", name=" + name + ", desc=" + desc + "]";
+		return "AccountType [id=" + id + ", name=" + name + ", desc=" + desc + "]";
 	}
 
 }

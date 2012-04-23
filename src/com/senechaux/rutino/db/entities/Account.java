@@ -14,15 +14,18 @@ public class Account implements Serializable {
     public static final String NAME = "name";
     public static final String DESC = "desc";
     public static final String WALLET_ID = "wallet_id";
+    public static final String ACCOUNTTYPE_ID = "accounttype_id";
 
 	@DatabaseField(generatedId = true)
 	private Integer id;
-	@DatabaseField
+	@DatabaseField(canBeNull = false)
 	String name;
 	@DatabaseField
 	String desc;
 	@DatabaseField(canBeNull = false, foreign = true)
 	Wallet wallet;
+	@DatabaseField(canBeNull = false, foreign = true)
+	AccountType accountType;
 	
 
 	public Account() {
@@ -59,6 +62,14 @@ public class Account implements Serializable {
 
 	public void setWallet(Wallet wallet) {
 		this.wallet = wallet;
+	}
+
+	public AccountType getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
 	}
 
 	@Override

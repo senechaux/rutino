@@ -16,10 +16,16 @@
 
         <EditText
             android:id="@+id/accountName"
-            android:inputType="textAutoComplete"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textAutoComplete" />
     </LinearLayout>
+
+    <Spinner
+        android:id="@+id/accountType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,10 +34,10 @@
 
     <EditText
         android:id="@+id/accountDesc"
-        android:inputType="textAutoComplete"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
+        android:inputType="textAutoComplete"
         android:scrollbars="vertical" />
 
     <Button

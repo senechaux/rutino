@@ -24,6 +24,7 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
+import com.senechaux.rutino.db.entities.AccountType;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
@@ -128,9 +129,7 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	private void fillList() throws SQLException {
 		Log.i(WalletList.class.getName(), "Show list again");
 		Dao<Wallet, Integer> dao = getHelper().getWalletDao();
-		QueryBuilder<Wallet, Integer> builder = dao.queryBuilder();
-		// builder.orderBy(Wallet.DATE_FIELD_NAME, false).limit(30L);
-		List<Wallet> list = dao.query(builder.prepare());
+		List<Wallet> list = dao.queryForAll();
 		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this,
 				R.layout.wallet_row, list);
 		setListAdapter(arrayAdapter);

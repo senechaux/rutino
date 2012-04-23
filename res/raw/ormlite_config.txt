@@ -1,5 +1,5 @@
 #
-# generated on 2012/04/19 01:23:41
+# generated on 2012/04/22 01:54:13
 #
 # --table-start--
 dataClass=com.senechaux.rutino.db.entities.Account
@@ -11,6 +11,7 @@ generatedId=true
 # --field-end--
 # --field-start--
 fieldName=name
+canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=desc
@@ -19,6 +20,29 @@ fieldName=desc
 fieldName=wallet
 canBeNull=false
 foreign=true
+# --field-end--
+# --field-start--
+fieldName=accountType
+canBeNull=false
+foreign=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.senechaux.rutino.db.entities.AccountType
+tableName=accounttype
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=name
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=desc
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -33,6 +57,7 @@ generatedId=true
 # --field-end--
 # --field-start--
 fieldName=name
+canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=desc
