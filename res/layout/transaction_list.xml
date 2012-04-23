@@ -13,12 +13,12 @@
         android:id="@+id/android:empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_wallets" />
+        android:text="@string/no_transactions" />
 
     <Button
-        android:id="@+id/createWallet"
+        android:id="@+id/createTransaction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_wallet" />
+        android:text="@string/create_transaction" />
 
 </LinearLayout>

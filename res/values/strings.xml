@@ -12,7 +12,13 @@
     <string name="update_account">Edit Account</string>
     <string name="delete_account">Delete Account</string>
     
+    <string name="no_transactions">No Transactions Yet</string>
+    <string name="create_transaction">Add Transaction</string>
+    <string name="update_transaction">Edit Transaction</string>
+    <string name="delete_transaction">Delete Transaction</string>
+    
     <string name="name">Name</string>
     <string name="description">Description</string>
+    <string name="amount">Amount</string>
     <string name="confirm">Confirm</string>
 </resources>

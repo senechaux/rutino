@@ -13,6 +13,7 @@ import com.j256.ormlite.table.TableUtils;
 import com.senechaux.rutino.R;
 import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.AccountType;
+import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -23,6 +24,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<Wallet, Integer> walletDao;
 	private Dao<Account, Integer> accountDao;
 	private Dao<AccountType, Integer> accountTypeDao;
+	private Dao<Transaction, Integer> transactionDao;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -34,6 +36,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, Wallet.class);
 			TableUtils.createTable(connectionSource, Account.class);
 			TableUtils.createTable(connectionSource, AccountType.class);
+			TableUtils.createTable(connectionSource, Transaction.class);
 			fillTables();
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
@@ -46,6 +49,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, Wallet.class, true);
 			TableUtils.dropTable(connectionSource, Account.class, true);
 			TableUtils.dropTable(connectionSource, AccountType.class, true);
+			TableUtils.dropTable(connectionSource, Transaction.class, true);
 			onCreate(sqliteDatabase, connectionSource);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
@@ -72,6 +76,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			accountTypeDao = getDao(AccountType.class);
 		}
 		return accountTypeDao;
+	}
+
+	public Dao<Transaction, Integer> getTransactionDao() throws SQLException {
+		if (transactionDao == null) {
+			transactionDao = getDao(Transaction.class);
+		}
+		return transactionDao;
 	}
 
 	private void fillTables() {

@@ -24,49 +24,53 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.AccountType;
-import com.senechaux.rutino.db.entities.Wallet;
+import com.senechaux.rutino.db.entities.Transaction;
+import com.senechaux.rutino.db.entities.Account;
 
-public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
+public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
+	private Account accountFather;
 
-	// private final DateFormat df = new SimpleDateFormat("M/dd/yy HH:mm");
-
-	public static void callMe(Context c) {
-		c.startActivity(new Intent(c, WalletList.class));
+	public static void callMe(Context c, Account account) {
+		Intent intent = new Intent(c, TransactionList.class);
+		intent.putExtra(Account.OBJ, account);
+		c.startActivity(intent);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.wallet_list);
+		setContentView(R.layout.transaction_list);
+		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
 		registerForContextMenu(getListView());
 
-		findViewById(R.id.createWallet).setOnClickListener(
+		findViewById(R.id.createTransaction).setOnClickListener(
 				new View.OnClickListener() {
 					public void onClick(View view) {
-						WalletEdit.callMe(WalletList.this);
+						TransactionEdit.callMe(TransactionList.this, accountFather);
 					}
 				});
+
+		reInit(savedInstanceState);
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Wallet wallet = (Wallet) l.getAdapter().getItem(position);
-		AccountList.callMe(WalletList.this, wallet);
+		Transaction transaction = (Transaction) l.getAdapter().getItem(position);
+		TransactionEdit.callMe(TransactionList.this, transaction);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		new MenuInflater(this).inflate(R.menu.wallet_menu, menu);
+		new MenuInflater(this).inflate(R.menu.transaction_menu, menu);
 		return (super.onCreateOptionsMenu(menu));
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.insert_wallet:
-			WalletEdit.callMe(WalletList.this);
+		case R.id.insert_transaction:
+			TransactionEdit.callMe(TransactionList.this, accountFather);
 			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
@@ -75,31 +79,37 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		new MenuInflater(this).inflate(R.menu.wallet_context, menu);
+		new MenuInflater(this).inflate(R.menu.transaction_context, menu);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		ArrayAdapter<Wallet> adapter = (ArrayAdapter<Wallet>) getListAdapter();
-		Wallet wallet = adapter.getItem(info.position);
+		ArrayAdapter<Transaction> adapter = (ArrayAdapter<Transaction>) getListAdapter();
+		Transaction transaction = adapter.getItem(info.position);
 
 		switch (item.getItemId()) {
-		case R.id.edit_wallet:
-			WalletEdit.callMe(WalletList.this, wallet);
+		case R.id.edit_transaction:
+			TransactionEdit.callMe(TransactionList.this, transaction);
 			return true;
-		case R.id.delete_wallet:
+		case R.id.delete_transaction:
 			try {
-				getHelper().getWalletDao().deleteById(wallet.getId());
+				getHelper().getTransactionDao().deleteById(transaction.getId());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
-			adapter.remove(wallet);
+			adapter.remove(transaction);
 			return true;
 		}
 		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putSerializable(Account.OBJ, accountFather);
 	}
 
 	@Override
@@ -114,19 +124,27 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	}
 
 	private void fillList() throws SQLException {
-		Log.i(WalletList.class.getName(), "Show list again");
-		Dao<Wallet, Integer> dao = getHelper().getWalletDao();
-		List<Wallet> list = dao.queryForAll();
-		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this,
-				R.layout.wallet_row, list);
+		Log.i(TransactionList.class.getName(), "Show list again");
+		Dao<Transaction, Integer> dao = getHelper().getTransactionDao();
+		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
+		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.getId());
+		List<Transaction> list = dao.query(qb.prepare());
+		ArrayAdapter<Transaction> arrayAdapter = new TransactionAdapter(this,
+				R.layout.transaction_row, list);
 		setListAdapter(arrayAdapter);
 	}
 
-	// CLASE PRIVADA PARA MOSTRAR LA LISTA
-	private class WalletAdapter extends ArrayAdapter<Wallet> {
+	private void reInit(Bundle savedInstanceState) {
+		if (savedInstanceState != null) {
+			accountFather = (Account) savedInstanceState.get(Account.OBJ);
+		}
+	}
 
-		public WalletAdapter(Context context, int textViewResourceId,
-				List<Wallet> items) {
+	// CLASE PRIVADA PARA MOSTRAR LA LISTA
+	private class TransactionAdapter extends ArrayAdapter<Transaction> {
+
+		public TransactionAdapter(Context context, int textViewResourceId,
+				List<Transaction> items) {
 			super(context, textViewResourceId, items);
 		}
 
@@ -135,10 +153,11 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			View v = convertView;
 			if (v == null) {
 				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = vi.inflate(R.layout.wallet_row, null);
+				v = vi.inflate(R.layout.transaction_row, null);
 			}
-			Wallet wallet = getItem(position);
-			fillText(v, R.id.walletName, wallet.getName());
+			Transaction transaction = getItem(position);
+			fillText(v, R.id.transactionName, transaction.getName());
+			fillText(v, R.id.transactionAmount, transaction.getAmount().toString());
 			return v;
 		}
 

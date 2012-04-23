@@ -17,9 +17,9 @@ public class AccountType implements Serializable {
 	@DatabaseField(generatedId = true)
 	private Integer id;
 	@DatabaseField(canBeNull = false)
-	String name;
+	private String name;
 	@DatabaseField
-	String desc;
+	private String desc;
 
 	public AccountType() {
 		super();
@@ -57,7 +57,7 @@ public class AccountType implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AccountType [id=" + id + ", name=" + name + ", desc=" + desc + "]";
+		return name;
 	}
 
 }

@@ -6,76 +6,87 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class Account implements Serializable {
+public class Transaction implements Serializable {
 	private static final long serialVersionUID = 8818426783186993288L;
 	
-    public static final String OBJ = "account";
+    public static final String OBJ = "transaction";
     public static final String ID = "id";
     public static final String NAME = "name";
+    public static final String AMOUNT = "amount";
     public static final String DESC = "desc";
-    public static final String WALLET_ID = "wallet_id";
-    public static final String ACCOUNTTYPE_ID = "accounttype_id";
+    public static final String ACCOUNT_ID = "account_id";
 
 	@DatabaseField(generatedId = true)
 	private Integer id;
-	@DatabaseField(canBeNull = false)
+	@DatabaseField
 	private String name;
 	@DatabaseField
 	private String desc;
+	@DatabaseField
+	private Double amount;
 	@DatabaseField(canBeNull = false, foreign = true)
-	private Wallet wallet;
-	@DatabaseField(canBeNull = false, foreign = true)
-	private AccountType accountType;
+	private Account account;
 	
 
-	public Account() {
+	public Transaction() {
 		super();
 	}
+
 
 	public Integer getId() {
 		return id;
 	}
 
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 
 	public String getName() {
 		return name;
 	}
 
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 
 	public String getDesc() {
 		return desc;
 	}
 
+
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
 
-	public Wallet getWallet() {
-		return wallet;
+
+	public Double getAmount() {
+		return amount;
 	}
 
-	public void setWallet(Wallet wallet) {
-		this.wallet = wallet;
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 
-	public AccountType getAccountType() {
-		return accountType;
+
+	public Account getAccount() {
+		return account;
 	}
 
-	public void setAccountType(AccountType accountType) {
-		this.accountType = accountType;
+
+	public void setAccount(Account account) {
+		this.account = account;
 	}
+
 
 	@Override
 	public String toString() {
-		return "Account [id=" + id + ", name=" + name + ", desc=" + desc
-				+ ", wallet=" + wallet + "]";
+		return "Transaction [id=" + id + ", name=" + name + ", desc=" + desc
+				+ ", amount=" + amount + ", account=" + account + "]";
 	}
 
 }

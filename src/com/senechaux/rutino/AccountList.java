@@ -57,7 +57,7 @@ public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Account account = (Account) l.getAdapter().getItem(position);
-		AccountEdit.callMe(AccountList.this, account);
+		TransactionList.callMe(AccountList.this, account);
 	}
 
 	@Override
@@ -123,24 +123,11 @@ public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
 		}
 	}
 
-	// @Override
-	// protected void onActivityResult(int requestCode, int resultCode,
-	// Intent intent) {
-	// super.onActivityResult(requestCode, resultCode, intent);
-	// try {
-	// fillList();
-	// } catch (SQLException e) {
-	// e.printStackTrace();
-	// throw new RuntimeException(e);
-	// }
-	// }
-	
 	private void fillList() throws SQLException {
 		Log.i(AccountList.class.getName(), "Show list again");
 		Dao<Account, Integer> dao = getHelper().getAccountDao();
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Account.WALLET_ID, walletFather.getId());
-		// builder.orderBy(Account.DATE_FIELD_NAME, false).limit(30L);
 		List<Account> list = dao.query(qb.prepare());
 		ArrayAdapter<Account> arrayAdapter = new AccountAdapter(this,
 				R.layout.account_row, list);

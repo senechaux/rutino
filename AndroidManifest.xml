@@ -14,13 +14,14 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".WalletEdit" />
         <activity android:name=".AccountList" />
         <activity android:name=".AccountEdit" />
-    </application>
+        <activity android:name=".TransactionList" />
+        <activity android:name=".TransactionEdit" />
+        </application>
 
 </manifest>
