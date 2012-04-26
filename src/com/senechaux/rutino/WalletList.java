@@ -22,9 +22,7 @@ import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.AccountType;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
@@ -91,7 +89,7 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			return true;
 		case R.id.delete_wallet:
 			try {
-				getHelper().getWalletDao().deleteById(wallet.getId());
+				getHelper().getWalletDao().deleteById(wallet.get_id());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);

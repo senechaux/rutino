@@ -1,23 +1,18 @@
 package com.senechaux.rutino.db.entities;
 
-import java.io.Serializable;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class Account implements Serializable {
-	private static final long serialVersionUID = 8818426783186993288L;
-	
-    public static final String OBJ = "account";
-    public static final String ID = "id";
-    public static final String NAME = "name";
-    public static final String DESC = "desc";
-    public static final String WALLET_ID = "wallet_id";
-    public static final String ACCOUNTTYPE_ID = "accounttype_id";
+public class Account extends BaseEntity {
+	private static final long serialVersionUID = 1L;
 
-	@DatabaseField(generatedId = true)
-	private Integer id;
+	public static final String OBJ = "account";
+	public static final String NAME = "name";
+	public static final String DESC = "desc";
+	public static final String WALLET_ID = "wallet_id";
+	public static final String ACCOUNTTYPE_ID = "accounttype_id";
+
 	@DatabaseField(canBeNull = false)
 	private String name;
 	@DatabaseField
@@ -26,18 +21,9 @@ public class Account implements Serializable {
 	private Wallet wallet;
 	@DatabaseField(canBeNull = false, foreign = true)
 	private AccountType accountType;
-	
 
 	public Account() {
 		super();
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -74,7 +60,7 @@ public class Account implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Account [id=" + id + ", name=" + name + ", desc=" + desc
+		return "Account [id=" + this.get_id() + ", name=" + name + ", desc=" + desc
 				+ ", wallet=" + wallet + "]";
 	}
 

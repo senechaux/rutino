@@ -1,21 +1,16 @@
 package com.senechaux.rutino.db.entities;
 
-import java.io.Serializable;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class Wallet implements Serializable {
-	private static final long serialVersionUID = 2033099084510674771L;
+public class Wallet extends BaseEntity {
+	private static final long serialVersionUID = 1L;
 
     public static final String OBJ = "wallet";
-    public static final String ID = "id";
     public static final String NAME = "name";
     public static final String DESC = "desc";
 
-    @DatabaseField(generatedId = true)
-	private Integer id;
 	@DatabaseField(canBeNull = false)
 	private String name;
 	@DatabaseField
@@ -23,14 +18,6 @@ public class Wallet implements Serializable {
 
 	public Wallet() {
 		super();
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -51,7 +38,7 @@ public class Wallet implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Wallet [id=" + id + ", name=" + name + ", desc=" + desc + "]";
+		return "Wallet [id=" + this.get_id() + ", name=" + name + ", desc=" + desc + "]";
 	}
 
 }

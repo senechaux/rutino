@@ -18,6 +18,7 @@ import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.AccountType;
+import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
@@ -50,8 +51,8 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 
 		accountName = (EditText) findViewById(R.id.accountName);
 		accountDesc = (EditText) findViewById(R.id.accountDesc);
-		createAccount = (Button) findViewById(R.id.accountConfirm);
 		accountTypeSpinner = (Spinner) findViewById(R.id.accountType);
+		createAccount = (Button) findViewById(R.id.accountConfirm);
 
 		walletFather = (Wallet) getIntent().getSerializableExtra(Wallet.OBJ);
 		account = (Account) getIntent().getSerializableExtra(Account.OBJ);
@@ -63,9 +64,9 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 					Dao<Account, Integer> accountDao = getHelper()
 							.getAccountDao();
 					boolean alreadyCreated = false;
-					if (account.getId() != null) {
+					if (account.get_id() != null) {
 						Account dbAccount = accountDao.queryForId(account
-								.getId());
+								.get_id());
 						if (dbAccount != null) {
 							accountDao.update(account);
 							alreadyCreated = true;
@@ -91,17 +92,19 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 					this, android.R.layout.simple_spinner_item, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			accountTypeSpinner.setAdapter(adapter);
-			accountTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				@Override
-				public void onItemSelected(AdapterView<?> parent, View view,
-						int position, long id) {
-					accountType = adapter.getItem(position);
-				}
+			accountTypeSpinner
+					.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+						@Override
+						public void onItemSelected(AdapterView<?> parent,
+								View view, int position, long id) {
+							accountType = adapter.getItem(position);
+						}
 
-				@Override
-				public void onNothingSelected(AdapterView<?> parent) {
-					// TODO Auto-generated method stub
-				}});
+						@Override
+						public void onNothingSelected(AdapterView<?> parent) {
+							// TODO Auto-generated method stub
+						}
+					});
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -142,5 +145,9 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 	private void loadFromObj() throws SQLException {
 		accountName.setText(account.getName());
 		accountDesc.setText(account.getDesc());
+
+		ArrayAdapter<AccountType> adapter = (ArrayAdapter<AccountType>) accountTypeSpinner.getAdapter();
+		accountTypeSpinner.setSelection(adapter.getPosition(account.getAccountType()));
 	}
+
 }

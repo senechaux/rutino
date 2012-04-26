@@ -48,8 +48,8 @@ public class WalletEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 					saveToObj();
 					Dao<Wallet, Integer> walletDao = getHelper().getWalletDao();
 					boolean alreadyCreated = false;
-					if (wallet.getId() != null) {
-						Wallet dbWallet = walletDao.queryForId(wallet.getId());
+					if (wallet.get_id() != null) {
+						Wallet dbWallet = walletDao.queryForId(wallet.get_id());
 						if (dbWallet != null) {
 							walletDao.update(wallet);
 							alreadyCreated = true;
@@ -60,7 +60,7 @@ public class WalletEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 					} else {
 						walletDao.create(wallet);
 						// CounterScreen.callMe(WalletEdit.this,
-						// wallet.getId());
+						// wallet.get_id());
 						finish();
 					}
 				} catch (SQLException e) {

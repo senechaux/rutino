@@ -95,7 +95,7 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			return true;
 		case R.id.delete_transaction:
 			try {
-				getHelper().getTransactionDao().deleteById(transaction.getId());
+				getHelper().getTransactionDao().deleteById(transaction.get_id());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -127,7 +127,7 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 		Log.i(TransactionList.class.getName(), "Show list again");
 		Dao<Transaction, Integer> dao = getHelper().getTransactionDao();
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.getId());
+		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.get_id());
 		List<Transaction> list = dao.query(qb.prepare());
 		ArrayAdapter<Transaction> arrayAdapter = new TransactionAdapter(this,
 				R.layout.transaction_row, list);

@@ -95,7 +95,7 @@ public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			return true;
 		case R.id.delete_account:
 			try {
-				getHelper().getAccountDao().deleteById(account.getId());
+				getHelper().getAccountDao().deleteById(account.get_id());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -127,7 +127,7 @@ public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
 		Log.i(AccountList.class.getName(), "Show list again");
 		Dao<Account, Integer> dao = getHelper().getAccountDao();
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Account.WALLET_ID, walletFather.getId());
+		qb.where().eq(Account.WALLET_ID, walletFather.get_id());
 		List<Account> list = dao.query(qb.prepare());
 		ArrayAdapter<Account> arrayAdapter = new AccountAdapter(this,
 				R.layout.account_row, list);

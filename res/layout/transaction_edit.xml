@@ -31,12 +31,18 @@
             android:layout_height="wrap_content"
             android:text="@string/amount" />
 
+        <Spinner
+            android:id="@+id/transactionCurrency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawSelectorOnTop="true" />
+
         <EditText
             android:id="@+id/transactionAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
     </LinearLayout>
 
     <TextView
@@ -49,6 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
+        android:gravity="top"
         android:inputType="textAutoComplete"
         android:scrollbars="vertical" />
 

@@ -16,9 +16,9 @@
 
         <EditText
             android:id="@+id/walletName"
-            android:inputType="textAutoComplete"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textAutoComplete" />
     </LinearLayout>
 
     <TextView
@@ -28,10 +28,11 @@
 
     <EditText
         android:id="@+id/walletDesc"
-        android:inputType="textAutoComplete"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
+        android:gravity="top"
+        android:inputType="textAutoComplete"
         android:scrollbars="vertical" />
 
     <Button

@@ -1,14 +1,10 @@
 #
-# generated on 2012/04/23 01:19:01
+# generated on 2012/04/26 01:49:11
 #
 # --table-start--
 dataClass=com.senechaux.rutino.db.entities.Account
 tableName=account
 # --table-fields-start--
-# --field-start--
-fieldName=id
-generatedId=true
-# --field-end--
 # --field-start--
 fieldName=name
 canBeNull=false
@@ -26,6 +22,10 @@ fieldName=accountType
 canBeNull=false
 foreign=true
 # --field-end--
+# --field-start--
+fieldName=_id
+generatedId=true
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -34,15 +34,47 @@ dataClass=com.senechaux.rutino.db.entities.AccountType
 tableName=accounttype
 # --table-fields-start--
 # --field-start--
-fieldName=id
+fieldName=name
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=desc
+# --field-end--
+# --field-start--
+fieldName=_id
 generatedId=true
 # --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.senechaux.rutino.db.entities.BaseEntity
+tableName=baseentity
+# --table-fields-start--
+# --field-start--
+fieldName=_id
+generatedId=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.senechaux.rutino.db.entities.Currency
+tableName=currency
+# --table-fields-start--
 # --field-start--
 fieldName=name
 canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=desc
+# --field-end--
+# --field-start--
+fieldName=change
+# --field-end--
+# --field-start--
+fieldName=_id
+generatedId=true
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -51,10 +83,6 @@ fieldName=desc
 dataClass=com.senechaux.rutino.db.entities.Transaction
 tableName=transaction
 # --table-fields-start--
-# --field-start--
-fieldName=id
-generatedId=true
-# --field-end--
 # --field-start--
 fieldName=name
 # --field-end--
@@ -69,6 +97,15 @@ fieldName=account
 canBeNull=false
 foreign=true
 # --field-end--
+# --field-start--
+fieldName=currency
+canBeNull=false
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=_id
+generatedId=true
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -77,15 +114,15 @@ dataClass=com.senechaux.rutino.db.entities.Wallet
 tableName=wallet
 # --table-fields-start--
 # --field-start--
-fieldName=id
-generatedId=true
-# --field-end--
-# --field-start--
 fieldName=name
 canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=desc
+# --field-end--
+# --field-start--
+fieldName=_id
+generatedId=true
 # --field-end--
 # --table-fields-end--
 # --table-end--
