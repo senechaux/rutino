@@ -66,6 +66,9 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 		case R.id.insert_wallet:
 			WalletEdit.callMe(WalletList.this);
 			return true;
+		case R.id.preferences:
+			Preferences.callMe(WalletList.this);
+			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}

@@ -24,6 +24,7 @@
         <activity android:name=".TransactionEdit" />
         <activity android:name=".ReportList" />
         <activity android:name=".ReportEdit" />
+        <activity android:name=".Preferences" />
         </application>
 
 </manifest>

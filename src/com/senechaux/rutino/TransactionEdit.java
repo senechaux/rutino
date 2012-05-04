@@ -10,7 +10,9 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -74,6 +76,9 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		transaction = (Transaction) getIntent().getSerializableExtra(
 				Transaction.OBJ);
 
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
 		mPickDate.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(DATE_DIALOG_ID);
@@ -108,6 +113,9 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 					this, android.R.layout.simple_spinner_item, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			currencySpinner.setAdapter(adapter);
+			currencySpinner.setSelection(adapter.getPosition(dao
+					.queryForId(Integer.valueOf(prefs
+							.getString("currency", "1")))));
 			currencySpinner
 					.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 						@Override
@@ -182,7 +190,7 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 			transaction.setAmount(0.0);
 		else
 			transaction.setAmount(Double.parseDouble(amount));
-		
+
 		transaction.setDate(transactionDateTime.getTime());
 		return;
 	}
@@ -191,7 +199,7 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		transactionName.setText(transaction.getName());
 		transactionDesc.setText(transaction.getDesc());
 		transactionAmount.setText(transaction.getAmount().toString());
-		
+
 		transactionDateTime.setTime(transaction.getDate());
 		updateTimeDate();
 
@@ -226,7 +234,7 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		int mMonth = transactionDateTime.get(Calendar.MONTH);
 		int mDay = transactionDateTime.get(Calendar.DAY_OF_MONTH);
 		mPickDate.setText("" + mDay + "-" + (mMonth + 1) + "-" + mYear);
-		
+
 		int mHour = transactionDateTime.get(Calendar.HOUR_OF_DAY);
 		int mMinute = transactionDateTime.get(Calendar.MINUTE);
 		mPickTime.setText("" + pad(mHour) + ":" + pad(mMinute));

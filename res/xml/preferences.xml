@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/prefs_currency" >
+        <ListPreference
+            android:dialogTitle="Choose a Pennsylvania city"
+            android:entries="@array/currency"
+            android:entryValues="@array/currency_values"
+            android:key="currency"
+            android:summary="@string/prefs_currencyText"
+            android:title="@string/prefs_currency" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

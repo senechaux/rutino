@@ -28,4 +28,9 @@
     <string name="amount">Amount</string>
     <string name="date">Date</string>
     <string name="confirm">Confirm</string>
+    <string name="preferences">Preferences</string>
+    
+	<string name="prefs_currency">Prefered currency</string>
+	<string name="prefs_currencyText">Select Prefered currency</string>
+    
 </resources>
