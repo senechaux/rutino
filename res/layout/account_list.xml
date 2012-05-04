@@ -15,10 +15,24 @@
         android:layout_height="wrap_content"
         android:text="@string/no_accounts" />
 
-    <Button
-        android:id="@+id/createAccount"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_account" />
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/createAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/create_account" />
+
+        <Button
+            android:id="@+id/createReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/create_report" />
+    </LinearLayout>
 
 </LinearLayout>

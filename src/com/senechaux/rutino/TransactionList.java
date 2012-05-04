@@ -24,8 +24,9 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.Currency;
+import com.senechaux.rutino.db.entities.Transaction;
 
 public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	private Account accountFather;
@@ -128,6 +129,8 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 		Dao<Transaction, Integer> dao = getHelper().getTransactionDao();
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.get_id());
+		// false: más reciente primero
+		qb.orderBy(Transaction.DATE, false);
 		List<Transaction> list = dao.query(qb.prepare());
 		ArrayAdapter<Transaction> arrayAdapter = new TransactionAdapter(this,
 				R.layout.transaction_row, list);
@@ -158,6 +161,12 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			Transaction transaction = getItem(position);
 			fillText(v, R.id.transactionName, transaction.getName());
 			fillText(v, R.id.transactionAmount, transaction.getAmount().toString());
+			try {
+				fillText(v, R.id.transactionCurrency, getHelper().getCurrencyDao().queryForId(transaction.getCurrency().get_id()).getName());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return v;
 		}
 

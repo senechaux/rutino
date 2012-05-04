@@ -50,6 +50,13 @@ public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
 					}
 				});
 
+		findViewById(R.id.createReport).setOnClickListener(
+				new View.OnClickListener() {
+					public void onClick(View view) {
+						ReportEdit.callMe(AccountList.this, walletFather);
+					}
+				});
+
 		reInit(savedInstanceState);
 	}
 

@@ -1,8 +1,13 @@
 package com.senechaux.rutino;
 
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +15,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.Dao;
@@ -26,10 +33,16 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 	private EditText transactionDesc;
 	private EditText transactionAmount;
 	private Spinner currencySpinner;
+	private Button mPickDate;
+	private Button mPickTime;
+	private GregorianCalendar transactionDateTime;
 	private Button createTransaction;
 	private Currency currency;
 	private Transaction transaction;
 	private Account accountFather;
+
+	protected static final int DATE_DIALOG_ID = 0;
+	protected static final int TIME_DIALOG_ID = 1;
 
 	public static void callMe(Context c, Account aFather) {
 		Intent intent = new Intent(c, TransactionEdit.class);
@@ -54,38 +67,39 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		transactionAmount = (EditText) findViewById(R.id.transactionAmount);
 		currencySpinner = (Spinner) findViewById(R.id.transactionCurrency);
 		createTransaction = (Button) findViewById(R.id.transactionConfirm);
+		mPickDate = (Button) findViewById(R.id.transactionDate);
+		mPickTime = (Button) findViewById(R.id.transactionTime);
 
 		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
 		transaction = (Transaction) getIntent().getSerializableExtra(
 				Transaction.OBJ);
 
+		mPickDate.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				showDialog(DATE_DIALOG_ID);
+			}
+		});
+
+		mPickTime.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				showDialog(TIME_DIALOG_ID);
+			}
+		});
+
 		createTransaction.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					Dao<Transaction, Integer> transactionDao = getHelper()
-							.getTransactionDao();
-					boolean alreadyCreated = false;
-					if (transaction.get_id() != null) {
-						Transaction dbTransaction = transactionDao
-								.queryForId(transaction.get_id());
-						if (dbTransaction != null) {
-							transactionDao.update(transaction);
-							alreadyCreated = true;
-						}
-					}
-					if (alreadyCreated) {
-						finish();
-					} else {
-						transaction.setAccount(accountFather);
-						transactionDao.create(transaction);
-						finish();
-					}
+					getHelper().getTransactionDao().createOrUpdate(transaction);
+					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
 			}
 		});
+
+		transactionDateTime = new GregorianCalendar();
+		updateTimeDate();
 
 		try {
 			Dao<Currency, Integer> dao = getHelper().getCurrencyDao();
@@ -94,17 +108,19 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 					this, android.R.layout.simple_spinner_item, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			currencySpinner.setAdapter(adapter);
-			currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				@Override
-				public void onItemSelected(AdapterView<?> parent, View view,
-						int position, long id) {
-					currency = adapter.getItem(position);
-				}
+			currencySpinner
+					.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+						@Override
+						public void onItemSelected(AdapterView<?> parent,
+								View view, int position, long id) {
+							currency = adapter.getItem(position);
+						}
 
-				@Override
-				public void onNothingSelected(AdapterView<?> parent) {
-					// TODO Auto-generated method stub
-				}});
+						@Override
+						public void onNothingSelected(AdapterView<?> parent) {
+							// TODO Auto-generated method stub
+						}
+					});
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -118,6 +134,24 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		super.onSaveInstanceState(outState);
 		saveToObj();
 		outState.putSerializable(Transaction.OBJ, transaction);
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DATE_DIALOG_ID:
+			int mYear = transactionDateTime.get(Calendar.YEAR);
+			int mMonth = transactionDateTime.get(Calendar.MONTH);
+			int mDay = transactionDateTime.get(Calendar.DAY_OF_MONTH);
+			return new DatePickerDialog(this, mDateSetListener, mYear, mMonth,
+					mDay);
+		case TIME_DIALOG_ID:
+			int mHour = transactionDateTime.get(Calendar.HOUR_OF_DAY);
+			int mMinute = transactionDateTime.get(Calendar.MINUTE);
+			return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute,
+					true);
+		}
+		return null;
 	}
 
 	private void reInit(Bundle savedInstanceState) {
@@ -137,14 +171,19 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 	private void saveToObj() {
 		if (transaction == null)
 			transaction = new Transaction();
+		if (accountFather != null)
+			transaction.setAccount(accountFather);
+
 		transaction.setName(transactionName.getText().toString());
 		transaction.setDesc(transactionDesc.getText().toString());
 		transaction.setCurrency(currency);
 		String amount = transactionAmount.getText().toString();
 		if (amount.trim().equals(""))
 			transaction.setAmount(0.0);
-		else 
+		else
 			transaction.setAmount(Double.parseDouble(amount));
+		
+		transaction.setDate(transactionDateTime.getTime());
 		return;
 	}
 
@@ -153,7 +192,51 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		transactionDesc.setText(transaction.getDesc());
 		transactionAmount.setText(transaction.getAmount().toString());
 		
-		ArrayAdapter<Currency> adapter = (ArrayAdapter<Currency>) currencySpinner.getAdapter();
-		currencySpinner.setSelection(adapter.getPosition(transaction.getCurrency()));
+		transactionDateTime.setTime(transaction.getDate());
+		updateTimeDate();
+
+		ArrayAdapter<Currency> adapter = (ArrayAdapter<Currency>) currencySpinner
+				.getAdapter();
+		currencySpinner.setSelection(adapter.getPosition(transaction
+				.getCurrency()));
 	}
+
+	// the callback received when the user "sets" the date in the dialog
+	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			transactionDateTime.set(GregorianCalendar.YEAR, year);
+			transactionDateTime.set(GregorianCalendar.MONTH, monthOfYear);
+			transactionDateTime.set(GregorianCalendar.DAY_OF_MONTH, dayOfMonth);
+			updateTimeDate();
+		}
+	};
+
+	// the callback received when the user "sets" the time in the dialog
+	private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			transactionDateTime.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay);
+			transactionDateTime.set(GregorianCalendar.MINUTE, minute);
+			updateTimeDate();
+		}
+	};
+
+	private void updateTimeDate() {
+		int mYear = transactionDateTime.get(Calendar.YEAR);
+		int mMonth = transactionDateTime.get(Calendar.MONTH);
+		int mDay = transactionDateTime.get(Calendar.DAY_OF_MONTH);
+		mPickDate.setText("" + mDay + "-" + (mMonth + 1) + "-" + mYear);
+		
+		int mHour = transactionDateTime.get(Calendar.HOUR_OF_DAY);
+		int mMinute = transactionDateTime.get(Calendar.MINUTE);
+		mPickTime.setText("" + pad(mHour) + ":" + pad(mMinute));
+	}
+
+	private static String pad(int c) {
+		if (c >= 10)
+			return String.valueOf(c);
+		else
+			return "0" + String.valueOf(c);
+	}
+
 }

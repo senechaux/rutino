@@ -5,4 +5,8 @@
         android:id="@+id/insert_account"
         android:title="@string/create_account"/>
 
+    <item
+        android:id="@+id/report_list"
+        android:title="@string/list_report"/>
+
 </menu>

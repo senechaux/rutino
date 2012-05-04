@@ -1,5 +1,7 @@
 package com.senechaux.rutino.db.entities;
 
+import java.util.Date;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -9,8 +11,9 @@ public class Transaction extends BaseEntity {
 
 	public static final String OBJ = "transaction";
 	public static final String NAME = "name";
-	public static final String AMOUNT = "amount";
 	public static final String DESC = "desc";
+	public static final String AMOUNT = "amount";
+	public static final String DATE = "date";
 	public static final String ACCOUNT_ID = "account_id";
 	public static final String CURRENCY_ID = "currency_id";
 
@@ -20,6 +23,8 @@ public class Transaction extends BaseEntity {
 	private String desc;
 	@DatabaseField
 	private Double amount;
+	@DatabaseField
+	private Date date;
 	@DatabaseField(canBeNull = false, foreign = true)
 	private Account account;
 	@DatabaseField(canBeNull = false, foreign = true)
@@ -51,6 +56,14 @@ public class Transaction extends BaseEntity {
 
 	public void setAmount(Double amount) {
 		this.amount = amount;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public Account getAccount() {

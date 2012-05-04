@@ -18,7 +18,6 @@ import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.AccountType;
-import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
@@ -57,34 +56,20 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		walletFather = (Wallet) getIntent().getSerializableExtra(Wallet.OBJ);
 		account = (Account) getIntent().getSerializableExtra(Account.OBJ);
 
+		// Acción del botón Crear
 		createAccount.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					Dao<Account, Integer> accountDao = getHelper()
-							.getAccountDao();
-					boolean alreadyCreated = false;
-					if (account.get_id() != null) {
-						Account dbAccount = accountDao.queryForId(account
-								.get_id());
-						if (dbAccount != null) {
-							accountDao.update(account);
-							alreadyCreated = true;
-						}
-					}
-					if (alreadyCreated) {
-						finish();
-					} else {
-						account.setWallet(walletFather);
-						accountDao.create(account);
-						finish();
-					}
+					getHelper().getAccountDao().createOrUpdate(account);
+					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
 			}
 		});
 
+		// Rellenar spinner Currency
 		try {
 			Dao<AccountType, Integer> dao = getHelper().getAccountTypeDao();
 			List<AccountType> list = dao.queryForAll();
@@ -136,6 +121,8 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 	private void saveToObj() {
 		if (account == null)
 			account = new Account();
+		if (walletFather != null)
+			account.setWallet(walletFather);
 		account.setName(accountName.getText().toString());
 		account.setDesc(accountDesc.getText().toString());
 		account.setAccountType(accountType);
@@ -146,8 +133,10 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		accountName.setText(account.getName());
 		accountDesc.setText(account.getDesc());
 
-		ArrayAdapter<AccountType> adapter = (ArrayAdapter<AccountType>) accountTypeSpinner.getAdapter();
-		accountTypeSpinner.setSelection(adapter.getPosition(account.getAccountType()));
+		ArrayAdapter<AccountType> adapter = (ArrayAdapter<AccountType>) accountTypeSpinner
+				.getAdapter();
+		accountTypeSpinner.setSelection(adapter.getPosition(account
+				.getAccountType()));
 	}
 
 }

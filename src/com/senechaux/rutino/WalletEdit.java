@@ -46,23 +46,8 @@ public class WalletEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					Dao<Wallet, Integer> walletDao = getHelper().getWalletDao();
-					boolean alreadyCreated = false;
-					if (wallet.get_id() != null) {
-						Wallet dbWallet = walletDao.queryForId(wallet.get_id());
-						if (dbWallet != null) {
-							walletDao.update(wallet);
-							alreadyCreated = true;
-						}
-					}
-					if (alreadyCreated) {
-						finish();
-					} else {
-						walletDao.create(wallet);
-						// CounterScreen.callMe(WalletEdit.this,
-						// wallet.get_id());
-						finish();
-					}
+					getHelper().getWalletDao().createOrUpdate(wallet);
+					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}

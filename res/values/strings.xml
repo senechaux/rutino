@@ -17,8 +17,15 @@
     <string name="update_transaction">Edit Transaction</string>
     <string name="delete_transaction">Delete Transaction</string>
     
+    <string name="no_reports">No Reports Yet</string>
+    <string name="create_report">Add Report</string>
+    <string name="update_report">Edit Report</string>
+    <string name="delete_report">Delete Report</string>
+    <string name="list_report">List Report</string>
+    
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="amount">Amount</string>
+    <string name="date">Date</string>
     <string name="confirm">Confirm</string>
 </resources>
