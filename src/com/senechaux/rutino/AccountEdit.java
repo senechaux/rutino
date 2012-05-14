@@ -3,6 +3,7 @@ package com.senechaux.rutino;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,14 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.AccountType;
 import com.senechaux.rutino.db.entities.Wallet;
 
-public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
+public class AccountEdit extends Activity {
 
 	private EditText accountName;
 	private EditText accountDesc;
@@ -61,7 +61,8 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					getHelper().getAccountDao().createOrUpdate(account);
+					DatabaseHelper.getInstance(AccountEdit.this)
+							.getAccountDao().createOrUpdate(account);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -71,7 +72,8 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 
 		// Rellenar spinner Currency
 		try {
-			Dao<AccountType, Integer> dao = getHelper().getAccountTypeDao();
+			Dao<AccountType, Integer> dao = DatabaseHelper.getInstance(this)
+					.getAccountTypeDao();
 			List<AccountType> list = dao.queryForAll();
 			final ArrayAdapter<AccountType> adapter = new ArrayAdapter<AccountType>(
 					this, android.R.layout.simple_spinner_item, list);
@@ -129,6 +131,7 @@ public class AccountEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		return;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadFromObj() throws SQLException {
 		accountName.setText(account.getName());
 		accountDesc.setText(account.getDesc());

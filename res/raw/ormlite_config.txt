@@ -1,5 +1,5 @@
 #
-# generated on 2012/05/04 05:03:42
+# generated on 2012/05/09 01:33:03
 #
 # --table-start--
 dataClass=com.senechaux.rutino.db.entities.Account
@@ -71,6 +71,42 @@ fieldName=desc
 # --field-end--
 # --field-start--
 fieldName=change
+# --field-end--
+# --field-start--
+fieldName=_id
+generatedId=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.senechaux.rutino.db.entities.PeriodicTransaction
+tableName=periodictransaction
+# --table-fields-start--
+# --field-start--
+fieldName=periodicity
+# --field-end--
+# --field-start--
+fieldName=name
+# --field-end--
+# --field-start--
+fieldName=desc
+# --field-end--
+# --field-start--
+fieldName=amount
+# --field-end--
+# --field-start--
+fieldName=date
+# --field-end--
+# --field-start--
+fieldName=account
+canBeNull=false
+foreign=true
+# --field-end--
+# --field-start--
+fieldName=currency
+canBeNull=false
+foreign=true
 # --field-end--
 # --field-start--
 fieldName=_id

@@ -27,6 +27,8 @@
     <string name="description">Description</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
+    <string name="days">Days</string>
+    <string name="periodicity">Periodicity</string>
     <string name="confirm">Confirm</string>
     <string name="preferences">Preferences</string>
     

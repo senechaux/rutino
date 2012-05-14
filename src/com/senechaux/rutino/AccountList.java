@@ -3,6 +3,7 @@ package com.senechaux.rutino;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,14 +21,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Wallet;
 
-public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
+public class AccountList extends ListActivity {
 	private Wallet walletFather;
 
 	public static void callMe(Context c, Wallet wallet) {
@@ -90,6 +90,7 @@ public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -102,7 +103,8 @@ public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			return true;
 		case R.id.delete_account:
 			try {
-				getHelper().getAccountDao().deleteById(account.get_id());
+//				getHelper().getAccountDao().deleteById(account.get_id());
+				DatabaseHelper.getInstance(this).getAccountDao().deleteById(account.get_id());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -132,7 +134,8 @@ public class AccountList extends OrmLiteBaseListActivity<DatabaseHelper> {
 
 	private void fillList() throws SQLException {
 		Log.i(AccountList.class.getName(), "Show list again");
-		Dao<Account, Integer> dao = getHelper().getAccountDao();
+//		Dao<Account, Integer> dao = getHelper().getAccountDao();
+		Dao<Account, Integer> dao = DatabaseHelper.getInstance(this).getAccountDao();
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Account.WALLET_ID, walletFather.get_id());
 		List<Account> list = dao.query(qb.prepare());

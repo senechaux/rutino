@@ -11,7 +11,7 @@ public abstract class BaseEntity implements Serializable {
 	public static final String ID = "_id";
 
 	@DatabaseField(generatedId = true)
-	private Integer _id;
+	protected Integer _id;
 
 	public Integer get_id() {
 		return _id;

@@ -18,17 +18,17 @@ public class Transaction extends BaseEntity {
 	public static final String CURRENCY_ID = "currency_id";
 
 	@DatabaseField
-	private String name;
+	protected String name;
 	@DatabaseField
-	private String desc;
+	protected String desc;
 	@DatabaseField
-	private Double amount;
+	protected Double amount;
 	@DatabaseField
-	private Date date;
+	protected Date date;
 	@DatabaseField(canBeNull = false, foreign = true)
-	private Account account;
+	protected Account account;
 	@DatabaseField(canBeNull = false, foreign = true)
-	private Currency currency;
+	protected Currency currency;
 
 	public Transaction() {
 		super();

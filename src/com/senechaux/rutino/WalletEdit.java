@@ -2,6 +2,7 @@ package com.senechaux.rutino;
 
 import java.sql.SQLException;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
-public class WalletEdit extends OrmLiteBaseActivity<DatabaseHelper> {
+public class WalletEdit extends Activity {
 
 	private EditText walletName;
 	private EditText walletDesc;
@@ -46,7 +45,7 @@ public class WalletEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					getHelper().getWalletDao().createOrUpdate(wallet);
+					DatabaseHelper.getInstance(WalletEdit.this).getWalletDao().createOrUpdate(wallet);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);

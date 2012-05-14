@@ -3,6 +3,7 @@ package com.senechaux.rutino;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,12 +21,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
-public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
+public class WalletList extends ListActivity {
 
 	// private final DateFormat df = new SimpleDateFormat("M/dd/yy HH:mm");
 
@@ -80,6 +80,7 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -92,7 +93,8 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			return true;
 		case R.id.delete_wallet:
 			try {
-				getHelper().getWalletDao().deleteById(wallet.get_id());
+//				getHelper().getWalletDao().deleteById(wallet.get_id());
+				DatabaseHelper.getInstance(this).getWalletDao().deleteById(wallet.get_id());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -116,7 +118,8 @@ public class WalletList extends OrmLiteBaseListActivity<DatabaseHelper> {
 
 	private void fillList() throws SQLException {
 		Log.i(WalletList.class.getName(), "Show list again");
-		Dao<Wallet, Integer> dao = getHelper().getWalletDao();
+//		Dao<Wallet, Integer> dao = getHelper().getWalletDao();
+		Dao<Wallet, Integer> dao = DatabaseHelper.getInstance(this).getWalletDao();
 		List<Wallet> list = dao.queryForAll();
 		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this,
 				R.layout.wallet_row, list);

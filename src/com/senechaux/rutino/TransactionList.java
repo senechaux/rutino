@@ -3,6 +3,7 @@ package com.senechaux.rutino;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,15 +21,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
-import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.Transaction;
 
-public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
+public class TransactionList extends ListActivity {
 	private Account accountFather;
 
 	public static void callMe(Context c, Account account) {
@@ -47,7 +46,8 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 		findViewById(R.id.createTransaction).setOnClickListener(
 				new View.OnClickListener() {
 					public void onClick(View view) {
-						TransactionEdit.callMe(TransactionList.this, accountFather);
+						TransactionEdit.callMe(TransactionList.this,
+								accountFather);
 					}
 				});
 
@@ -57,7 +57,8 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Transaction transaction = (Transaction) l.getAdapter().getItem(position);
+		Transaction transaction = (Transaction) l.getAdapter()
+				.getItem(position);
 		TransactionEdit.callMe(TransactionList.this, transaction);
 	}
 
@@ -84,6 +85,7 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -96,7 +98,8 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			return true;
 		case R.id.delete_transaction:
 			try {
-				getHelper().getTransactionDao().deleteById(transaction.get_id());
+				DatabaseHelper.getInstance(this).getTransactionDao()
+						.deleteById(transaction.get_id());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -126,7 +129,8 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 
 	private void fillList() throws SQLException {
 		Log.i(TransactionList.class.getName(), "Show list again");
-		Dao<Transaction, Integer> dao = getHelper().getTransactionDao();
+		Dao<Transaction, Integer> dao = DatabaseHelper.getInstance(this)
+				.getTransactionDao();
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.get_id());
 		// false: más reciente primero
@@ -160,9 +164,13 @@ public class TransactionList extends OrmLiteBaseListActivity<DatabaseHelper> {
 			}
 			Transaction transaction = getItem(position);
 			fillText(v, R.id.transactionName, transaction.getName());
-			fillText(v, R.id.transactionAmount, transaction.getAmount().toString());
+			fillText(v, R.id.transactionAmount, transaction.getAmount()
+					.toString());
 			try {
-				fillText(v, R.id.transactionCurrency, getHelper().getCurrencyDao().queryForId(transaction.getCurrency().get_id()).getName());
+				fillText(v, R.id.transactionCurrency, DatabaseHelper
+						.getInstance(TransactionList.this).getCurrencyDao()
+						.queryForId(transaction.getCurrency().get_id())
+						.getName());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

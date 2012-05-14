@@ -2,6 +2,7 @@ package com.senechaux.rutino;
 
 import java.sql.SQLException;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Wallet;
 
-public class ReportEdit extends OrmLiteBaseActivity<DatabaseHelper> {
+public class ReportEdit extends Activity {
 
 	private EditText reportName;
 	private EditText reportDesc;
@@ -52,7 +51,8 @@ public class ReportEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					getHelper().getReportDao().createOrUpdate(report);
+					DatabaseHelper.getInstance(ReportEdit.this).getReportDao()
+							.createOrUpdate(report);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);

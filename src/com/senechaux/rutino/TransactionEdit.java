@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -17,28 +18,31 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Currency;
+import com.senechaux.rutino.db.entities.PeriodicTransaction;
 import com.senechaux.rutino.db.entities.Transaction;
 
-public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
+public class TransactionEdit extends Activity {
 
 	private EditText transactionName;
 	private EditText transactionDesc;
 	private EditText transactionAmount;
+	private EditText periodicity;
 	private Spinner currencySpinner;
 	private Button mPickDate;
 	private Button mPickTime;
-	private GregorianCalendar transactionDateTime;
+	private CheckBox isPeriodic;
 	private Button createTransaction;
+	private GregorianCalendar transactionDateTime;
 	private Currency currency;
 	private Transaction transaction;
 	private Account accountFather;
@@ -67,10 +71,12 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		transactionName = (EditText) findViewById(R.id.transactionName);
 		transactionDesc = (EditText) findViewById(R.id.transactionDesc);
 		transactionAmount = (EditText) findViewById(R.id.transactionAmount);
+		periodicity = (EditText) findViewById(R.id.periodicity);
 		currencySpinner = (Spinner) findViewById(R.id.transactionCurrency);
 		createTransaction = (Button) findViewById(R.id.transactionConfirm);
 		mPickDate = (Button) findViewById(R.id.transactionDate);
 		mPickTime = (Button) findViewById(R.id.transactionTime);
+		isPeriodic = (CheckBox) findViewById(R.id.isPeriodic);
 
 		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
 		transaction = (Transaction) getIntent().getSerializableExtra(
@@ -95,7 +101,13 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					getHelper().getTransactionDao().createOrUpdate(transaction);
+					if (!isPeriodic.isChecked())
+						DatabaseHelper.getInstance(TransactionEdit.this)
+								.getTransactionDao()
+								.createOrUpdate(transaction);
+					else {
+						insertPeriodic();
+					}
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -107,7 +119,8 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		updateTimeDate();
 
 		try {
-			Dao<Currency, Integer> dao = getHelper().getCurrencyDao();
+			Dao<Currency, Integer> dao = DatabaseHelper.getInstance(this)
+					.getCurrencyDao();
 			List<Currency> list = dao.queryForAll();
 			final ArrayAdapter<Currency> adapter = new ArrayAdapter<Currency>(
 					this, android.R.layout.simple_spinner_item, list);
@@ -195,6 +208,7 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		return;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadFromObj() throws SQLException {
 		transactionName.setText(transaction.getName());
 		transactionDesc.setText(transaction.getDesc());
@@ -246,5 +260,23 @@ public class TransactionEdit extends OrmLiteBaseActivity<DatabaseHelper> {
 		else
 			return "0" + String.valueOf(c);
 	}
+
+	private void insertPeriodic() throws SQLException {
+		String per = periodicity.getText().toString();
+		PeriodicTransaction perTransaction = new PeriodicTransaction(
+				transaction, Integer.valueOf(per));
+		DatabaseHelper.getInstance(this).getPeriodicTransactionDao()
+				.createOrUpdate(perTransaction);
+
+	}
+
+	// private void setAlarm() {
+	// Intent intent = new Intent(this, TransactionEdit.class);
+	// intent.putExtra(TasksDbAdapter.KEY_ROWID, mRowId);
+	// PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+	// intent, PendingIntent.FLAG_ONE_SHOT);
+	// am.set(AlarmManager.RTC_WAKEUP, dateTimeTask.getTimeInMillis(),
+	// pendingIntent);
+	// }
 
 }
