@@ -8,7 +8,7 @@ public class Constants {
     /**
      * Account type string.
      */
-    public static final String ACCOUNT_TYPE = "com.senechaux.rutino";
+    public static final String ACCOUNT_TYPE = "com.senechaux.rutino.account";
 
     /**
      * Authtoken type string.

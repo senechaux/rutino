@@ -21,8 +21,8 @@
 <!-- for the Account Manager. -->
 
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accountType="com.senechaux.rutino"
-    android:icon="@drawable/ic_launcher"
-    android:smallIcon="@drawable/ic_launcher"
+    android:accountType="com.senechaux.rutino.account"
+    android:icon="@drawable/rutino_icon"
+    android:smallIcon="@drawable/rutino_icon"
     android:label="@string/label"
 />

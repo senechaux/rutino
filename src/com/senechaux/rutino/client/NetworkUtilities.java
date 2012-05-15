@@ -18,18 +18,12 @@ package com.senechaux.rutino.client;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -38,11 +32,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
 
-import android.accounts.Account;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
@@ -117,32 +107,15 @@ public class NetworkUtilities {
     public static boolean authenticate(String username, String password,
         Handler handler, final Context context) {
         final HttpResponse resp;
-        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            Log.v(TAG, "1");
-        }
         final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair(PARAM_USERNAME, username));
         params.add(new BasicNameValuePair(PARAM_PASSWORD, password));
         HttpEntity entity = null;
-        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            Log.v(TAG, "2");
-        }
         try {
-            if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                Log.v(TAG, "3");
-            }
-
             entity = new UrlEncodedFormEntity(params);
         } catch (final UnsupportedEncodingException e) {
             // this should never happen.
-            if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                Log.v(TAG, "4");
-            }
-
             throw new AssertionError(e);
-        }
-        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            Log.v(TAG, "5");
         }
 
         final HttpPost post = new HttpPost(AUTH_URI);
@@ -226,6 +199,7 @@ public class NetworkUtilities {
      * @param lastUpdated The last time that sync was performed
      * @return list The list of updates received from the server.
      */
+    /*
     public static List<User> fetchFriendUpdates(Account account,
         String authtoken, Date lastUpdated) throws JSONException,
         ParseException, IOException, AuthenticationException {
@@ -274,7 +248,7 @@ public class NetworkUtilities {
         }
         return friendList;
     }
-
+*/
     /**
      * Fetches status messages for the user's friends from the server
      * 
@@ -283,6 +257,7 @@ public class NetworkUtilities {
      *        account
      * @return list The list of status messages received from the server.
      */
+    /*
     public static List<User.Status> fetchFriendStatuses(Account account,
         String authtoken) throws JSONException, ParseException, IOException,
         AuthenticationException {
@@ -321,5 +296,6 @@ public class NetworkUtilities {
         }
         return statusList;
     }
+    */
 
 }

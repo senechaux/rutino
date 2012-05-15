@@ -24,7 +24,7 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 
     <application
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/rutino_icon"
         android:label="@string/app_name" >
         <activity
             android:name=".WalletList"
@@ -64,7 +64,8 @@
 
         <provider
             android:name=".db.ContentProvider"
-            android:authorities="com.senechaux.rutino.db.contentprovider" >
+            android:authorities="com.senechaux.rutino"
+            android:enabled="true" >
         </provider>
 
         <service android:name=".alarms.AppService" />
@@ -91,9 +92,6 @@
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
-            <meta-data
-                android:name="android.provider.CONTACTS_STRUCTURE"
-                android:resource="@xml/contacts" />
         </service>
     </application>
 
