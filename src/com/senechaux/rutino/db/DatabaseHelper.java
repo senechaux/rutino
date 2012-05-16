@@ -1,6 +1,7 @@
 package com.senechaux.rutino.db;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,6 +9,8 @@ import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.senechaux.rutino.R;
@@ -58,7 +61,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, Report.class);
 			fillTables();
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(), "Unable to create the tables", e);
+			Log.e(DatabaseHelper.class.getName(),
+					"Unable to create the tables", e);
 		}
 	}
 
@@ -130,6 +134,38 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			reportDao = getDao(Report.class);
 		}
 		return reportDao;
+	}
+
+	public void deleteAccount(Account account) throws SQLException {
+		// Borramos las transacciones asociadas a la cuenta
+		Dao<Transaction, Integer> dao = getTransactionDao();
+		DeleteBuilder<Transaction, Integer> db = dao.deleteBuilder();
+		db.where().eq(Transaction.ACCOUNT_ID, account.get_id());
+		dao.delete(db.prepare());
+
+		// Borramos las transacciones periódicas asociadas a la cuenta
+		Dao<PeriodicTransaction, Integer> daoPer = getPeriodicTransactionDao();
+		DeleteBuilder<PeriodicTransaction, Integer> dbPer = daoPer
+				.deleteBuilder();
+		dbPer.where().eq(PeriodicTransaction.ACCOUNT_ID, account.get_id());
+		daoPer.delete(dbPer.prepare());
+
+		// Borramos la cuenta
+		getAccountDao().deleteById(account.get_id());
+	}
+
+	public void deleteWallet(Wallet wallet) throws SQLException {
+		// Borramos las cuentas asociadas a la cartera
+		Dao<Account, Integer> dao = getAccountDao();
+		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
+		qb.where().eq(Account.WALLET_ID, wallet.get_id());
+		List<Account> list = dao.query(qb.prepare());
+		for (Account account : list) {
+			this.deleteAccount(account);
+		}
+
+		// Borramos la cuenta
+		getWalletDao().deleteById(wallet.get_id());
 	}
 
 	private void fillTables() {
