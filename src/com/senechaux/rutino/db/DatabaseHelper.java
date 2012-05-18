@@ -26,7 +26,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static volatile DatabaseHelper databaseHelper = null;
 
 	private static final String DATABASE_NAME = "rutino.db";
-	private static final int DATABASE_VERSION = 9;
+	private static final int DATABASE_VERSION = 10;
 
 	private Dao<Wallet, Integer> walletDao;
 	private Dao<Account, Integer> accountDao;
