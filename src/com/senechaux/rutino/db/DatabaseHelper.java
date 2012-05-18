@@ -21,6 +21,7 @@ import com.senechaux.rutino.db.entities.PeriodicTransaction;
 import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.db.entities.Wallet;
+import com.senechaux.rutino.utils.UtilAlarm;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static volatile DatabaseHelper databaseHelper = null;
@@ -136,7 +137,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return reportDao;
 	}
 
-	public void deleteAccount(Account account) throws SQLException {
+	public void deletePeriodicTransaction(Context ctxt,
+			PeriodicTransaction perTrans) throws SQLException {
+		getPeriodicTransactionDao().deleteById(perTrans.get_id());
+		UtilAlarm.cancelAlarm(ctxt, perTrans);
+	}
+
+	public void deleteAccount(Context ctxt, Account account)
+			throws SQLException {
 		// Borramos las transacciones asociadas a la cuenta
 		Dao<Transaction, Integer> dao = getTransactionDao();
 		DeleteBuilder<Transaction, Integer> db = dao.deleteBuilder();
@@ -145,23 +153,26 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		// Borramos las transacciones periódicas asociadas a la cuenta
 		Dao<PeriodicTransaction, Integer> daoPer = getPeriodicTransactionDao();
-		DeleteBuilder<PeriodicTransaction, Integer> dbPer = daoPer
-				.deleteBuilder();
-		dbPer.where().eq(PeriodicTransaction.ACCOUNT_ID, account.get_id());
-		daoPer.delete(dbPer.prepare());
+		QueryBuilder<PeriodicTransaction, Integer> qbPer = daoPer
+				.queryBuilder();
+		qbPer.where().eq(PeriodicTransaction.ACCOUNT_ID, account.get_id());
+		List<PeriodicTransaction> list = daoPer.query(qbPer.prepare());
+		for (PeriodicTransaction periodicTransaction : list) {
+			this.deletePeriodicTransaction(ctxt, periodicTransaction);
+		}
 
 		// Borramos la cuenta
 		getAccountDao().deleteById(account.get_id());
 	}
 
-	public void deleteWallet(Wallet wallet) throws SQLException {
+	public void deleteWallet(Context ctxt, Wallet wallet) throws SQLException {
 		// Borramos las cuentas asociadas a la cartera
 		Dao<Account, Integer> dao = getAccountDao();
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Account.WALLET_ID, wallet.get_id());
 		List<Account> list = dao.query(qb.prepare());
 		for (Account account : list) {
-			this.deleteAccount(account);
+			this.deleteAccount(ctxt, account);
 		}
 
 		// Borramos la cuenta
