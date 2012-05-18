@@ -2,7 +2,6 @@ package com.senechaux.rutino.db.entities;
 
 import java.util.Date;
 
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -15,7 +14,8 @@ public class Transaction extends BaseEntity {
 	public static final String DESC = "desc";
 	public static final String AMOUNT = "amount";
 	public static final String DATE = "date";
-	public static final String LOCATION = "location";
+	public static final String LATITUDE = "latitude";
+	public static final String LONGITUDE = "longitude";
 	public static final String ACCOUNT_ID = "account_id";
 	public static final String CURRENCY_ID = "currency_id";
 
@@ -27,8 +27,10 @@ public class Transaction extends BaseEntity {
 	protected Double amount;
 	@DatabaseField
 	protected Date date;
-	@DatabaseField(dataType=DataType.SERIALIZABLE)
-	protected MyLocation location;
+	@DatabaseField
+	protected Double latitude;
+	@DatabaseField
+	protected Double longitude;
 	@DatabaseField(canBeNull = false, foreign = true)
 	protected Account account;
 	@DatabaseField(canBeNull = false, foreign = true)
@@ -40,12 +42,14 @@ public class Transaction extends BaseEntity {
 
 	public Transaction(PeriodicTransaction perTrans) {
 		super();
-		this.setDesc(perTrans.getDesc());
-		this.setAccount(perTrans.getAccount());
-		this.setAmount(perTrans.getAmount());
-		this.setCurrency(perTrans.getCurrency());
-		this.setDate(perTrans.getDate());
 		this.setName(perTrans.getName());
+		this.setDesc(perTrans.getDesc());
+		this.setAmount(perTrans.getAmount());
+		this.setDate(perTrans.getDate());
+		this.setLatitude(perTrans.getLatitude());
+		this.setLongitude(perTrans.getLongitude());
+		this.setAccount(perTrans.getAccount());
+		this.setCurrency(perTrans.getCurrency());
 	}
 
 	public String getName() {
@@ -80,12 +84,20 @@ public class Transaction extends BaseEntity {
 		this.date = date;
 	}
 
-	public MyLocation getLocation() {
-		return location;
+	public Double getLatitude() {
+		return latitude;
 	}
 
-	public void setLocation(MyLocation location) {
-		this.location = location;
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
 	}
 
 	public Account getAccount() {

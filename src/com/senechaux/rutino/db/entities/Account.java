@@ -74,13 +74,13 @@ public class Account extends BaseEntity {
 
 	// Devuelve el total convertido a la moneda pedida
 	public Double getTotal(Context ctxt, Currency currency) throws SQLException {
-		Dao<Transaction, Integer> dao = DatabaseHelper.getInstance(ctxt)
+		Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(ctxt)
 				.getTransactionDao();
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Transaction.ACCOUNT_ID, this.get_id());
 		List<Transaction> list = dao.query(qb.prepare());
 		
-		Dao<Currency, Integer> daoCurrency = DatabaseHelper.getInstance(ctxt)
+		Dao<Currency, Integer> daoCurrency = DatabaseHelper.getHelper(ctxt)
 				.getCurrencyDao();
 		
 		Double res = 0.0;

@@ -18,12 +18,14 @@ public class PeriodicTransaction extends Transaction {
 	}
 
 	public PeriodicTransaction(Transaction transaction, int periodicity) {
-		this.name = transaction.name;
-		this.desc = transaction.desc;
-		this.amount = transaction.amount;
-		this.date = transaction.date;
-		this.account = transaction.account;
-		this.currency = transaction.currency;
+		this.name = transaction.getName();
+		this.desc = transaction.getDesc();
+		this.amount = transaction.getAmount();
+		this.date = transaction.getDate();
+		this.latitude = transaction.getLatitude();
+		this.longitude = transaction.getLongitude();
+		this.account = transaction.getAccount();
+		this.currency = transaction.getCurrency();
 		this.periodicity = periodicity;
 	}
 

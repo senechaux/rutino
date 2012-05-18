@@ -45,7 +45,7 @@ public class WalletEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					DatabaseHelper.getInstance(WalletEdit.this).getWalletDao().createOrUpdate(wallet);
+					DatabaseHelper.getHelper(WalletEdit.this).getWalletDao().createOrUpdate(wallet);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);

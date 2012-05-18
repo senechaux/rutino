@@ -21,7 +21,7 @@ public class OnBootReceiver extends BroadcastReceiver {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		try {
-			list = DatabaseHelper.getInstance(context).getPeriodicTransactionDao().queryForAll();
+			list = DatabaseHelper.getHelper(context).getPeriodicTransactionDao().queryForAll();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

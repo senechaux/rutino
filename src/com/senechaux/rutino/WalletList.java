@@ -1,11 +1,14 @@
 package com.senechaux.rutino;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -20,6 +23,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
@@ -69,6 +73,18 @@ public class WalletList extends ListActivity {
 		case R.id.preferences:
 			Preferences.callMe(WalletList.this);
 			return true;
+		case R.id.backup:
+			new ExportDatabaseFileTask().execute();
+			return true;
+		case R.id.restore:
+			new ImportDatabaseFileTask().execute();
+			try {
+				fillList();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}
+			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
@@ -93,7 +109,7 @@ public class WalletList extends ListActivity {
 			return true;
 		case R.id.delete_wallet:
 			try {
-				DatabaseHelper.getInstance(this).deleteWallet(this, wallet);
+				DatabaseHelper.getHelper(this).deleteWallet(this, wallet);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -117,14 +133,15 @@ public class WalletList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(WalletList.class.getName(), "Show list again");
-		Dao<Wallet, Integer> dao = DatabaseHelper.getInstance(this).getWalletDao();
+		Dao<Wallet, Integer> dao = DatabaseHelper.getHelper(this)
+				.getWalletDao();
 		List<Wallet> list = dao.queryForAll();
 		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this,
 				R.layout.wallet_row, list);
 		setListAdapter(arrayAdapter);
 	}
 
-	// CLASE PRIVADA PARA MOSTRAR LA LISTA
+	// WalletAdapter
 	private class WalletAdapter extends ArrayAdapter<Wallet> {
 
 		public WalletAdapter(Context context, int textViewResourceId,
@@ -149,4 +166,79 @@ public class WalletList extends ListActivity {
 			textView.setText(text == null ? "" : text);
 		}
 	}
+
+	// Exportar base de datos en segundo plano
+	private class ExportDatabaseFileTask extends
+			AsyncTask<String, Void, Boolean> {
+		private final ProgressDialog dialog = new ProgressDialog(
+				WalletList.this);
+
+		// can use UI thread here
+		protected void onPreExecute() {
+			this.dialog.setMessage(getString(R.string.backupProgress));
+			this.dialog.show();
+		}
+
+		// automatically done on worker thread (separate from UI thread)
+		protected Boolean doInBackground(final String... args) {
+			try {
+				return DatabaseHelper.getHelper(WalletList.this).exportDatabase();
+			} catch (IOException e) {
+				Log.e("com.senechaux.com", e.getMessage(), e);
+				return false;
+			}
+		}
+
+		// can use UI thread here
+		protected void onPostExecute(final Boolean success) {
+			if (this.dialog.isShowing()) {
+				this.dialog.dismiss();
+			}
+			if (success) {
+				Toast.makeText(WalletList.this, R.string.backupOK,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(WalletList.this, R.string.backupKO,
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+
+	// Exportar base de datos en segundo plano
+	private class ImportDatabaseFileTask extends
+			AsyncTask<String, Void, Boolean> {
+		private final ProgressDialog dialog = new ProgressDialog(
+				WalletList.this);
+
+		// can use UI thread here
+		protected void onPreExecute() {
+			this.dialog.setMessage("IMPORTANDO");
+			this.dialog.show();
+		}
+
+		// automatically done on worker thread (separate from UI thread)
+		protected Boolean doInBackground(final String... args) {
+			try {
+				return DatabaseHelper.getHelper(WalletList.this).importDatabase();
+			} catch (IOException e) {
+				Log.e("com.senechaux.com", e.getMessage(), e);
+				return false;
+			}
+		}
+
+		// can use UI thread here
+		protected void onPostExecute(final Boolean success) {
+			if (this.dialog.isShowing()) {
+				this.dialog.dismiss();
+			}
+			if (success) {
+				Toast.makeText(WalletList.this, R.string.backupOK,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(WalletList.this, R.string.backupKO,
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+
 }

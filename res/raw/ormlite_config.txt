@@ -1,5 +1,5 @@
 #
-# generated on 2012/05/18 01:15:06
+# generated on 2012/05/18 05:35:37
 #
 # --table-start--
 dataClass=com.senechaux.rutino.db.entities.Account
@@ -99,8 +99,10 @@ fieldName=amount
 fieldName=date
 # --field-end--
 # --field-start--
-fieldName=location
-dataPersister=SERIALIZABLE
+fieldName=latitude
+# --field-end--
+# --field-start--
+fieldName=longitude
 # --field-end--
 # --field-start--
 fieldName=account
@@ -165,8 +167,10 @@ fieldName=amount
 fieldName=date
 # --field-end--
 # --field-start--
-fieldName=location
-dataPersister=SERIALIZABLE
+fieldName=latitude
+# --field-end--
+# --field-start--
+fieldName=longitude
 # --field-end--
 # --field-start--
 fieldName=account

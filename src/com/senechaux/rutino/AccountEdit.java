@@ -61,7 +61,7 @@ public class AccountEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					DatabaseHelper.getInstance(AccountEdit.this)
+					DatabaseHelper.getHelper(AccountEdit.this)
 							.getAccountDao().createOrUpdate(account);
 					finish();
 				} catch (SQLException e) {
@@ -72,7 +72,7 @@ public class AccountEdit extends Activity {
 
 		// Rellenar spinner Currency
 		try {
-			Dao<AccountType, Integer> dao = DatabaseHelper.getInstance(this)
+			Dao<AccountType, Integer> dao = DatabaseHelper.getHelper(this)
 					.getAccountTypeDao();
 			List<AccountType> list = dao.queryForAll();
 			final ArrayAdapter<AccountType> adapter = new ArrayAdapter<AccountType>(

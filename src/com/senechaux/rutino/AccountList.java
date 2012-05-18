@@ -109,7 +109,7 @@ public class AccountList extends ListActivity {
 			return true;
 		case R.id.delete_account:
 			try {
-				DatabaseHelper.getInstance(this).deleteAccount(this, account);
+				DatabaseHelper.getHelper(this).deleteAccount(this, account);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -139,7 +139,7 @@ public class AccountList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(AccountList.class.getName(), "Show list again");
-		Dao<Account, Integer> dao = DatabaseHelper.getInstance(this)
+		Dao<Account, Integer> dao = DatabaseHelper.getHelper(this)
 				.getAccountDao();
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Account.WALLET_ID, walletFather.get_id());
@@ -174,7 +174,7 @@ public class AccountList extends ListActivity {
 			Currency prefCurrency = null;
 			fillText(v, R.id.accountName, account.getName());
 			try {
-				prefCurrency = DatabaseHelper.getInstance(AccountList.this)
+				prefCurrency = DatabaseHelper.getHelper(AccountList.this)
 				.getCurrencyDao().queryForId(Integer.valueOf(prefs
 						.getString("currency", "1")));
 				fillText(v, R.id.accountAmount, account.getTotal(AccountList.this, prefCurrency).toString());

@@ -1,10 +1,13 @@
 package com.senechaux.rutino.db;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -21,13 +24,16 @@ import com.senechaux.rutino.db.entities.PeriodicTransaction;
 import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.db.entities.Wallet;
+import com.senechaux.rutino.utils.FileUtils;
 import com.senechaux.rutino.utils.UtilAlarm;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static volatile DatabaseHelper databaseHelper = null;
 
-	private static final String DATABASE_NAME = "rutino.db";
-	private static final int DATABASE_VERSION = 10;
+	private static final String TAG = "DataBaseHelper"; // Tag just for the LogCat window
+	private static final String DB_PATH = "/data/data/com.senechaux.rutino/databases/rutino.db";
+	private static final String DB_NAME = "rutino.db";
+	private static final int DATABASE_VERSION = 12;
 
 	private Dao<Wallet, Integer> walletDao;
 	private Dao<Account, Integer> accountDao;
@@ -38,11 +44,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<Report, Integer> reportDao;
 
 	private DatabaseHelper(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION,
+		super(context, DB_NAME, null, DATABASE_VERSION,
 				R.raw.ormlite_config);
 	}
 
-	public static synchronized DatabaseHelper getInstance(final Context mContext) {
+	public static synchronized DatabaseHelper getHelper(final Context mContext) {
 		if (databaseHelper == null) {
 			databaseHelper = new DatabaseHelper(mContext);
 		}
@@ -85,6 +91,43 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 					"Unable to upgrade database from version " + oldVer
 							+ " to new " + newVer, e);
 		}
+	}
+
+	/**
+	 * Copies the database file to SDCard
+	 * */
+	public boolean exportDatabase() throws IOException {
+		File dbFile = new File(DB_PATH);
+		File exportDir = new File(Environment.getExternalStorageDirectory(), "");
+		if (!exportDir.exists()) {
+			exportDir.mkdirs();
+		}
+		File file = new File(exportDir, DB_NAME);
+		file.createNewFile();
+		FileUtils.copyFile(dbFile, file);
+
+		return true;
+	}
+
+	/**
+	 * Copies the database file from SDCard
+	 * */
+	public boolean importDatabase() throws IOException {
+		// Close the SQLiteOpenHelper so it will commit the created empty
+		// database to internal storage.
+		close();
+		File newDb = new File(Environment.getExternalStorageDirectory(), DB_NAME);
+		File oldDb = new File(DB_PATH);
+		if (newDb.exists()) {
+			FileUtils.copyFile(newDb, oldDb);
+			// Access the copied database so SQLiteHelper will cache it and mark
+			// it as created.
+			getWritableDatabase().close();
+			String mPath = DB_PATH + DB_NAME;
+			SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);;
+			return true;
+		}
+		return false;
 	}
 
 	public Dao<Wallet, Integer> getWalletDao() throws SQLException {

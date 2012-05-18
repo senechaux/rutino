@@ -98,7 +98,7 @@ public class TransactionList extends ListActivity {
 			return true;
 		case R.id.delete_transaction:
 			try {
-				DatabaseHelper.getInstance(this).getTransactionDao()
+				DatabaseHelper.getHelper(this).getTransactionDao()
 						.deleteById(transaction.get_id());
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -129,7 +129,7 @@ public class TransactionList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TransactionList.class.getName(), "Show list again");
-		Dao<Transaction, Integer> dao = DatabaseHelper.getInstance(this)
+		Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(this)
 				.getTransactionDao();
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.get_id());
@@ -168,7 +168,7 @@ public class TransactionList extends ListActivity {
 					.toString());
 			try {
 				fillText(v, R.id.transactionCurrency, DatabaseHelper
-						.getInstance(TransactionList.this).getCurrencyDao()
+						.getHelper(TransactionList.this).getCurrencyDao()
 						.queryForId(transaction.getCurrency().get_id())
 						.getName());
 			} catch (SQLException e) {

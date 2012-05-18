@@ -32,7 +32,6 @@ import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Currency;
-import com.senechaux.rutino.db.entities.MyLocation;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
 import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.utils.UtilAlarm;
@@ -129,7 +128,7 @@ public class TransactionEdit extends Activity {
 				try {
 					saveToObj();
 					if (!isPeriodic.isChecked())
-						DatabaseHelper.getInstance(TransactionEdit.this)
+						DatabaseHelper.getHelper(TransactionEdit.this)
 								.getTransactionDao()
 								.createOrUpdate(transaction);
 					else {
@@ -146,7 +145,7 @@ public class TransactionEdit extends Activity {
 		updateTimeDate();
 
 		try {
-			Dao<Currency, Integer> dao = DatabaseHelper.getInstance(this)
+			Dao<Currency, Integer> dao = DatabaseHelper.getHelper(this)
 					.getCurrencyDao();
 			List<Currency> list = dao.queryForAll();
 			final ArrayAdapter<Currency> adapter = new ArrayAdapter<Currency>(
@@ -231,7 +230,8 @@ public class TransactionEdit extends Activity {
 		else
 			transaction.setAmount(Double.parseDouble(amount));
 		if (geotag.isChecked()) {
-			transaction.setLocation(new MyLocation(latitude, longitude));
+			transaction.setLatitude(latitude);
+			transaction.setLongitude(longitude);
 		}
 
 		transaction.setDate(transactionDateTime.getTime());
@@ -251,9 +251,9 @@ public class TransactionEdit extends Activity {
 				.getAdapter();
 		currencySpinner.setSelection(adapter.getPosition(transaction
 				.getCurrency()));
-		if (transaction.getLocation() != null) {
-			latitude = transaction.getLocation().getLatitude();
-			longitude = transaction.getLocation().getLongitude();
+		if (transaction.getLatitude() != null) {
+			latitude = transaction.getLatitude();
+			longitude = transaction.getLongitude();
 			latitudeText.setText(getString(R.string.latitude) +" "+ String.valueOf(latitude));
 			longitudeText.setText(getString(R.string.longitude) +" "+ String.valueOf(longitude));
 		}
@@ -302,7 +302,7 @@ public class TransactionEdit extends Activity {
 		String per = periodicity.getText().toString();
 		PeriodicTransaction perTransaction = new PeriodicTransaction(
 				transaction, Integer.valueOf(per));
-		DatabaseHelper.getInstance(this).getPeriodicTransactionDao()
+		DatabaseHelper.getHelper(this).getPeriodicTransactionDao()
 				.createOrUpdate(perTransaction);
 
 		UtilAlarm.setAlarm(this, perTransaction);

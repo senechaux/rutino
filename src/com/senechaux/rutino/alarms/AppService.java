@@ -32,12 +32,12 @@ public class AppService extends WakefulIntentService {
 		Transaction trans = new Transaction(perTrans);
 		try {
 			// Insertamos la transacción en BBDD
-			DatabaseHelper.getInstance(this).getTransactionDao()
+			DatabaseHelper.getHelper(this).getTransactionDao()
 					.createOrUpdate(trans);
 
 			// Actualizamos la transacción periódica en BBDD
 			perTrans.setNextDate();
-			DatabaseHelper.getInstance(this).getPeriodicTransactionDao()
+			DatabaseHelper.getHelper(this).getPeriodicTransactionDao()
 					.update(perTrans);
 
 		} catch (SQLException e) {
