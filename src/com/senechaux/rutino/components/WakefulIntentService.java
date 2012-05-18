@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.PowerManager;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -45,8 +46,10 @@ abstract public class WakefulIntentService extends IntentService {
 		ctxt.startService(i);
 	}
 
-	public static void sendWakefulWork(Context ctxt, Class<?> clsService) {
-		sendWakefulWork(ctxt, new Intent(ctxt, clsService));
+	public static void sendWakefulWork(Context ctxt, Class<?> clsService, Bundle extras) {
+		Intent i = new Intent(ctxt, clsService);
+		if (extras != null) i.putExtras(extras);
+		sendWakefulWork(ctxt, i);
 	}
 
 	public static void scheduleAlarms(AlarmListener listener, Context ctxt) {

@@ -93,8 +93,7 @@ public class WalletList extends ListActivity {
 			return true;
 		case R.id.delete_wallet:
 			try {
-//				getHelper().getWalletDao().deleteById(wallet.get_id());
-				DatabaseHelper.getInstance(this).getWalletDao().deleteById(wallet.get_id());
+				DatabaseHelper.getInstance(this).deleteWallet(this, wallet);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -118,7 +117,6 @@ public class WalletList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(WalletList.class.getName(), "Show list again");
-//		Dao<Wallet, Integer> dao = getHelper().getWalletDao();
 		Dao<Wallet, Integer> dao = DatabaseHelper.getInstance(this).getWalletDao();
 		List<Wallet> list = dao.queryForAll();
 		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this,

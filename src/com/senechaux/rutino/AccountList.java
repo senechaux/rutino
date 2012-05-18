@@ -6,7 +6,9 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -25,10 +27,12 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class AccountList extends ListActivity {
 	private Wallet walletFather;
+	private SharedPreferences prefs;
 
 	public static void callMe(Context c, Wallet wallet) {
 		Intent intent = new Intent(c, AccountList.class);
@@ -42,6 +46,8 @@ public class AccountList extends ListActivity {
 		setContentView(R.layout.account_list);
 		walletFather = (Wallet) getIntent().getSerializableExtra(Wallet.OBJ);
 		registerForContextMenu(getListView());
+
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		findViewById(R.id.createAccount).setOnClickListener(
 				new View.OnClickListener() {
@@ -103,8 +109,7 @@ public class AccountList extends ListActivity {
 			return true;
 		case R.id.delete_account:
 			try {
-//				getHelper().getAccountDao().deleteById(account.get_id());
-				DatabaseHelper.getInstance(this).getAccountDao().deleteById(account.get_id());
+				DatabaseHelper.getInstance(this).deleteAccount(this, account);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -134,8 +139,8 @@ public class AccountList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(AccountList.class.getName(), "Show list again");
-//		Dao<Account, Integer> dao = getHelper().getAccountDao();
-		Dao<Account, Integer> dao = DatabaseHelper.getInstance(this).getAccountDao();
+		Dao<Account, Integer> dao = DatabaseHelper.getInstance(this)
+				.getAccountDao();
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Account.WALLET_ID, walletFather.get_id());
 		List<Account> list = dao.query(qb.prepare());
@@ -166,7 +171,21 @@ public class AccountList extends ListActivity {
 				v = vi.inflate(R.layout.account_row, null);
 			}
 			Account account = getItem(position);
+			Currency prefCurrency = null;
 			fillText(v, R.id.accountName, account.getName());
+			try {
+				prefCurrency = DatabaseHelper.getInstance(AccountList.this)
+				.getCurrencyDao().queryForId(Integer.valueOf(prefs
+						.getString("currency", "1")));
+				fillText(v, R.id.accountAmount, account.getTotal(AccountList.this, prefCurrency).toString());
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			fillText(v, R.id.accountCurrency, prefCurrency.getName());
 			return v;
 		}
 

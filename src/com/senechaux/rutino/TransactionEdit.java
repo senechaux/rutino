@@ -12,6 +12,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -19,17 +20,23 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Currency;
+import com.senechaux.rutino.db.entities.MyLocation;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
 import com.senechaux.rutino.db.entities.Transaction;
+import com.senechaux.rutino.utils.UtilAlarm;
+import com.senechaux.rutino.utils.UtilGeo;
 
 public class TransactionEdit extends Activity {
 
@@ -41,11 +48,14 @@ public class TransactionEdit extends Activity {
 	private Button mPickDate;
 	private Button mPickTime;
 	private CheckBox isPeriodic;
+	private CheckBox geotag;
 	private Button createTransaction;
 	private GregorianCalendar transactionDateTime;
 	private Currency currency;
 	private Transaction transaction;
 	private Account accountFather;
+	private Double latitude, longitude;
+	private TextView latitudeText, longitudeText;
 
 	protected static final int DATE_DIALOG_ID = 0;
 	protected static final int TIME_DIALOG_ID = 1;
@@ -77,6 +87,10 @@ public class TransactionEdit extends Activity {
 		mPickDate = (Button) findViewById(R.id.transactionDate);
 		mPickTime = (Button) findViewById(R.id.transactionTime);
 		isPeriodic = (CheckBox) findViewById(R.id.isPeriodic);
+		geotag = (CheckBox) findViewById(R.id.geotag);
+		latitudeText = (TextView) findViewById(R.id.latitude);
+		longitudeText = (TextView) findViewById(R.id.longitude);
+		
 
 		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
 		transaction = (Transaction) getIntent().getSerializableExtra(
@@ -94,6 +108,19 @@ public class TransactionEdit extends Activity {
 		mPickTime.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showDialog(TIME_DIALOG_ID);
+			}
+		});
+
+		geotag.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if (isChecked) {
+					Location l = UtilGeo.getLocation(TransactionEdit.this);
+					latitude = l.getLatitude();
+					longitude = l.getLongitude();
+					latitudeText.setText(getString(R.string.latitude) +" "+ String.valueOf(latitude));
+					longitudeText.setText(getString(R.string.longitude) +" "+ String.valueOf(longitude));
+				}
 			}
 		});
 
@@ -203,6 +230,9 @@ public class TransactionEdit extends Activity {
 			transaction.setAmount(0.0);
 		else
 			transaction.setAmount(Double.parseDouble(amount));
+		if (geotag.isChecked()) {
+			transaction.setLocation(new MyLocation(latitude, longitude));
+		}
 
 		transaction.setDate(transactionDateTime.getTime());
 		return;
@@ -221,6 +251,12 @@ public class TransactionEdit extends Activity {
 				.getAdapter();
 		currencySpinner.setSelection(adapter.getPosition(transaction
 				.getCurrency()));
+		if (transaction.getLocation() != null) {
+			latitude = transaction.getLocation().getLatitude();
+			longitude = transaction.getLocation().getLongitude();
+			latitudeText.setText(getString(R.string.latitude) +" "+ String.valueOf(latitude));
+			longitudeText.setText(getString(R.string.longitude) +" "+ String.valueOf(longitude));
+		}
 	}
 
 	// the callback received when the user "sets" the date in the dialog
@@ -262,21 +298,14 @@ public class TransactionEdit extends Activity {
 	}
 
 	private void insertPeriodic() throws SQLException {
+		// Inserta en BBDD
 		String per = periodicity.getText().toString();
 		PeriodicTransaction perTransaction = new PeriodicTransaction(
 				transaction, Integer.valueOf(per));
 		DatabaseHelper.getInstance(this).getPeriodicTransactionDao()
 				.createOrUpdate(perTransaction);
 
+		UtilAlarm.setAlarm(this, perTransaction);
 	}
-
-	// private void setAlarm() {
-	// Intent intent = new Intent(this, TransactionEdit.class);
-	// intent.putExtra(TasksDbAdapter.KEY_ROWID, mRowId);
-	// PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
-	// intent, PendingIntent.FLAG_ONE_SHOT);
-	// am.set(AlarmManager.RTC_WAKEUP, dateTimeTask.getTimeInMillis(),
-	// pendingIntent);
-	// }
 
 }

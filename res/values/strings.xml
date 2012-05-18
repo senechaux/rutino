@@ -25,6 +25,9 @@
     <string name="date">Date</string>
     <string name="days">Days</string>
     <string name="periodicity">Periodicity</string>
+    <string name="geotag">Geotag</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
     <string name="confirm">Confirm</string>
     <string name="preferences">Preferences</string>
     <string name="prefs_currency">Prefered currency</string>

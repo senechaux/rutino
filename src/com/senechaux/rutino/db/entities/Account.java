@@ -1,7 +1,15 @@
 package com.senechaux.rutino.db.entities;
 
+import java.sql.SQLException;
+import java.util.List;
+
+import android.content.Context;
+
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.DatabaseTable;
+import com.senechaux.rutino.db.DatabaseHelper;
 
 @DatabaseTable
 public class Account extends BaseEntity {
@@ -62,6 +70,29 @@ public class Account extends BaseEntity {
 	public String toString() {
 		return "Account [id=" + this.get_id() + ", name=" + name + ", desc=" + desc
 				+ ", wallet=" + wallet + "]";
+	}
+
+	// Devuelve el total convertido a la moneda pedida
+	public Double getTotal(Context ctxt, Currency currency) throws SQLException {
+		Dao<Transaction, Integer> dao = DatabaseHelper.getInstance(ctxt)
+				.getTransactionDao();
+		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
+		qb.where().eq(Transaction.ACCOUNT_ID, this.get_id());
+		List<Transaction> list = dao.query(qb.prepare());
+		
+		Dao<Currency, Integer> daoCurrency = DatabaseHelper.getInstance(ctxt)
+				.getCurrencyDao();
+		
+		Double res = 0.0;
+		for (Transaction t : list) {
+			if (t.getCurrency().get_id() != 1) {
+				res += t.getAmount() / daoCurrency.queryForId(t.getCurrency().get_id()).getChange();
+			} else {
+				res += t.getAmount();
+			}
+		}
+		
+		return res * currency.getChange();
 	}
 
 }

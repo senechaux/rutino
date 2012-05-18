@@ -2,6 +2,7 @@ package com.senechaux.rutino.db.entities;
 
 import java.util.Date;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -14,6 +15,7 @@ public class Transaction extends BaseEntity {
 	public static final String DESC = "desc";
 	public static final String AMOUNT = "amount";
 	public static final String DATE = "date";
+	public static final String LOCATION = "location";
 	public static final String ACCOUNT_ID = "account_id";
 	public static final String CURRENCY_ID = "currency_id";
 
@@ -25,6 +27,8 @@ public class Transaction extends BaseEntity {
 	protected Double amount;
 	@DatabaseField
 	protected Date date;
+	@DatabaseField(dataType=DataType.SERIALIZABLE)
+	protected MyLocation location;
 	@DatabaseField(canBeNull = false, foreign = true)
 	protected Account account;
 	@DatabaseField(canBeNull = false, foreign = true)
@@ -32,6 +36,16 @@ public class Transaction extends BaseEntity {
 
 	public Transaction() {
 		super();
+	}
+
+	public Transaction(PeriodicTransaction perTrans) {
+		super();
+		this.setDesc(perTrans.getDesc());
+		this.setAccount(perTrans.getAccount());
+		this.setAmount(perTrans.getAmount());
+		this.setCurrency(perTrans.getCurrency());
+		this.setDate(perTrans.getDate());
+		this.setName(perTrans.getName());
 	}
 
 	public String getName() {
@@ -64,6 +78,14 @@ public class Transaction extends BaseEntity {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public MyLocation getLocation() {
+		return location;
+	}
+
+	public void setLocation(MyLocation location) {
+		this.location = location;
 	}
 
 	public Account getAccount() {
