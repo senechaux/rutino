@@ -56,8 +56,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase sqliteDatabase,
-			ConnectionSource connectionSource) {
+	public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
 		try {
 			TableUtils.createTable(connectionSource, Wallet.class);
 			TableUtils.createTable(connectionSource, Account.class);
@@ -73,21 +72,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase sqliteDatabase,
-			ConnectionSource connectionSource, int oldVer, int newVer) {
+	public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
 		try {
 			TableUtils.dropTable(connectionSource, Wallet.class, true);
 			TableUtils.dropTable(connectionSource, Account.class, true);
 			TableUtils.dropTable(connectionSource, AccountType.class, true);
 			TableUtils.dropTable(connectionSource, Transaction.class, true);
-			TableUtils.dropTable(connectionSource, PeriodicTransaction.class,
-					true);
+			TableUtils.dropTable(connectionSource, PeriodicTransaction.class, true);
 			TableUtils.dropTable(connectionSource, Currency.class, true);
 			TableUtils.dropTable(connectionSource, Report.class, true);
 			onCreate(sqliteDatabase, connectionSource);
 		} catch (SQLException e) {
-			Log.e(TAG, "Unable to upgrade database from version " + oldVer
-					+ " to new " + newVer, e);
+			Log.e(TAG, "Unable to upgrade database from version " + oldVer + " to new " + newVer, e);
 		}
 	}
 
@@ -114,8 +110,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		// Close the SQLiteOpenHelper so it will commit the created empty
 		// database to internal storage.
 		close();
-		File newDb = new File(Environment.getExternalStorageDirectory(),
-				DB_NAME);
+		File newDb = new File(Environment.getExternalStorageDirectory(), DB_NAME);
 		File oldDb = new File(DB_PATH);
 		if (newDb.exists()) {
 			FileUtils.copyFile(newDb, oldDb);
@@ -153,8 +148,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return transactionDao;
 	}
 
-	public Dao<PeriodicTransaction, Integer> getPeriodicTransactionDao()
-			throws SQLException {
+	public Dao<PeriodicTransaction, Integer> getPeriodicTransactionDao() throws SQLException {
 		if (periodicTransactionDao == null) {
 			periodicTransactionDao = getDao(PeriodicTransaction.class);
 		}
@@ -175,14 +169,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return reportDao;
 	}
 
-	public void deletePeriodicTransaction(Context ctxt,
-			PeriodicTransaction perTrans) throws SQLException {
+	public void deletePeriodicTransaction(Context ctxt, PeriodicTransaction perTrans) throws SQLException {
 		getPeriodicTransactionDao().deleteById(perTrans.get_id());
 		UtilAlarm.cancelAlarm(ctxt, perTrans);
 	}
 
-	public void deleteAccount(Context ctxt, Account account)
-			throws SQLException {
+	public void deleteAccount(Context ctxt, Account account) throws SQLException {
 		// Borramos las transacciones asociadas a la cuenta
 		Dao<Transaction, Integer> dao = getTransactionDao();
 		DeleteBuilder<Transaction, Integer> db = dao.deleteBuilder();
@@ -191,8 +183,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		// Borramos las transacciones periódicas asociadas a la cuenta
 		Dao<PeriodicTransaction, Integer> daoPer = getPeriodicTransactionDao();
-		QueryBuilder<PeriodicTransaction, Integer> qbPer = daoPer
-				.queryBuilder();
+		QueryBuilder<PeriodicTransaction, Integer> qbPer = daoPer.queryBuilder();
 		qbPer.where().eq(PeriodicTransaction.ACCOUNT_ID, account.get_id());
 		List<PeriodicTransaction> list = daoPer.query(qbPer.prepare());
 		for (PeriodicTransaction periodicTransaction : list) {
@@ -220,15 +211,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private void fillTables() {
 		try {
 			getAccountTypeDao();
-			accountTypeDao.create(new AccountType("Cuenta",
-					"Descripción Cuenta corriente"));
-			accountTypeDao.create(new AccountType("Tarjeta Crédito",
-					"Descripción Tarjeta Crédito"));
+			accountTypeDao.create(new AccountType("Cuenta", "Descripción Cuenta corriente"));
+			accountTypeDao.create(new AccountType("Tarjeta Crédito", "Descripción Tarjeta Crédito"));
 			getCurrencyDao();
 			currencyDao.create(new Currency("EUR", "Euro", 1.0));
 			currencyDao.create(new Currency("ESP", "Peseta", 166.386));
-			currencyDao.create(new Currency("USD", "United States Dollar",
-					1.3165));
+			currencyDao.create(new Currency("USD", "United States Dollar", 1.3165));
 		} catch (SQLException e) {
 			Log.e(TAG, "Unable to generate Account Types", e);
 		}

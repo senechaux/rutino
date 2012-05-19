@@ -17,8 +17,7 @@ abstract public class WakefulIntentService extends IntentService {
 
 	public DatabaseHelper getHelper() {
 		if (databaseHelper == null) {
-			databaseHelper = OpenHelperManager.getHelper(this,
-					DatabaseHelper.class);
+			databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
 		}
 		return databaseHelper;
 	}
@@ -31,8 +30,7 @@ abstract public class WakefulIntentService extends IntentService {
 
 	synchronized private static PowerManager.WakeLock getLock(Context context) {
 		if (lockStatic == null) {
-			PowerManager mgr = (PowerManager) context
-					.getSystemService(Context.POWER_SERVICE);
+			PowerManager mgr = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
 
 			lockStatic = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, NAME);
 			lockStatic.setReferenceCounted(true);
@@ -48,7 +46,8 @@ abstract public class WakefulIntentService extends IntentService {
 
 	public static void sendWakefulWork(Context ctxt, Class<?> clsService, Bundle extras) {
 		Intent i = new Intent(ctxt, clsService);
-		if (extras != null) i.putExtras(extras);
+		if (extras != null)
+			i.putExtras(extras);
 		sendWakefulWork(ctxt, i);
 	}
 
@@ -56,17 +55,15 @@ abstract public class WakefulIntentService extends IntentService {
 		scheduleAlarms(listener, ctxt, true);
 	}
 
-	public static void scheduleAlarms(AlarmListener listener, Context ctxt,
-			boolean force) {
+	public static void scheduleAlarms(AlarmListener listener, Context ctxt, boolean force) {
 		SharedPreferences prefs = ctxt.getSharedPreferences(NAME, 0);
 		long lastAlarm = prefs.getLong(LAST_ALARM, 0);
 
 		if (lastAlarm == 0
 				|| force
-				|| (System.currentTimeMillis() > lastAlarm && System
-						.currentTimeMillis() - lastAlarm > listener.getMaxAge())) {
-			AlarmManager mgr = (AlarmManager) ctxt
-					.getSystemService(Context.ALARM_SERVICE);
+				|| (System.currentTimeMillis() > lastAlarm && System.currentTimeMillis() - lastAlarm > listener
+						.getMaxAge())) {
+			AlarmManager mgr = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
 			Intent i = new Intent(ctxt, AlarmReceiver.class);
 			PendingIntent pi = PendingIntent.getBroadcast(ctxt, 0, i, 0);
 
@@ -75,8 +72,7 @@ abstract public class WakefulIntentService extends IntentService {
 	}
 
 	public static void cancelAlarms(Context ctxt) {
-		AlarmManager mgr = (AlarmManager) ctxt
-				.getSystemService(Context.ALARM_SERVICE);
+		AlarmManager mgr = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
 		Intent i = new Intent(ctxt, AlarmReceiver.class);
 		PendingIntent pi = PendingIntent.getBroadcast(ctxt, 0, i, 0);
 

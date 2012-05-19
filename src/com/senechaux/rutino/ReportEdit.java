@@ -51,8 +51,7 @@ public class ReportEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					DatabaseHelper.getHelper(ReportEdit.this).getReportDao()
-							.createOrUpdate(report);
+					DatabaseHelper.getHelper(ReportEdit.this).getReportDao().createOrUpdate(report);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);

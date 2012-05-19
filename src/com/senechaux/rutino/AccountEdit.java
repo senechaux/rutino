@@ -61,8 +61,7 @@ public class AccountEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					DatabaseHelper.getHelper(AccountEdit.this)
-							.getAccountDao().createOrUpdate(account);
+					DatabaseHelper.getHelper(AccountEdit.this).getAccountDao().createOrUpdate(account);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -72,26 +71,23 @@ public class AccountEdit extends Activity {
 
 		// Rellenar spinner Currency
 		try {
-			Dao<AccountType, Integer> dao = DatabaseHelper.getHelper(this)
-					.getAccountTypeDao();
+			Dao<AccountType, Integer> dao = DatabaseHelper.getHelper(this).getAccountTypeDao();
 			List<AccountType> list = dao.queryForAll();
-			final ArrayAdapter<AccountType> adapter = new ArrayAdapter<AccountType>(
-					this, android.R.layout.simple_spinner_item, list);
+			final ArrayAdapter<AccountType> adapter = new ArrayAdapter<AccountType>(this,
+					android.R.layout.simple_spinner_item, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			accountTypeSpinner.setAdapter(adapter);
-			accountTypeSpinner
-					.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-						@Override
-						public void onItemSelected(AdapterView<?> parent,
-								View view, int position, long id) {
-							accountType = adapter.getItem(position);
-						}
+			accountTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					accountType = adapter.getItem(position);
+				}
 
-						@Override
-						public void onNothingSelected(AdapterView<?> parent) {
-							// TODO Auto-generated method stub
-						}
-					});
+				@Override
+				public void onNothingSelected(AdapterView<?> parent) {
+					// TODO Auto-generated method stub
+				}
+			});
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -136,10 +132,8 @@ public class AccountEdit extends Activity {
 		accountName.setText(account.getName());
 		accountDesc.setText(account.getDesc());
 
-		ArrayAdapter<AccountType> adapter = (ArrayAdapter<AccountType>) accountTypeSpinner
-				.getAdapter();
-		accountTypeSpinner.setSelection(adapter.getPosition(account
-				.getAccountType()));
+		ArrayAdapter<AccountType> adapter = (ArrayAdapter<AccountType>) accountTypeSpinner.getAdapter();
+		accountTypeSpinner.setSelection(adapter.getPosition(account.getAccountType()));
 	}
 
 }

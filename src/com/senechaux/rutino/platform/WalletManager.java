@@ -94,17 +94,16 @@ public class WalletManager {
 	 */
 	private static int lookupRawWallet(Context context, ContentResolver resolver, int walletId) {
 		int id = 0;
-		
+
 		// query for all accounts that have that password
 		Wallet wallet;
 		try {
-			wallet = DatabaseHelper.getHelper(context)
-					.getWalletDao().queryForId(walletId);
-			if(wallet != null){
+			wallet = DatabaseHelper.getHelper(context).getWalletDao().queryForId(walletId);
+			if (wallet != null) {
 				id = walletId;
 			}
 		} catch (SQLException e) {
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return id;
 	}
@@ -333,4 +332,3 @@ public class WalletManager {
 	// public static final String SELECTION = Data.RAW_CONTACT_ID + "=?";
 	// }
 }
-

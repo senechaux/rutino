@@ -43,12 +43,11 @@ public class WalletList extends ListActivity {
 		setContentView(R.layout.wallet_list);
 		registerForContextMenu(getListView());
 
-		findViewById(R.id.createWallet).setOnClickListener(
-				new View.OnClickListener() {
-					public void onClick(View view) {
-						WalletEdit.callMe(WalletList.this);
-					}
-				});
+		findViewById(R.id.createWallet).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				WalletEdit.callMe(WalletList.this);
+			}
+		});
 	}
 
 	@Override
@@ -90,16 +89,14 @@ public class WalletList extends ListActivity {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		new MenuInflater(this).inflate(R.menu.wallet_context, menu);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		ArrayAdapter<Wallet> adapter = (ArrayAdapter<Wallet>) getListAdapter();
 		Wallet wallet = adapter.getItem(info.position);
 
@@ -133,19 +130,16 @@ public class WalletList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(WalletList.class.getName(), "Show list again");
-		Dao<Wallet, Integer> dao = DatabaseHelper.getHelper(this)
-				.getWalletDao();
+		Dao<Wallet, Integer> dao = DatabaseHelper.getHelper(this).getWalletDao();
 		List<Wallet> list = dao.queryForAll();
-		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this,
-				R.layout.wallet_row, list);
+		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this, R.layout.wallet_row, list);
 		setListAdapter(arrayAdapter);
 	}
 
 	// WalletAdapter
 	private class WalletAdapter extends ArrayAdapter<Wallet> {
 
-		public WalletAdapter(Context context, int textViewResourceId,
-				List<Wallet> items) {
+		public WalletAdapter(Context context, int textViewResourceId, List<Wallet> items) {
 			super(context, textViewResourceId, items);
 		}
 
@@ -168,10 +162,8 @@ public class WalletList extends ListActivity {
 	}
 
 	// Exportar base de datos en segundo plano
-	private class ExportDatabaseFileTask extends
-			AsyncTask<String, Void, Boolean> {
-		private final ProgressDialog dialog = new ProgressDialog(
-				WalletList.this);
+	private class ExportDatabaseFileTask extends AsyncTask<String, Void, Boolean> {
+		private final ProgressDialog dialog = new ProgressDialog(WalletList.this);
 
 		// can use UI thread here
 		protected void onPreExecute() {
@@ -195,20 +187,16 @@ public class WalletList extends ListActivity {
 				this.dialog.dismiss();
 			}
 			if (success) {
-				Toast.makeText(WalletList.this, R.string.backupOK,
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(WalletList.this, R.string.backupOK, Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(WalletList.this, R.string.backupKO,
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(WalletList.this, R.string.backupKO, Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
 
 	// Exportar base de datos en segundo plano
-	private class ImportDatabaseFileTask extends
-			AsyncTask<String, Void, Boolean> {
-		private final ProgressDialog dialog = new ProgressDialog(
-				WalletList.this);
+	private class ImportDatabaseFileTask extends AsyncTask<String, Void, Boolean> {
+		private final ProgressDialog dialog = new ProgressDialog(WalletList.this);
 
 		// can use UI thread here
 		protected void onPreExecute() {
@@ -232,11 +220,9 @@ public class WalletList extends ListActivity {
 				this.dialog.dismiss();
 			}
 			if (success) {
-				Toast.makeText(WalletList.this, R.string.backupOK,
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(WalletList.this, R.string.backupOK, Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(WalletList.this, R.string.backupKO,
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(WalletList.this, R.string.backupKO, Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

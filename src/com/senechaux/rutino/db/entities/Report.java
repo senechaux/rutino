@@ -73,8 +73,7 @@ public class Report extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return "Report [id=" + this.get_id() + ", name=" + name + ", desc="
-				+ desc + ", wallet=" + wallet + "]";
+		return "Report [id=" + this.get_id() + ", name=" + name + ", desc=" + desc + ", wallet=" + wallet + "]";
 	}
 
 }

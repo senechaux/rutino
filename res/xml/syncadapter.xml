@@ -21,7 +21,6 @@
 <!-- for the SyncAdapter. -->
 
 <sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentAuthority="com.senechaux.rutino"
     android:accountType="com.senechaux.rutino.account"
-    android:supportsUploading="false"
-/>
+    android:contentAuthority="com.senechaux.rutino"
+    android:supportsUploading="false" />

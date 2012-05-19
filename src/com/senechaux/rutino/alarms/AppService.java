@@ -26,19 +26,16 @@ public class AppService extends WakefulIntentService {
 	protected void doWakefulWork(Intent intent) {
 		Log.i("AppService", "PASA POR AQUI --------------------------");
 
-		PeriodicTransaction perTrans = (PeriodicTransaction) intent
-				.getSerializableExtra(PeriodicTransaction.OBJ);
+		PeriodicTransaction perTrans = (PeriodicTransaction) intent.getSerializableExtra(PeriodicTransaction.OBJ);
 
 		Transaction trans = new Transaction(perTrans);
 		try {
 			// Insertamos la transacción en BBDD
-			DatabaseHelper.getHelper(this).getTransactionDao()
-					.createOrUpdate(trans);
+			DatabaseHelper.getHelper(this).getTransactionDao().createOrUpdate(trans);
 
 			// Actualizamos la transacción periódica en BBDD
 			perTrans.setNextDate();
-			DatabaseHelper.getHelper(this).getPeriodicTransactionDao()
-					.update(perTrans);
+			DatabaseHelper.getHelper(this).getPeriodicTransactionDao().update(perTrans);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -47,20 +44,18 @@ public class AppService extends WakefulIntentService {
 
 		// Establecemos la nueva alarma
 		UtilAlarm.setAlarm(this, perTrans);
-		
+
 		// Creamos la notificación
 		Intent notificationIntent = new Intent(this, TransactionEdit.class);
 		notificationIntent.putExtra(Transaction.OBJ, trans);
 
-//		CharSequence from = getResources().getString(R.string.app_name);
+		// CharSequence from = getResources().getString(R.string.app_name);
 		CharSequence from = trans.getName();
-		CharSequence message = getResources().getString(
-				R.string.update_transaction); // cambiar este
-		PendingIntent pi = PendingIntent.getActivity(this, trans.get_id(),
-				notificationIntent, 0);
+		CharSequence message = getResources().getString(R.string.update_transaction); // cambiar
+																						// este
+		PendingIntent pi = PendingIntent.getActivity(this, trans.get_id(), notificationIntent, 0);
 
-		Notification notif = new Notification(R.drawable.rutino_icon,
-				getResources().getString(R.string.name),
+		Notification notif = new Notification(R.drawable.rutino_icon, getResources().getString(R.string.name),
 				System.currentTimeMillis());
 		notif.setLatestEventInfo(this, from, message, pi);
 		notif.flags |= Notification.FLAG_AUTO_CANCEL;

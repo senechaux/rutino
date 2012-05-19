@@ -68,21 +68,18 @@ public class Account extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return "Account [id=" + this.get_id() + ", name=" + name + ", desc=" + desc
-				+ ", wallet=" + wallet + "]";
+		return "Account [id=" + this.get_id() + ", name=" + name + ", desc=" + desc + ", wallet=" + wallet + "]";
 	}
 
 	// Devuelve el total convertido a la moneda pedida
 	public Double getTotal(Context ctxt, Currency currency) throws SQLException {
-		Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(ctxt)
-				.getTransactionDao();
+		Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(ctxt).getTransactionDao();
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Transaction.ACCOUNT_ID, this.get_id());
 		List<Transaction> list = dao.query(qb.prepare());
-		
-		Dao<Currency, Integer> daoCurrency = DatabaseHelper.getHelper(ctxt)
-				.getCurrencyDao();
-		
+
+		Dao<Currency, Integer> daoCurrency = DatabaseHelper.getHelper(ctxt).getCurrencyDao();
+
 		Double res = 0.0;
 		for (Transaction t : list) {
 			if (t.getCurrency().get_id() != 1) {
@@ -91,7 +88,7 @@ public class Account extends BaseEntity {
 				res += t.getAmount();
 			}
 		}
-		
+
 		return res * currency.getChange();
 	}
 

@@ -11,8 +11,7 @@ import com.senechaux.rutino.db.entities.PeriodicTransaction;
 public class OnAlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		PeriodicTransaction perTrans = (PeriodicTransaction) intent
-				.getSerializableExtra(PeriodicTransaction.OBJ);
+		PeriodicTransaction perTrans = (PeriodicTransaction) intent.getSerializableExtra(PeriodicTransaction.OBJ);
 		Bundle extras = new Bundle();
 		extras.putSerializable(PeriodicTransaction.OBJ, perTrans);
 		WakefulIntentService.sendWakefulWork(context, AppService.class, extras);

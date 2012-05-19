@@ -18,26 +18,24 @@ public class OnBootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		List<PeriodicTransaction> list = null;
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
+		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		try {
 			list = DatabaseHelper.getHelper(context).getPeriodicTransactionDao().queryForAll();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		for (PeriodicTransaction perTrans : list) {
 			if (perTrans.getDate().getTime() < System.currentTimeMillis()) {
 				Intent i = new Intent(context, OnAlarmReceiver.class);
 				i.putExtra(PeriodicTransaction.OBJ, perTrans);
 				PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
-				am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-						pi);
+				am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pi);
 			} else {
 				UtilAlarm.setAlarm(context, perTrans);
 			}
 		}
-		
+
 	}
 }

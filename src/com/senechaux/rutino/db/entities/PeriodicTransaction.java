@@ -36,18 +36,15 @@ public class PeriodicTransaction extends Transaction {
 	public void setPeriodicity(int periodicity) {
 		this.periodicity = periodicity;
 	}
-	
+
 	public void setNextDate() {
-		this.setDate(UtilDate.addDays(this.getDate(),
-				this.getPeriodicity()));
+		this.setDate(UtilDate.addDays(this.getDate(), this.getPeriodicity()));
 	}
 
 	@Override
 	public String toString() {
-		return "PeriodicTransaction [periodicity=" + periodicity + ", name="
-				+ name + ", desc=" + desc + ", amount=" + amount + ", date="
-				+ date + ", account=" + account + ", currency=" + currency
-				+ ", _id=" + _id + "]";
+		return "PeriodicTransaction [periodicity=" + periodicity + ", name=" + name + ", desc=" + desc + ", amount="
+				+ amount + ", date=" + date + ", account=" + account + ", currency=" + currency + ", _id=" + _id + "]";
 	}
 
 }

@@ -34,10 +34,10 @@
     <string name="restore">Restore</string>
     <string name="prefs_currency">Prefered currency</string>
     <string name="prefs_currencyText">Select Prefered currency</string>
-    <string name="backupProgress">Exporting database&#8230;</string>
+    <string name="backupProgress">Exporting database…</string>
     <string name="backupOK">Export successful!!</string>
     <string name="backupKO">Export failed</string>
-    
+
     <!-- Label for this package -->
     <string name="label">RutinoAdapter</string>
 

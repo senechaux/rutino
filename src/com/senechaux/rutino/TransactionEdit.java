@@ -89,14 +89,11 @@ public class TransactionEdit extends Activity {
 		geotag = (CheckBox) findViewById(R.id.geotag);
 		latitudeText = (TextView) findViewById(R.id.latitude);
 		longitudeText = (TextView) findViewById(R.id.longitude);
-		
 
 		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
-		transaction = (Transaction) getIntent().getSerializableExtra(
-				Transaction.OBJ);
+		transaction = (Transaction) getIntent().getSerializableExtra(Transaction.OBJ);
 
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		mPickDate.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -111,14 +108,13 @@ public class TransactionEdit extends Activity {
 		});
 
 		geotag.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
 					Location l = UtilGeo.getLocation(TransactionEdit.this);
 					latitude = l.getLatitude();
 					longitude = l.getLongitude();
-					latitudeText.setText(getString(R.string.latitude) +" "+ String.valueOf(latitude));
-					longitudeText.setText(getString(R.string.longitude) +" "+ String.valueOf(longitude));
+					latitudeText.setText(getString(R.string.latitude) + " " + String.valueOf(latitude));
+					longitudeText.setText(getString(R.string.longitude) + " " + String.valueOf(longitude));
 				}
 			}
 		});
@@ -128,9 +124,7 @@ public class TransactionEdit extends Activity {
 				try {
 					saveToObj();
 					if (!isPeriodic.isChecked())
-						DatabaseHelper.getHelper(TransactionEdit.this)
-								.getTransactionDao()
-								.createOrUpdate(transaction);
+						DatabaseHelper.getHelper(TransactionEdit.this).getTransactionDao().createOrUpdate(transaction);
 					else {
 						insertPeriodic();
 					}
@@ -145,29 +139,25 @@ public class TransactionEdit extends Activity {
 		updateTimeDate();
 
 		try {
-			Dao<Currency, Integer> dao = DatabaseHelper.getHelper(this)
-					.getCurrencyDao();
+			Dao<Currency, Integer> dao = DatabaseHelper.getHelper(this).getCurrencyDao();
 			List<Currency> list = dao.queryForAll();
-			final ArrayAdapter<Currency> adapter = new ArrayAdapter<Currency>(
-					this, android.R.layout.simple_spinner_item, list);
+			final ArrayAdapter<Currency> adapter = new ArrayAdapter<Currency>(this,
+					android.R.layout.simple_spinner_item, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			currencySpinner.setAdapter(adapter);
-			currencySpinner.setSelection(adapter.getPosition(dao
-					.queryForId(Integer.valueOf(prefs
-							.getString("currency", "1")))));
-			currencySpinner
-					.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-						@Override
-						public void onItemSelected(AdapterView<?> parent,
-								View view, int position, long id) {
-							currency = adapter.getItem(position);
-						}
+			currencySpinner.setSelection(adapter.getPosition(dao.queryForId(Integer.valueOf(prefs.getString("currency",
+					"1")))));
+			currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					currency = adapter.getItem(position);
+				}
 
-						@Override
-						public void onNothingSelected(AdapterView<?> parent) {
-							// TODO Auto-generated method stub
-						}
-					});
+				@Override
+				public void onNothingSelected(AdapterView<?> parent) {
+					// TODO Auto-generated method stub
+				}
+			});
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -190,13 +180,11 @@ public class TransactionEdit extends Activity {
 			int mYear = transactionDateTime.get(Calendar.YEAR);
 			int mMonth = transactionDateTime.get(Calendar.MONTH);
 			int mDay = transactionDateTime.get(Calendar.DAY_OF_MONTH);
-			return new DatePickerDialog(this, mDateSetListener, mYear, mMonth,
-					mDay);
+			return new DatePickerDialog(this, mDateSetListener, mYear, mMonth, mDay);
 		case TIME_DIALOG_ID:
 			int mHour = transactionDateTime.get(Calendar.HOUR_OF_DAY);
 			int mMinute = transactionDateTime.get(Calendar.MINUTE);
-			return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute,
-					true);
+			return new TimePickerDialog(this, mTimeSetListener, mHour, mMinute, true);
 		}
 		return null;
 	}
@@ -204,8 +192,7 @@ public class TransactionEdit extends Activity {
 	private void reInit(Bundle savedInstanceState) {
 		try {
 			if (savedInstanceState != null) {
-				transaction = (Transaction) savedInstanceState
-						.get(Transaction.OBJ);
+				transaction = (Transaction) savedInstanceState.get(Transaction.OBJ);
 			}
 			if (transaction != null) {
 				loadFromObj();
@@ -247,22 +234,19 @@ public class TransactionEdit extends Activity {
 		transactionDateTime.setTime(transaction.getDate());
 		updateTimeDate();
 
-		ArrayAdapter<Currency> adapter = (ArrayAdapter<Currency>) currencySpinner
-				.getAdapter();
-		currencySpinner.setSelection(adapter.getPosition(transaction
-				.getCurrency()));
+		ArrayAdapter<Currency> adapter = (ArrayAdapter<Currency>) currencySpinner.getAdapter();
+		currencySpinner.setSelection(adapter.getPosition(transaction.getCurrency()));
 		if (transaction.getLatitude() != null) {
 			latitude = transaction.getLatitude();
 			longitude = transaction.getLongitude();
-			latitudeText.setText(getString(R.string.latitude) +" "+ String.valueOf(latitude));
-			longitudeText.setText(getString(R.string.longitude) +" "+ String.valueOf(longitude));
+			latitudeText.setText(getString(R.string.latitude) + " " + String.valueOf(latitude));
+			longitudeText.setText(getString(R.string.longitude) + " " + String.valueOf(longitude));
 		}
 	}
 
 	// the callback received when the user "sets" the date in the dialog
 	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
+		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 			transactionDateTime.set(GregorianCalendar.YEAR, year);
 			transactionDateTime.set(GregorianCalendar.MONTH, monthOfYear);
 			transactionDateTime.set(GregorianCalendar.DAY_OF_MONTH, dayOfMonth);
@@ -300,10 +284,8 @@ public class TransactionEdit extends Activity {
 	private void insertPeriodic() throws SQLException {
 		// Inserta en BBDD
 		String per = periodicity.getText().toString();
-		PeriodicTransaction perTransaction = new PeriodicTransaction(
-				transaction, Integer.valueOf(per));
-		DatabaseHelper.getHelper(this).getPeriodicTransactionDao()
-				.createOrUpdate(perTransaction);
+		PeriodicTransaction perTransaction = new PeriodicTransaction(transaction, Integer.valueOf(per));
+		DatabaseHelper.getHelper(this).getPeriodicTransactionDao().createOrUpdate(perTransaction);
 
 		UtilAlarm.setAlarm(this, perTransaction);
 	}

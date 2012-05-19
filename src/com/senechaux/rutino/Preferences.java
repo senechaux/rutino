@@ -12,13 +12,13 @@ public class Preferences extends PreferenceActivity {
 		Intent intent = new Intent(c, Preferences.class);
 		c.startActivity(intent);
 	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 	}
 
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 	}
 }

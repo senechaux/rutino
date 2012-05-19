@@ -17,8 +17,7 @@ public class UtilGeo {
 	 * @return
 	 */
 	public static Location getLocation(Context ctx) {
-		LocationManager lm = (LocationManager) ctx
-				.getSystemService(Context.LOCATION_SERVICE);
+		LocationManager lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
 		List<String> providers = lm.getProviders(true);
 
 		/*
@@ -34,5 +33,5 @@ public class UtilGeo {
 		}
 		return l;
 	}
-	
+
 }

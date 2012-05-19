@@ -60,25 +60,24 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	@Override
-	public void onPerformSync(Account account, Bundle extras, String authority,
-			ContentProviderClient provider, SyncResult syncResult) {
+	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider,
+			SyncResult syncResult) {
 		List<Wallet> wallets;
 
 		String authtoken = null;
 		Log.d(TAG, "ANGEL va a hacer sync");
 		try {
 			// use the account manager to request the credentials
-			authtoken = mAccountManager.blockingGetAuthToken(account,
-					Constants.AUTHTOKEN_TYPE, true /* notifyAuthFailure */);
+			authtoken = mAccountManager
+					.blockingGetAuthToken(account, Constants.AUTHTOKEN_TYPE, true /* notifyAuthFailure */);
 
 			// fetch updates from server
-			wallets = NetworkUtilities.fetchWalletUpdates(account, authtoken,
-					mLastUpdated);
+			wallets = NetworkUtilities.fetchWalletUpdates(account, authtoken, mLastUpdated);
 
-//			for (Wallet wallet : wallets) {
-//				DatabaseHelper.getHelper(this.mContext).getWalletDao()
-//						.createOrUpdate(wallet);
-//			}
+			// for (Wallet wallet : wallets) {
+			// DatabaseHelper.getHelper(this.mContext).getWalletDao()
+			// .createOrUpdate(wallet);
+			// }
 
 			// update the last synced date.
 			mLastUpdated = new Date();
@@ -94,8 +93,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			Log.e(TAG, "IOException", e);
 			syncResult.stats.numIoExceptions++;
 		} catch (final AuthenticationException e) {
-			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE,
-					authtoken);
+			mAccountManager.invalidateAuthToken(Constants.ACCOUNT_TYPE, authtoken);
 			syncResult.stats.numAuthExceptions++;
 			Log.e(TAG, "AuthenticationException", e);
 		} catch (final ParseException e) {
@@ -107,4 +105,3 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		}
 	}
 }
-

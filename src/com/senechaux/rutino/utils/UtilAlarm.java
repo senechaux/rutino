@@ -14,19 +14,16 @@ public class UtilAlarm {
 		// Establece alarma
 		Intent intent = new Intent(ctxt, OnAlarmReceiver.class);
 		intent.putExtra(PeriodicTransaction.OBJ, perTrans);
-		PendingIntent pi = PendingIntent.getBroadcast(ctxt, perTrans.get_id(),
-				intent, PendingIntent.FLAG_ONE_SHOT);
+		PendingIntent pi = PendingIntent.getBroadcast(ctxt, perTrans.get_id(), intent, PendingIntent.FLAG_ONE_SHOT);
 		AlarmManager am = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
-		am.set(AlarmManager.RTC_WAKEUP, perTrans.getDate().getTime(),
-				pi);
+		am.set(AlarmManager.RTC_WAKEUP, perTrans.getDate().getTime(), pi);
 	}
-	
+
 	public static void cancelAlarm(Context ctxt, PeriodicTransaction perTrans) {
 		// Cancela alarma
 		Intent intent = new Intent(ctxt, OnAlarmReceiver.class);
 		intent.putExtra(PeriodicTransaction.OBJ, perTrans);
-		PendingIntent pi = PendingIntent.getBroadcast(ctxt, perTrans.get_id(),
-				intent, PendingIntent.FLAG_ONE_SHOT);
+		PendingIntent pi = PendingIntent.getBroadcast(ctxt, perTrans.get_id(), intent, PendingIntent.FLAG_ONE_SHOT);
 		AlarmManager am = (AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE);
 		am.cancel(pi);
 	}

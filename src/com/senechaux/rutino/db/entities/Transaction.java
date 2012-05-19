@@ -118,8 +118,8 @@ public class Transaction extends BaseEntity {
 
 	@Override
 	public String toString() {
-		return "Transaction [id=" + this.get_id() + ", name=" + name + ", desc=" + desc
-				+ ", amount=" + amount + ", account=" + account + "]";
+		return "Transaction [id=" + this.get_id() + ", name=" + name + ", desc=" + desc + ", amount=" + amount
+				+ ", account=" + account + "]";
 	}
 
 }

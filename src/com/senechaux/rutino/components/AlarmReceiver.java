@@ -26,12 +26,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 		if (listener != null) {
 			if (intent.getAction() == null) {
-				SharedPreferences prefs = ctxt.getSharedPreferences(
-						WakefulIntentService.NAME, 0);
+				SharedPreferences prefs = ctxt.getSharedPreferences(WakefulIntentService.NAME, 0);
 
-				prefs.edit()
-						.putLong(WakefulIntentService.LAST_ALARM,
-								System.currentTimeMillis()).commit();
+				prefs.edit().putLong(WakefulIntentService.LAST_ALARM, System.currentTimeMillis()).commit();
 
 				listener.sendWakefulWork(ctxt);
 			} else {
@@ -46,17 +43,14 @@ public class AlarmReceiver extends BroadcastReceiver {
 		ComponentName cn = new ComponentName(ctxt, getClass());
 
 		try {
-			ActivityInfo ai = pm.getReceiverInfo(cn,
-					PackageManager.GET_META_DATA);
+			ActivityInfo ai = pm.getReceiverInfo(cn, PackageManager.GET_META_DATA);
 			XmlResourceParser xpp = ai.loadXmlMetaData(pm, WAKEFUL_META_DATA);
 
 			while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
 				if (xpp.getEventType() == XmlPullParser.START_TAG) {
 					if (xpp.getName().equals("WakefulIntentService")) {
-						String clsName = xpp
-								.getAttributeValue(null, "listener");
-						Class<AlarmListener> cls = (Class<AlarmListener>) Class
-								.forName(clsName);
+						String clsName = xpp.getAttributeValue(null, "listener");
+						Class<AlarmListener> cls = (Class<AlarmListener>) Class.forName(clsName);
 
 						return (cls.newInstance());
 					}
@@ -73,11 +67,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Listener class not found", e);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeException(
-					"Listener is not public or lacks public constructor", e);
+			throw new RuntimeException("Listener is not public or lacks public constructor", e);
 		} catch (InstantiationException e) {
-			throw new RuntimeException("Could not create instance of listener",
-					e);
+			throw new RuntimeException("Could not create instance of listener", e);
 		}
 
 		return (null);

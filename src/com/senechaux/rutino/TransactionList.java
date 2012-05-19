@@ -43,13 +43,11 @@ public class TransactionList extends ListActivity {
 		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
 		registerForContextMenu(getListView());
 
-		findViewById(R.id.createTransaction).setOnClickListener(
-				new View.OnClickListener() {
-					public void onClick(View view) {
-						TransactionEdit.callMe(TransactionList.this,
-								accountFather);
-					}
-				});
+		findViewById(R.id.createTransaction).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				TransactionEdit.callMe(TransactionList.this, accountFather);
+			}
+		});
 
 		reInit(savedInstanceState);
 	}
@@ -57,8 +55,7 @@ public class TransactionList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Transaction transaction = (Transaction) l.getAdapter()
-				.getItem(position);
+		Transaction transaction = (Transaction) l.getAdapter().getItem(position);
 		TransactionEdit.callMe(TransactionList.this, transaction);
 	}
 
@@ -79,16 +76,14 @@ public class TransactionList extends ListActivity {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		new MenuInflater(this).inflate(R.menu.transaction_context, menu);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		ArrayAdapter<Transaction> adapter = (ArrayAdapter<Transaction>) getListAdapter();
 		Transaction transaction = adapter.getItem(info.position);
 
@@ -98,8 +93,7 @@ public class TransactionList extends ListActivity {
 			return true;
 		case R.id.delete_transaction:
 			try {
-				DatabaseHelper.getHelper(this).getTransactionDao()
-						.deleteById(transaction.get_id());
+				DatabaseHelper.getHelper(this).getTransactionDao().deleteById(transaction.get_id());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -129,15 +123,13 @@ public class TransactionList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TransactionList.class.getName(), "Show list again");
-		Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(this)
-				.getTransactionDao();
+		Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(this).getTransactionDao();
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.get_id());
 		// false: más reciente primero
 		qb.orderBy(Transaction.DATE, false);
 		List<Transaction> list = dao.query(qb.prepare());
-		ArrayAdapter<Transaction> arrayAdapter = new TransactionAdapter(this,
-				R.layout.transaction_row, list);
+		ArrayAdapter<Transaction> arrayAdapter = new TransactionAdapter(this, R.layout.transaction_row, list);
 		setListAdapter(arrayAdapter);
 	}
 
@@ -150,8 +142,7 @@ public class TransactionList extends ListActivity {
 	// CLASE PRIVADA PARA MOSTRAR LA LISTA
 	private class TransactionAdapter extends ArrayAdapter<Transaction> {
 
-		public TransactionAdapter(Context context, int textViewResourceId,
-				List<Transaction> items) {
+		public TransactionAdapter(Context context, int textViewResourceId, List<Transaction> items) {
 			super(context, textViewResourceId, items);
 		}
 
@@ -164,13 +155,10 @@ public class TransactionList extends ListActivity {
 			}
 			Transaction transaction = getItem(position);
 			fillText(v, R.id.transactionName, transaction.getName());
-			fillText(v, R.id.transactionAmount, transaction.getAmount()
-					.toString());
+			fillText(v, R.id.transactionAmount, transaction.getAmount().toString());
 			try {
-				fillText(v, R.id.transactionCurrency, DatabaseHelper
-						.getHelper(TransactionList.this).getCurrencyDao()
-						.queryForId(transaction.getCurrency().get_id())
-						.getName());
+				fillText(v, R.id.transactionCurrency, DatabaseHelper.getHelper(TransactionList.this).getCurrencyDao()
+						.queryForId(transaction.getCurrency().get_id()).getName());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

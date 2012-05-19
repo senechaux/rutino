@@ -49,19 +49,17 @@ public class AccountList extends ListActivity {
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		findViewById(R.id.createAccount).setOnClickListener(
-				new View.OnClickListener() {
-					public void onClick(View view) {
-						AccountEdit.callMe(AccountList.this, walletFather);
-					}
-				});
+		findViewById(R.id.createAccount).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				AccountEdit.callMe(AccountList.this, walletFather);
+			}
+		});
 
-		findViewById(R.id.createReport).setOnClickListener(
-				new View.OnClickListener() {
-					public void onClick(View view) {
-						ReportEdit.callMe(AccountList.this, walletFather);
-					}
-				});
+		findViewById(R.id.createReport).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				ReportEdit.callMe(AccountList.this, walletFather);
+			}
+		});
 
 		reInit(savedInstanceState);
 	}
@@ -90,16 +88,14 @@ public class AccountList extends ListActivity {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		new MenuInflater(this).inflate(R.menu.account_context, menu);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		ArrayAdapter<Account> adapter = (ArrayAdapter<Account>) getListAdapter();
 		Account account = adapter.getItem(info.position);
 
@@ -139,13 +135,11 @@ public class AccountList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(AccountList.class.getName(), "Show list again");
-		Dao<Account, Integer> dao = DatabaseHelper.getHelper(this)
-				.getAccountDao();
+		Dao<Account, Integer> dao = DatabaseHelper.getHelper(this).getAccountDao();
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Account.WALLET_ID, walletFather.get_id());
 		List<Account> list = dao.query(qb.prepare());
-		ArrayAdapter<Account> arrayAdapter = new AccountAdapter(this,
-				R.layout.account_row, list);
+		ArrayAdapter<Account> arrayAdapter = new AccountAdapter(this, R.layout.account_row, list);
 		setListAdapter(arrayAdapter);
 	}
 
@@ -158,8 +152,7 @@ public class AccountList extends ListActivity {
 	// CLASE PRIVADA PARA MOSTRAR LA LISTA
 	private class AccountAdapter extends ArrayAdapter<Account> {
 
-		public AccountAdapter(Context context, int textViewResourceId,
-				List<Account> items) {
+		public AccountAdapter(Context context, int textViewResourceId, List<Account> items) {
 			super(context, textViewResourceId, items);
 		}
 
@@ -174,9 +167,8 @@ public class AccountList extends ListActivity {
 			Currency prefCurrency = null;
 			fillText(v, R.id.accountName, account.getName());
 			try {
-				prefCurrency = DatabaseHelper.getHelper(AccountList.this)
-				.getCurrencyDao().queryForId(Integer.valueOf(prefs
-						.getString("currency", "1")));
+				prefCurrency = DatabaseHelper.getHelper(AccountList.this).getCurrencyDao()
+						.queryForId(Integer.valueOf(prefs.getString("currency", "1")));
 				fillText(v, R.id.accountAmount, account.getTotal(AccountList.this, prefCurrency).toString());
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block

@@ -11,7 +11,7 @@ public class ContentProvider extends android.content.ContentProvider {
 
 	private String TAG = "ContentProvider";
 	// database
-	//private TodoDatabaseHelper database;
+	// private TodoDatabaseHelper database;
 
 	// Used for the UriMacher
 	private static final int TODOS = 10;
@@ -20,16 +20,12 @@ public class ContentProvider extends android.content.ContentProvider {
 	private static final String AUTHORITY = "com.senechaux.rutino.db.contentprovider";
 
 	private static final String BASE_PATH = "todos";
-	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
-			+ "/" + BASE_PATH);
+	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
 
-	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-			+ "/todos";
-	public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-			+ "/todo";
+	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/todos";
+	public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/todo";
 
-	private static final UriMatcher sURIMatcher = new UriMatcher(
-			UriMatcher.NO_MATCH);
+	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	static {
 		sURIMatcher.addURI(AUTHORITY, BASE_PATH, TODOS);
 		sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", TODO_ID);
@@ -64,8 +60,7 @@ public class ContentProvider extends android.content.ContentProvider {
 	}
 
 	@Override
-	public Cursor query(Uri arg0, String[] arg1, String arg2, String[] arg3,
-			String arg4) {
+	public Cursor query(Uri arg0, String[] arg1, String arg2, String[] arg3, String arg4) {
 		// TODO Auto-generated method stub
 		Log.i(TAG, "query");
 		return null;
