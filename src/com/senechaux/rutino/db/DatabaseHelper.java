@@ -30,7 +30,8 @@ import com.senechaux.rutino.utils.UtilAlarm;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static volatile DatabaseHelper databaseHelper = null;
 
-	private static final String TAG = "DataBaseHelper"; // Tag just for the LogCat window
+	private static final String TAG = "DataBaseHelper"; // Tag just for the
+														// LogCat window
 	private static final String DB_PATH = "/data/data/com.senechaux.rutino/databases/rutino.db";
 	private static final String DB_NAME = "rutino.db";
 	private static final int DATABASE_VERSION = 12;
@@ -44,8 +45,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<Report, Integer> reportDao;
 
 	private DatabaseHelper(Context context) {
-		super(context, DB_NAME, null, DATABASE_VERSION,
-				R.raw.ormlite_config);
+		super(context, DB_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
 	}
 
 	public static synchronized DatabaseHelper getHelper(final Context mContext) {
@@ -68,8 +68,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, Report.class);
 			fillTables();
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(),
-					"Unable to create the tables", e);
+			Log.e(TAG, "Unable to create the tables", e);
 		}
 	}
 
@@ -87,9 +86,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, Report.class, true);
 			onCreate(sqliteDatabase, connectionSource);
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(),
-					"Unable to upgrade database from version " + oldVer
-							+ " to new " + newVer, e);
+			Log.e(TAG, "Unable to upgrade database from version " + oldVer
+					+ " to new " + newVer, e);
 		}
 	}
 
@@ -116,15 +114,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		// Close the SQLiteOpenHelper so it will commit the created empty
 		// database to internal storage.
 		close();
-		File newDb = new File(Environment.getExternalStorageDirectory(), DB_NAME);
+		File newDb = new File(Environment.getExternalStorageDirectory(),
+				DB_NAME);
 		File oldDb = new File(DB_PATH);
 		if (newDb.exists()) {
 			FileUtils.copyFile(newDb, oldDb);
-			// Access the copied database so SQLiteHelper will cache it and mark
-			// it as created.
-			getWritableDatabase().close();
-			String mPath = DB_PATH + DB_NAME;
-			SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);;
+			databaseHelper = null;
 			return true;
 		}
 		return false;
@@ -235,8 +230,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			currencyDao.create(new Currency("USD", "United States Dollar",
 					1.3165));
 		} catch (SQLException e) {
-			Log.e(DatabaseHelper.class.getName(),
-					"Unable to generate Account Types", e);
+			Log.e(TAG, "Unable to generate Account Types", e);
 		}
 	}
 
