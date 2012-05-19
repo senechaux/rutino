@@ -333,3 +333,4 @@ public class WalletManager {
 	// public static final String SELECTION = Data.RAW_CONTACT_ID + "=?";
 	// }
 }
+
