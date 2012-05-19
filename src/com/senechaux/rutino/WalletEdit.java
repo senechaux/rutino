@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
@@ -45,7 +46,11 @@ public class WalletEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					DatabaseHelper.getHelper(WalletEdit.this).getWalletDao().createOrUpdate(wallet);
+					Dao<Wallet, Integer> dao = DatabaseHelper.getHelper(WalletEdit.this).getWalletDao(); 
+					dao.createOrUpdate(wallet);
+					wallet.setGlobal_id(Constants.PREFIX_GLOBAL_ID + wallet.get_id());
+					dao.update(wallet);
+					
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);

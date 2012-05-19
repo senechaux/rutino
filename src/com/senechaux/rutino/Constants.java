@@ -14,4 +14,6 @@ public class Constants {
 	 * Authtoken type string.
 	 */
 	public static final String AUTHTOKEN_TYPE = "com.senechaux.rutino";
+	
+	public static final String PREFIX_GLOBAL_ID = "m_";
 }

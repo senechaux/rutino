@@ -61,7 +61,10 @@ public class AccountEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					DatabaseHelper.getHelper(AccountEdit.this).getAccountDao().createOrUpdate(account);
+					Dao<Account, Integer> dao = DatabaseHelper.getHelper(AccountEdit.this).getAccountDao(); 
+					dao.createOrUpdate(account);
+					account.setGlobal_id(Constants.PREFIX_GLOBAL_ID + account.get_id());
+					dao.update(account);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);

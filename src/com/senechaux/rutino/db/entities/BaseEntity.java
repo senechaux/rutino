@@ -9,9 +9,13 @@ public abstract class BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String ID = "_id";
+	public static final String GLOBAL_ID = "global_id";
 
 	@DatabaseField(generatedId = true)
 	protected Integer _id;
+
+	@DatabaseField
+	protected String global_id;
 
 	public Integer get_id() {
 		return _id;
@@ -19,6 +23,14 @@ public abstract class BaseEntity implements Serializable {
 
 	public void set_id(Integer _id) {
 		this._id = _id;
+	}
+
+	public String getGlobal_id() {
+		return global_id;
+	}
+
+	public void setGlobal_id(String global_id) {
+		this.global_id = global_id;
 	}
 
 	@Override

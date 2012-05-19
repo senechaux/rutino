@@ -34,7 +34,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 														// LogCat window
 	private static final String DB_PATH = "/data/data/com.senechaux.rutino/databases/rutino.db";
 	private static final String DB_NAME = "rutino.db";
-	private static final int DATABASE_VERSION = 12;
+	private static final int DATABASE_VERSION = 14;
 
 	private Dao<Wallet, Integer> walletDao;
 	private Dao<Account, Integer> accountDao;

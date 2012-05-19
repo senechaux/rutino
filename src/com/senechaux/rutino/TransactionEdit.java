@@ -123,8 +123,13 @@ public class TransactionEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					if (!isPeriodic.isChecked())
-						DatabaseHelper.getHelper(TransactionEdit.this).getTransactionDao().createOrUpdate(transaction);
+					if (!isPeriodic.isChecked()) {
+						Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(TransactionEdit.this).getTransactionDao();
+						dao.createOrUpdate(transaction);
+						transaction.setGlobal_id(Constants.PREFIX_GLOBAL_ID + transaction.get_id());
+						dao.update(transaction);
+					}
+
 					else {
 						insertPeriodic();
 					}
@@ -285,7 +290,11 @@ public class TransactionEdit extends Activity {
 		// Inserta en BBDD
 		String per = periodicity.getText().toString();
 		PeriodicTransaction perTransaction = new PeriodicTransaction(transaction, Integer.valueOf(per));
-		DatabaseHelper.getHelper(this).getPeriodicTransactionDao().createOrUpdate(perTransaction);
+		Dao<PeriodicTransaction, Integer> dao = DatabaseHelper.getHelper(this).getPeriodicTransactionDao();
+		dao.createOrUpdate(perTransaction);
+		perTransaction.setGlobal_id(Constants.PREFIX_GLOBAL_ID + perTransaction.get_id());
+		dao.update(perTransaction);
+
 
 		UtilAlarm.setAlarm(this, perTransaction);
 	}

@@ -1,5 +1,5 @@
 #
-# generated on 2012/05/18 05:35:37
+# generated on 2012/05/19 06:34:59
 #
 # --table-start--
 dataClass=com.senechaux.rutino.db.entities.Account
@@ -26,6 +26,9 @@ foreign=true
 fieldName=_id
 generatedId=true
 # --field-end--
+# --field-start--
+fieldName=global_id
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -44,6 +47,9 @@ fieldName=desc
 fieldName=_id
 generatedId=true
 # --field-end--
+# --field-start--
+fieldName=global_id
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -54,6 +60,9 @@ tableName=baseentity
 # --field-start--
 fieldName=_id
 generatedId=true
+# --field-end--
+# --field-start--
+fieldName=global_id
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -75,6 +84,9 @@ fieldName=change
 # --field-start--
 fieldName=_id
 generatedId=true
+# --field-end--
+# --field-start--
+fieldName=global_id
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -118,6 +130,9 @@ foreign=true
 fieldName=_id
 generatedId=true
 # --field-end--
+# --field-start--
+fieldName=global_id
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -146,6 +161,9 @@ foreign=true
 # --field-start--
 fieldName=_id
 generatedId=true
+# --field-end--
+# --field-start--
+fieldName=global_id
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -186,6 +204,9 @@ foreign=true
 fieldName=_id
 generatedId=true
 # --field-end--
+# --field-start--
+fieldName=global_id
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################
@@ -203,6 +224,9 @@ fieldName=desc
 # --field-start--
 fieldName=_id
 generatedId=true
+# --field-end--
+# --field-start--
+fieldName=global_id
 # --field-end--
 # --table-fields-end--
 # --table-end--
