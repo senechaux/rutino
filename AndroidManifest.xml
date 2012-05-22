@@ -43,6 +43,7 @@
         <activity android:name=".AccountEdit" />
         <activity android:name=".TransactionList" />
         <activity android:name=".TransactionEdit" />
+        <activity android:name=".PeriodicTransactionList" />
         <activity android:name=".ReportList" />
         <activity android:name=".ReportEdit" />
         <activity android:name=".Preferences" />

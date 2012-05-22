@@ -49,14 +49,11 @@ public class AppService extends WakefulIntentService {
 		Intent notificationIntent = new Intent(this, TransactionEdit.class);
 		notificationIntent.putExtra(Transaction.OBJ, trans);
 
-		// CharSequence from = getResources().getString(R.string.app_name);
 		CharSequence from = trans.getName();
-		CharSequence message = getResources().getString(R.string.update_transaction); // cambiar
-																						// este
+		CharSequence message = getResources().getString(R.string.update_transaction);
 		PendingIntent pi = PendingIntent.getActivity(this, trans.get_id(), notificationIntent, 0);
 
-		Notification notif = new Notification(R.drawable.rutino_icon, getResources().getString(R.string.name),
-				System.currentTimeMillis());
+		Notification notif = new Notification(R.drawable.rutino_icon, from, System.currentTimeMillis());
 		notif.setLatestEventInfo(this, from, message, pi);
 		notif.flags |= Notification.FLAG_AUTO_CANCEL;
 

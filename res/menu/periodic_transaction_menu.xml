@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/insert_transaction"
-        android:title="@string/create_transaction"/>
+        android:id="@+id/insert_periodic_transaction"
+        android:title="@string/create_periodic_transaction"/>
     <item
         android:id="@+id/periodic_transaction_list"
         android:title="@string/list_periodic_transaction"/>

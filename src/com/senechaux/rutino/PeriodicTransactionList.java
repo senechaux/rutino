@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,13 +26,15 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
-import com.senechaux.rutino.db.entities.Transaction;
+import com.senechaux.rutino.db.entities.PeriodicTransaction;
 
-public class TransactionList extends ListActivity {
+public class PeriodicTransactionList extends ListActivity {
 	private Account accountFather;
+	private Button createPeriodicTransaction;
+
 
 	public static void callMe(Context c, Account account) {
-		Intent intent = new Intent(c, TransactionList.class);
+		Intent intent = new Intent(c, PeriodicTransactionList.class);
 		intent.putExtra(Account.OBJ, account);
 		c.startActivity(intent);
 	}
@@ -39,13 +42,15 @@ public class TransactionList extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.transaction_list);
+		setContentView(R.layout.periodic_transaction_list);
+		createPeriodicTransaction = (Button) findViewById(R.id.createPeriodicTransaction);
+
 		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
 		registerForContextMenu(getListView());
 
-		findViewById(R.id.createTransaction).setOnClickListener(new View.OnClickListener() {
+		createPeriodicTransaction.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				TransactionEdit.callMe(TransactionList.this, accountFather);
+				TransactionEdit.callMe(PeriodicTransactionList.this, accountFather);
 			}
 		});
 
@@ -55,24 +60,21 @@ public class TransactionList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Transaction transaction = (Transaction) l.getAdapter().getItem(position);
-		TransactionEdit.callMe(TransactionList.this, transaction);
+		PeriodicTransaction perTransaction = (PeriodicTransaction) l.getAdapter().getItem(position);
+		TransactionEdit.callMe(PeriodicTransactionList.this, perTransaction);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		new MenuInflater(this).inflate(R.menu.transaction_menu, menu);
+		new MenuInflater(this).inflate(R.menu.periodic_transaction_menu, menu);
 		return (super.onCreateOptionsMenu(menu));
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.insert_transaction:
-			TransactionEdit.callMe(TransactionList.this, accountFather);
-			return true;
-		case R.id.periodic_transaction_list:
-			PeriodicTransactionList.callMe(TransactionList.this, accountFather);
+		case R.id.insert_periodic_transaction:
+			TransactionEdit.callMe(PeriodicTransactionList.this, accountFather);
 			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
@@ -80,28 +82,28 @@ public class TransactionList extends ListActivity {
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		new MenuInflater(this).inflate(R.menu.transaction_context, menu);
+		new MenuInflater(this).inflate(R.menu.periodic_transaction_context, menu);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		ArrayAdapter<Transaction> adapter = (ArrayAdapter<Transaction>) getListAdapter();
-		Transaction transaction = adapter.getItem(info.position);
+		ArrayAdapter<PeriodicTransaction> adapter = (ArrayAdapter<PeriodicTransaction>) getListAdapter();
+		PeriodicTransaction perTransaction = adapter.getItem(info.position);
 
 		switch (item.getItemId()) {
-		case R.id.edit_transaction:
-			TransactionEdit.callMe(TransactionList.this, transaction);
+		case R.id.edit_periodic_transaction:
+			TransactionEdit.callMe(PeriodicTransactionList.this, perTransaction);
 			return true;
-		case R.id.delete_transaction:
+		case R.id.delete_periodic_transaction:
 			try {
-				DatabaseHelper.getHelper(this).getTransactionDao().deleteById(transaction.get_id());
+				DatabaseHelper.getHelper(this).deletePeriodicTransaction(this, perTransaction);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
-			adapter.remove(transaction);
+			adapter.remove(perTransaction);
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -125,14 +127,14 @@ public class TransactionList extends ListActivity {
 	}
 
 	private void fillList() throws SQLException {
-		Log.i(TransactionList.class.getName(), "Show list again");
-		Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(this).getTransactionDao();
-		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.get_id());
+		Log.i(PeriodicTransactionList.class.getName(), "Show list again");
+		Dao<PeriodicTransaction, Integer> dao = DatabaseHelper.getHelper(this).getPeriodicTransactionDao();
+		QueryBuilder<PeriodicTransaction, Integer> qb = dao.queryBuilder();
+		qb.where().eq(PeriodicTransaction.ACCOUNT_ID, accountFather.get_id());
 		// false: más reciente primero
-		qb.orderBy(Transaction.DATE, false);
-		List<Transaction> list = dao.query(qb.prepare());
-		ArrayAdapter<Transaction> arrayAdapter = new TransactionAdapter(this, R.layout.transaction_row, list);
+		qb.orderBy(PeriodicTransaction.DATE, false);
+		List<PeriodicTransaction> list = dao.query(qb.prepare());
+		ArrayAdapter<PeriodicTransaction> arrayAdapter = new PeriodicTransactionAdapter(this, R.layout.transaction_row, list);
 		setListAdapter(arrayAdapter);
 	}
 
@@ -143,9 +145,9 @@ public class TransactionList extends ListActivity {
 	}
 
 	// CLASE PRIVADA PARA MOSTRAR LA LISTA
-	private class TransactionAdapter extends ArrayAdapter<Transaction> {
+	private class PeriodicTransactionAdapter extends ArrayAdapter<PeriodicTransaction> {
 
-		public TransactionAdapter(Context context, int textViewResourceId, List<Transaction> items) {
+		public PeriodicTransactionAdapter(Context context, int textViewResourceId, List<PeriodicTransaction> items) {
 			super(context, textViewResourceId, items);
 		}
 
@@ -154,13 +156,13 @@ public class TransactionList extends ListActivity {
 			View v = convertView;
 			if (v == null) {
 				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = vi.inflate(R.layout.transaction_row, null);
+				v = vi.inflate(R.layout.periodic_transaction_row, null);
 			}
-			Transaction transaction = getItem(position);
-			fillText(v, R.id.transactionName, transaction.getName());
-			fillText(v, R.id.transactionAmount, transaction.getAmount().toString());
+			PeriodicTransaction transaction = getItem(position);
+			fillText(v, R.id.periodicTransactionName, transaction.getName());
+			fillText(v, R.id.periodicTransactionAmount, transaction.getAmount().toString());
 			try {
-				fillText(v, R.id.transactionCurrency, DatabaseHelper.getHelper(TransactionList.this).getCurrencyDao()
+				fillText(v, R.id.periodicTransactionCurrency, DatabaseHelper.getHelper(PeriodicTransactionList.this).getCurrencyDao()
 						.queryForId(transaction.getCurrency().get_id()).getName());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

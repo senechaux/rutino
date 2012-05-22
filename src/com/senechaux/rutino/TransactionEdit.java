@@ -123,14 +123,14 @@ public class TransactionEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
+
 					if (!isPeriodic.isChecked()) {
-						Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(TransactionEdit.this).getTransactionDao();
+						Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(TransactionEdit.this)
+								.getTransactionDao();
 						dao.createOrUpdate(transaction);
 						transaction.setGlobal_id(Constants.PREFIX_GLOBAL_ID + transaction.get_id());
 						dao.update(transaction);
-					}
-
-					else {
+					} else {
 						insertPeriodic();
 					}
 					finish();
@@ -208,22 +208,35 @@ public class TransactionEdit extends Activity {
 	}
 
 	private void saveToObj() {
-		if (transaction == null)
-			transaction = new Transaction();
-		if (accountFather != null)
-			transaction.setAccount(accountFather);
+		if (transaction == null) {
+			if (isPeriodic.isChecked())
+				transaction = new PeriodicTransaction();
+			else
+				transaction = new Transaction();
+		}
+		transaction.setAccount(accountFather);
 
 		transaction.setName(transactionName.getText().toString());
 		transaction.setDesc(transactionDesc.getText().toString());
 		transaction.setCurrency(currency);
+		
 		String amount = transactionAmount.getText().toString();
 		if (amount.trim().equals(""))
 			transaction.setAmount(0.0);
 		else
 			transaction.setAmount(Double.parseDouble(amount));
+		
 		if (geotag.isChecked()) {
 			transaction.setLatitude(latitude);
 			transaction.setLongitude(longitude);
+		}
+
+		if (isPeriodic.isChecked()) {
+			String p = periodicity.getText().toString();
+			if (p.trim().equals(""))
+				((PeriodicTransaction)transaction).setPeriodicity(1);
+			else
+				((PeriodicTransaction)transaction).setPeriodicity(Integer.parseInt(p));
 		}
 
 		transaction.setDate(transactionDateTime.getTime());
@@ -232,6 +245,7 @@ public class TransactionEdit extends Activity {
 
 	@SuppressWarnings("unchecked")
 	private void loadFromObj() throws SQLException {
+		accountFather = transaction.getAccount();
 		transactionName.setText(transaction.getName());
 		transactionDesc.setText(transaction.getDesc());
 		transactionAmount.setText(transaction.getAmount().toString());
@@ -246,6 +260,13 @@ public class TransactionEdit extends Activity {
 			longitude = transaction.getLongitude();
 			latitudeText.setText(getString(R.string.latitude) + " " + String.valueOf(latitude));
 			longitudeText.setText(getString(R.string.longitude) + " " + String.valueOf(longitude));
+		}
+
+		if (transaction.getClass() == PeriodicTransaction.class) {
+			isPeriodic.setChecked(true);
+			isPeriodic.setEnabled(false);
+			periodicity.setText(String.valueOf(((PeriodicTransaction) transaction).getPeriodicity()));
+			periodicity.setEnabled(false);
 		}
 	}
 
@@ -287,16 +308,18 @@ public class TransactionEdit extends Activity {
 	}
 
 	private void insertPeriodic() throws SQLException {
+		PeriodicTransaction perTrans = (PeriodicTransaction)transaction;
+		// Si existe se borra la anterior alarma
+		if (perTrans.get_id() != null) {
+			UtilAlarm.cancelAlarm(this, perTrans);
+		}
 		// Inserta en BBDD
-		String per = periodicity.getText().toString();
-		PeriodicTransaction perTransaction = new PeriodicTransaction(transaction, Integer.valueOf(per));
 		Dao<PeriodicTransaction, Integer> dao = DatabaseHelper.getHelper(this).getPeriodicTransactionDao();
-		dao.createOrUpdate(perTransaction);
-		perTransaction.setGlobal_id(Constants.PREFIX_GLOBAL_ID + perTransaction.get_id());
-		dao.update(perTransaction);
+		dao.createOrUpdate(perTrans);
+		perTrans.setGlobal_id(Constants.PREFIX_GLOBAL_ID + perTrans.get_id());
+		dao.update(perTrans);
 
-
-		UtilAlarm.setAlarm(this, perTransaction);
+		UtilAlarm.setAlarm(this, perTrans);
 	}
 
 }

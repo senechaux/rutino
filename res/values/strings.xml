@@ -14,6 +14,11 @@
     <string name="create_transaction">Add Transaction</string>
     <string name="update_transaction">Edit Transaction</string>
     <string name="delete_transaction">Delete Transaction</string>
+    <string name="create_periodic_transaction">Add Periodic Transaction</string>
+    <string name="update_periodic_transaction">Edit Periodic Transaction</string>
+    <string name="delete_periodic_transaction">Delete Periodic Transaction</string>
+    <string name="list_periodic_transaction">List Periodic Transaction</string>
+    <string name="no_periodic_transactions">No Periodic Transactions Yet</string>
     <string name="no_reports">No Reports Yet</string>
     <string name="create_report">Add Report</string>
     <string name="update_report">Edit Report</string>
