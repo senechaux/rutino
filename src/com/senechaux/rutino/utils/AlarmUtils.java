@@ -8,7 +8,7 @@ import android.content.Intent;
 import com.senechaux.rutino.alarms.OnAlarmReceiver;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
 
-public class UtilAlarm {
+public class AlarmUtils {
 
 	public static void setAlarm(Context ctxt, PeriodicTransaction perTrans) {
 		// Establece alarma

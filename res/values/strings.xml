@@ -24,10 +24,13 @@
     <string name="update_report">Edit Report</string>
     <string name="delete_report">Delete Report</string>
     <string name="list_report">List Report</string>
+    <string name="report">Report</string>
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
+    <string name="date_from">Date from</string>
+    <string name="date_to">Date to</string>
     <string name="days">Days</string>
     <string name="periodicity">Periodicity</string>
     <string name="geotag">Geotag</string>

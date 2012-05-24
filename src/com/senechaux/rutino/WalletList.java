@@ -31,8 +31,6 @@ import com.senechaux.rutino.db.entities.Wallet;
 
 public class WalletList extends ListActivity {
 
-	// private final DateFormat df = new SimpleDateFormat("M/dd/yy HH:mm");
-
 	public static void callMe(Context c) {
 		c.startActivity(new Intent(c, WalletList.class));
 	}

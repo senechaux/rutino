@@ -2,7 +2,7 @@ package com.senechaux.rutino.db.entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.senechaux.rutino.utils.UtilDate;
+import com.senechaux.rutino.utils.DateUtils;
 
 @DatabaseTable
 public class PeriodicTransaction extends Transaction {
@@ -38,7 +38,7 @@ public class PeriodicTransaction extends Transaction {
 	}
 
 	public void setNextDate() {
-		this.setDate(UtilDate.addDays(this.getDate(), this.getPeriodicity()));
+		this.setDate(DateUtils.addDays(this.getDate(), this.getPeriodicity()));
 	}
 
 	@Override

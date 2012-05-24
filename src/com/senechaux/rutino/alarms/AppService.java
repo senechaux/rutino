@@ -15,7 +15,7 @@ import com.senechaux.rutino.components.WakefulIntentService;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
 import com.senechaux.rutino.db.entities.Transaction;
-import com.senechaux.rutino.utils.UtilAlarm;
+import com.senechaux.rutino.utils.AlarmUtils;
 
 public class AppService extends WakefulIntentService {
 	public AppService() {
@@ -43,7 +43,7 @@ public class AppService extends WakefulIntentService {
 		}
 
 		// Establecemos la nueva alarma
-		UtilAlarm.setAlarm(this, perTrans);
+		AlarmUtils.setAlarm(this, perTrans);
 
 		// Creamos la notificación
 		Intent notificationIntent = new Intent(this, TransactionEdit.class);

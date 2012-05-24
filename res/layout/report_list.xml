@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:textSize="16sp" >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:textSize="16sp" >
+
+        <TextView
+            android:id="@+id/reportName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:text="@string/report"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/reportDateFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/date_from" />
+
+        <TextView
+            android:id="@id/reportDateTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/reportDateFrom"
+            android:layout_below="@id/reportDateFrom"
+            android:text="@string/date_to" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/android:empty"
+        android:layout_width="wrap_content"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:text="@string/no_reports" />
+
+    <Button
+        android:id="@+id/createReport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/create_report" />
+
+</LinearLayout>

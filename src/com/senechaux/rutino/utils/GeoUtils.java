@@ -6,7 +6,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 
-public class UtilGeo {
+public class GeoUtils {
 	/**
 	 * This is a fast code to get the last known location of the phone. If there
 	 * is no exact gps-information it falls back to the network-based location

@@ -11,7 +11,7 @@ import android.content.Intent;
 
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
-import com.senechaux.rutino.utils.UtilAlarm;
+import com.senechaux.rutino.utils.AlarmUtils;
 
 public class OnBootReceiver extends BroadcastReceiver {
 
@@ -33,7 +33,7 @@ public class OnBootReceiver extends BroadcastReceiver {
 				PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
 				am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pi);
 			} else {
-				UtilAlarm.setAlarm(context, perTrans);
+				AlarmUtils.setAlarm(context, perTrans);
 			}
 		}
 

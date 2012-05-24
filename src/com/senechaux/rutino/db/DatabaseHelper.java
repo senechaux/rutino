@@ -25,7 +25,7 @@ import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.db.entities.Wallet;
 import com.senechaux.rutino.utils.FileUtils;
-import com.senechaux.rutino.utils.UtilAlarm;
+import com.senechaux.rutino.utils.AlarmUtils;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static volatile DatabaseHelper databaseHelper = null;
@@ -34,7 +34,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 														// LogCat window
 	private static final String DB_PATH = "/data/data/com.senechaux.rutino/databases/rutino.db";
 	private static final String DB_NAME = "rutino.db";
-	private static final int DATABASE_VERSION = 14;
+	private static final int DATABASE_VERSION = 1;
 
 	private Dao<Wallet, Integer> walletDao;
 	private Dao<Account, Integer> accountDao;
@@ -171,7 +171,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	public void deletePeriodicTransaction(Context ctxt, PeriodicTransaction perTrans) throws SQLException {
 		getPeriodicTransactionDao().deleteById(perTrans.get_id());
-		UtilAlarm.cancelAlarm(ctxt, perTrans);
+		AlarmUtils.cancelAlarm(ctxt, perTrans);
 	}
 
 	public void deleteAccount(Context ctxt, Account account) throws SQLException {

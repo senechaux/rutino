@@ -1,14 +1,13 @@
 package com.senechaux.rutino;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -26,16 +25,14 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.Account;
-import com.senechaux.rutino.db.entities.Currency;
+import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Wallet;
 
-public class AccountList extends ListActivity {
+public class ReportList extends ListActivity {
 	private Wallet walletFather;
-	private SharedPreferences prefs;
 
 	public static void callMe(Context c, Wallet wallet) {
-		Intent intent = new Intent(c, AccountList.class);
+		Intent intent = new Intent(c, ReportList.class);
 		intent.putExtra(Wallet.OBJ, wallet);
 		c.startActivity(intent);
 	}
@@ -43,21 +40,13 @@ public class AccountList extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.account_list);
+		setContentView(R.layout.report_list);
 		walletFather = (Wallet) getIntent().getSerializableExtra(Wallet.OBJ);
 		registerForContextMenu(getListView());
 
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-		findViewById(R.id.createAccount).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				AccountEdit.callMe(AccountList.this, walletFather);
-			}
-		});
-
 		findViewById(R.id.createReport).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				ReportEdit.callMe(AccountList.this, walletFather);
+				ReportEdit.callMe(ReportList.this, walletFather);
 			}
 		});
 
@@ -67,24 +56,21 @@ public class AccountList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Account account = (Account) l.getAdapter().getItem(position);
-		TransactionList.callMe(AccountList.this, account);
+		Report report = (Report) l.getAdapter().getItem(position);
+		ReportEdit.callMe(ReportList.this, report);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		new MenuInflater(this).inflate(R.menu.account_menu, menu);
+		new MenuInflater(this).inflate(R.menu.report_menu, menu);
 		return (super.onCreateOptionsMenu(menu));
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.insert_account:
-			AccountEdit.callMe(AccountList.this, walletFather);
-			return true;
-		case R.id.report_list:
-			ReportList.callMe(AccountList.this, walletFather);
+		case R.id.insert_report:
+			ReportEdit.callMe(ReportList.this, walletFather);
 			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
@@ -92,28 +78,28 @@ public class AccountList extends ListActivity {
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		new MenuInflater(this).inflate(R.menu.account_context, menu);
+		new MenuInflater(this).inflate(R.menu.report_context, menu);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		ArrayAdapter<Account> adapter = (ArrayAdapter<Account>) getListAdapter();
-		Account account = adapter.getItem(info.position);
+		ArrayAdapter<Report> adapter = (ArrayAdapter<Report>) getListAdapter();
+		Report report = adapter.getItem(info.position);
 
 		switch (item.getItemId()) {
-		case R.id.edit_account:
-			AccountEdit.callMe(AccountList.this, account);
+		case R.id.edit_report:
+			ReportEdit.callMe(ReportList.this, report);
 			return true;
-		case R.id.delete_account:
+		case R.id.delete_report:
 			try {
-				DatabaseHelper.getHelper(this).deleteAccount(this, account);
+				DatabaseHelper.getHelper(this).getReportDao().delete(report);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
-			adapter.remove(account);
+			adapter.remove(report);
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -137,12 +123,12 @@ public class AccountList extends ListActivity {
 	}
 
 	private void fillList() throws SQLException {
-		Log.i(AccountList.class.getName(), "Show list again");
-		Dao<Account, Integer> dao = DatabaseHelper.getHelper(this).getAccountDao();
-		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Account.WALLET_ID, walletFather.get_id());
-		List<Account> list = dao.query(qb.prepare());
-		ArrayAdapter<Account> arrayAdapter = new AccountAdapter(this, R.layout.account_row, list);
+		Log.i(ReportList.class.getName(), "Show list again");
+		Dao<Report, Integer> dao = DatabaseHelper.getHelper(this).getReportDao();
+		QueryBuilder<Report, Integer> qb = dao.queryBuilder();
+		qb.where().eq(Report.WALLET_ID, walletFather.get_id());
+		List<Report> list = dao.query(qb.prepare());
+		ArrayAdapter<Report> arrayAdapter = new ReportAdapter(this, R.layout.report_row, list);
 		setListAdapter(arrayAdapter);
 	}
 
@@ -153,9 +139,10 @@ public class AccountList extends ListActivity {
 	}
 
 	// CLASE PRIVADA PARA MOSTRAR LA LISTA
-	private class AccountAdapter extends ArrayAdapter<Account> {
+	private class ReportAdapter extends ArrayAdapter<Report> {
+		DateFormat df = DateFormat.getDateInstance();
 
-		public AccountAdapter(Context context, int textViewResourceId, List<Account> items) {
+		public ReportAdapter(Context context, int textViewResourceId, List<Report> items) {
 			super(context, textViewResourceId, items);
 		}
 
@@ -164,23 +151,12 @@ public class AccountList extends ListActivity {
 			View v = convertView;
 			if (v == null) {
 				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = vi.inflate(R.layout.account_row, null);
+				v = vi.inflate(R.layout.report_row, null);
 			}
-			Account account = getItem(position);
-			Currency prefCurrency = null;
-			fillText(v, R.id.accountName, account.getName());
-			try {
-				prefCurrency = DatabaseHelper.getHelper(AccountList.this).getCurrencyDao()
-						.queryForId(Integer.valueOf(prefs.getString("currency", "1")));
-				fillText(v, R.id.accountAmount, account.getTotal(AccountList.this, prefCurrency).toString());
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			fillText(v, R.id.accountCurrency, prefCurrency.getName());
+			Report report = getItem(position);
+			fillText(v, R.id.reportName, report.getName());
+			fillText(v, R.id.reportDateFrom, df.format(report.getDateFrom()));
+			fillText(v, R.id.reportDateTo, df.format(report.getDateTo()));
 			return v;
 		}
 

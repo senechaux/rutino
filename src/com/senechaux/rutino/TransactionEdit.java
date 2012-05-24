@@ -34,10 +34,13 @@ import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
 import com.senechaux.rutino.db.entities.Transaction;
-import com.senechaux.rutino.utils.UtilAlarm;
-import com.senechaux.rutino.utils.UtilGeo;
+import com.senechaux.rutino.utils.AlarmUtils;
+import com.senechaux.rutino.utils.GeoUtils;
+import com.senechaux.rutino.utils.StringUtils;
 
 public class TransactionEdit extends Activity {
+	protected static final int DATE_DIALOG_ID = 0;
+	protected static final int TIME_DIALOG_ID = 1;
 
 	private EditText transactionName;
 	private EditText transactionDesc;
@@ -55,9 +58,6 @@ public class TransactionEdit extends Activity {
 	private Account accountFather;
 	private Double latitude, longitude;
 	private TextView latitudeText, longitudeText;
-
-	protected static final int DATE_DIALOG_ID = 0;
-	protected static final int TIME_DIALOG_ID = 1;
 
 	public static void callMe(Context c, Account aFather) {
 		Intent intent = new Intent(c, TransactionEdit.class);
@@ -110,7 +110,7 @@ public class TransactionEdit extends Activity {
 		geotag.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if (isChecked) {
-					Location l = UtilGeo.getLocation(TransactionEdit.this);
+					Location l = GeoUtils.getLocation(TransactionEdit.this);
 					latitude = l.getLatitude();
 					longitude = l.getLongitude();
 					latitudeText.setText(getString(R.string.latitude) + " " + String.valueOf(latitude));
@@ -141,7 +141,7 @@ public class TransactionEdit extends Activity {
 		});
 
 		transactionDateTime = new GregorianCalendar();
-		updateTimeDate();
+		StringUtils.updateTimeDate(mPickDate, mPickTime, transactionDateTime);
 
 		try {
 			Dao<Currency, Integer> dao = DatabaseHelper.getHelper(this).getCurrencyDao();
@@ -251,7 +251,7 @@ public class TransactionEdit extends Activity {
 		transactionAmount.setText(transaction.getAmount().toString());
 
 		transactionDateTime.setTime(transaction.getDate());
-		updateTimeDate();
+		StringUtils.updateTimeDate(mPickDate, mPickTime, transactionDateTime);
 
 		ArrayAdapter<Currency> adapter = (ArrayAdapter<Currency>) currencySpinner.getAdapter();
 		currencySpinner.setSelection(adapter.getPosition(transaction.getCurrency()));
@@ -276,7 +276,7 @@ public class TransactionEdit extends Activity {
 			transactionDateTime.set(GregorianCalendar.YEAR, year);
 			transactionDateTime.set(GregorianCalendar.MONTH, monthOfYear);
 			transactionDateTime.set(GregorianCalendar.DAY_OF_MONTH, dayOfMonth);
-			updateTimeDate();
+			StringUtils.updateTimeDate(mPickDate, mPickTime, transactionDateTime);
 		}
 	};
 
@@ -285,33 +285,15 @@ public class TransactionEdit extends Activity {
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 			transactionDateTime.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay);
 			transactionDateTime.set(GregorianCalendar.MINUTE, minute);
-			updateTimeDate();
+			StringUtils.updateTimeDate(mPickDate, mPickTime, transactionDateTime);
 		}
 	};
-
-	private void updateTimeDate() {
-		int mYear = transactionDateTime.get(Calendar.YEAR);
-		int mMonth = transactionDateTime.get(Calendar.MONTH);
-		int mDay = transactionDateTime.get(Calendar.DAY_OF_MONTH);
-		mPickDate.setText("" + mDay + "-" + (mMonth + 1) + "-" + mYear);
-
-		int mHour = transactionDateTime.get(Calendar.HOUR_OF_DAY);
-		int mMinute = transactionDateTime.get(Calendar.MINUTE);
-		mPickTime.setText("" + pad(mHour) + ":" + pad(mMinute));
-	}
-
-	private static String pad(int c) {
-		if (c >= 10)
-			return String.valueOf(c);
-		else
-			return "0" + String.valueOf(c);
-	}
 
 	private void insertPeriodic() throws SQLException {
 		PeriodicTransaction perTrans = (PeriodicTransaction)transaction;
 		// Si existe se borra la anterior alarma
 		if (perTrans.get_id() != null) {
-			UtilAlarm.cancelAlarm(this, perTrans);
+			AlarmUtils.cancelAlarm(this, perTrans);
 		}
 		// Inserta en BBDD
 		Dao<PeriodicTransaction, Integer> dao = DatabaseHelper.getHelper(this).getPeriodicTransactionDao();
@@ -319,7 +301,7 @@ public class TransactionEdit extends Activity {
 		perTrans.setGlobal_id(Constants.PREFIX_GLOBAL_ID + perTrans.get_id());
 		dao.update(perTrans);
 
-		UtilAlarm.setAlarm(this, perTrans);
+		AlarmUtils.setAlarm(this, perTrans);
 	}
 
 }
