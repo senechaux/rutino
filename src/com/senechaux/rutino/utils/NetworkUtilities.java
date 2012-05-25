@@ -240,7 +240,7 @@ public class NetworkUtilities {
 
 		HttpEntity entity = null;
 		entity = new UrlEncodedFormEntity(params);
-		final HttpPost post = new HttpPost(FETCH_WALLET_UPDATES_URI);
+		//final HttpPost post = new HttpPost(FETCH_WALLET_UPDATES_URI);
 		//post.addHeader(entity.getContentType());
 		//post.setEntity(entity);
 		final HttpGet get = new HttpGet(FETCH_WALLET_UPDATES_URI);

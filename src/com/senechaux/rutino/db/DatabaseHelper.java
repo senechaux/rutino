@@ -129,6 +129,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public int genericCreateOrUpdate(Context ctxt, BaseEntity entity) throws SQLException {
 		Dao<BaseEntity, Integer> dao = (Dao<BaseEntity, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
 				entity.getClass());
+		
+		QueryBuilder<BaseEntity, Integer> qb = dao.queryBuilder();
+		qb.where().eq(BaseEntity.GLOBAL_ID, entity.getGlobal_id());
+		BaseEntity dbEntity = dao.queryForFirst(qb.prepare());
+		if (dbEntity != null) {
+			entity.set_id(dbEntity.get_id());
+		}
 		CreateOrUpdateStatus status = dao.createOrUpdate(entity);
 		if (entity.getGlobal_id() == null) {
 			entity.setGlobal_id(Constants.PREFIX_GLOBAL_ID + entity.get_id());

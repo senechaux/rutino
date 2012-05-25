@@ -65,7 +65,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		List<Wallet> wallets;
 
 		String authtoken = null;
-		Log.d(TAG, "ANGEL va a hacer sync");
+		Log.d(TAG, "Rutino onPerformSync");
 		try {
 			// use the account manager to request the credentials
 			authtoken = mAccountManager
@@ -81,7 +81,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			// update the last synced date.
 			mLastUpdated = new Date();
 			// update platform wallets.
-			Log.d(TAG, "Calling contactManager's sync contacts");
+			Log.d(TAG, "Calling walletManager's sync wallets");
 			WalletManager.syncWallets(mContext, account.name, wallets);
 		} catch (final AuthenticatorException e) {
 			syncResult.stats.numParseExceptions++;

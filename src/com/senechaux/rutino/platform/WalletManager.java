@@ -28,7 +28,7 @@ import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
 /**
- * Class for managing contacts sync related mOperations
+ * Class for managing wallets sync related mOperations
  */
 @SuppressWarnings("unchecked")
 public class WalletManager {

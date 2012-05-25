@@ -1,5 +1,6 @@
 package com.senechaux.rutino.db.entities;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -62,17 +63,13 @@ public class Wallet extends BaseEntity {
 	 */
 	public static Wallet valueOf(JSONObject wallet) {
 		try {
-			final int mobileId = wallet.has("mobile_id") ? wallet.getInt("mobile_id") : null;
-			// final int userId = wallet.has("user_id") ? wallet.getInt("uid") :
-			// null;
-			final String name = wallet.has("name") ? wallet.getString("name") : null;
-			final String description = wallet.has("description") ? wallet.getString("description") : null;
-			// final String name = "caca";
-			// final String description = "futi";
+			String globalId = wallet.has("global_id") ? wallet.getString("global_id") : null;
+			String name = wallet.has("name") ? wallet.getString("name") : null;
+			String description = wallet.has("description") ? wallet.getString("description") : null;
 			Wallet walletEntity = new Wallet(name, description);
-			walletEntity.set_id(mobileId);
+			walletEntity.setGlobal_id(globalId);
 			return walletEntity;
-		} catch (final Exception ex) {
+		} catch (JSONException ex) {
 			Log.i("User", "Error parsing JSON user object" + ex.toString());
 
 		}
