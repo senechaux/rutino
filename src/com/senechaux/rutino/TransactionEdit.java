@@ -259,10 +259,11 @@ public class TransactionEdit extends Activity {
 			longitudeText.setText(getString(R.string.longitude) + " " + String.valueOf(longitude));
 		}
 
+		isPeriodic.setEnabled(false);
 		if (transaction.getClass() == PeriodicTransaction.class) {
 			isPeriodic.setChecked(true);
-			isPeriodic.setEnabled(false);
 			periodicity.setText(String.valueOf(((PeriodicTransaction) transaction).getPeriodicity()));
+		} else {
 			periodicity.setEnabled(false);
 		}
 	}
