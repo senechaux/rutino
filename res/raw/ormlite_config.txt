@@ -2,8 +2,8 @@
 # generated on 2012/05/19 06:34:59
 #
 # --table-start--
-dataClass=com.senechaux.rutino.db.entities.Account
-tableName=account
+dataClass=com.senechaux.rutino.db.entities.AccountEntity
+tableName=accountentity
 # --table-fields-start--
 # --field-start--
 fieldName=name

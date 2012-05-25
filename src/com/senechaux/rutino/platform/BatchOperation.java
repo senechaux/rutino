@@ -16,6 +16,8 @@
 
 package com.senechaux.rutino.platform;
 
+import java.util.ArrayList;
+
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -23,8 +25,6 @@ import android.content.OperationApplicationException;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.util.Log;
-
-import java.util.ArrayList;
 
 /**
  * This class handles execution of batch mOperations on Contacts provider.

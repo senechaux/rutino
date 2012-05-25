@@ -30,7 +30,7 @@ import android.widget.TimePicker;
 
 import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
 import com.senechaux.rutino.db.entities.Transaction;
@@ -57,13 +57,13 @@ public class TransactionEdit extends Activity {
 	private GregorianCalendar transactionDateTime;
 	private Currency currency;
 	private Transaction transaction;
-	private Account accountFather;
+	private AccountEntity accountFather;
 	private Double latitude, longitude;
 	private TextView latitudeText, longitudeText;
 
-	public static void callMe(Context c, Account aFather) {
+	public static void callMe(Context c, AccountEntity aFather) {
 		Intent intent = new Intent(c, TransactionEdit.class);
-		intent.putExtra(Account.OBJ, aFather);
+		intent.putExtra(AccountEntity.OBJ, aFather);
 		c.startActivity(intent);
 	}
 
@@ -92,7 +92,7 @@ public class TransactionEdit extends Activity {
 		latitudeText = (TextView) findViewById(R.id.latitude);
 		longitudeText = (TextView) findViewById(R.id.longitude);
 
-		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
+		accountFather = (AccountEntity) getIntent().getSerializableExtra(AccountEntity.OBJ);
 		transaction = (Transaction) getIntent().getSerializableExtra(Transaction.OBJ);
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

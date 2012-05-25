@@ -23,7 +23,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.R;

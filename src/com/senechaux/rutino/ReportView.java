@@ -14,7 +14,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Transaction;
 
@@ -83,10 +83,10 @@ public class ReportView extends Activity {
 		reportDateFrom.setText(df.format(report.getDateFrom()));
 		reportDateTo.setText(df.format(report.getDateTo()));
 
-		Dao<Account, Integer> dao = (Dao<Account, Integer>)DatabaseHelper.getHelper(this).getMyDao(Account.class);
-		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Account.WALLET_ID, report.getWallet().get_id());
-		List<Account> accountList = dao.query(qb.prepare());
+		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>)DatabaseHelper.getHelper(this).getMyDao(AccountEntity.class);
+		QueryBuilder<AccountEntity, Integer> qb = dao.queryBuilder();
+		qb.where().eq(AccountEntity.WALLET_ID, report.getWallet().get_id());
+		List<AccountEntity> accountList = dao.query(qb.prepare());
 		
 		Dao<Transaction, Integer> daoTrans = (Dao<Transaction, Integer>)DatabaseHelper.getHelper(this).getMyDao(Transaction.class);
 		QueryBuilder<Transaction, Integer> qbTrans = daoTrans.queryBuilder();

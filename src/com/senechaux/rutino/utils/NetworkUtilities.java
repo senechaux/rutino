@@ -18,11 +18,9 @@ package com.senechaux.rutino.utils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -48,7 +46,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
+import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.authenticator.AuthenticatorActivity;
+import com.senechaux.rutino.db.entities.AccountEntity;
+import com.senechaux.rutino.db.entities.BaseEntity;
 import com.senechaux.rutino.db.entities.Wallet;
 
 /**
@@ -61,10 +62,6 @@ public class NetworkUtilities {
 	public static final String PARAM_UPDATED = "timestamp";
 	public static final String USER_AGENT = "AuthenticationService/1.0";
 	public static final int REGISTRATION_TIMEOUT = 30 * 1000; // ms
-	public static final String BASE_URL = "http://192.168.1.129/api_dev.php";
-	// "http://samplesyncadapter2.appspot.com";
-	public static final String AUTH_URI = BASE_URL + "/auth";
-	public static final String FETCH_WALLET_UPDATES_URI = BASE_URL + "/wallet.json";
 	private static HttpClient mHttpClient;
 
 	/**
@@ -130,7 +127,7 @@ public class NetworkUtilities {
 			throw new AssertionError(e);
 		}
 
-		final HttpPost post = new HttpPost(AUTH_URI);
+		final HttpPost post = new HttpPost(Constants.AUTH_URI);
 		post.addHeader(entity.getContentType());
 		post.setEntity(entity);
 		maybeCreateHttpClient();
@@ -211,9 +208,66 @@ public class NetworkUtilities {
 		// run on background thread.
 		return NetworkUtilities.performOnBackgroundThread(runnable);
 	}
+//
+//	/**
+//	 * Fetches the list of wallets from the server
+//	 * 
+//	 * @param account
+//	 *            The account being synced.
+//	 * @param authtoken
+//	 *            The authtoken stored in AccountManager for this account
+//	 * @param lastUpdated
+//	 *            The last time that sync was performed
+//	 * @return list The list of updates received from the server.
+//	 */
+//	public static List<Wallet> fetchWalletUpdates(Account account, String authtoken, Date lastUpdated)
+//			throws JSONException, ParseException, IOException, AuthenticationException {
+//
+//		final ArrayList<Wallet> walletList = new ArrayList<Wallet>();
+//		final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+//
+//		//params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
+//		//params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
+//		if (lastUpdated != null) {
+//			final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+//			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//			//params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
+//		}
+//		Log.i(TAG, params.toString());
+//
+//		HttpEntity entity = null;
+//		entity = new UrlEncodedFormEntity(params);
+//		final HttpGet get = new HttpGet(Constants.GET_WALLET_LIST);
+//		get.addHeader(entity.getContentType());
+//
+//		maybeCreateHttpClient();
+//
+//		final HttpResponse resp = mHttpClient.execute(get);
+//		final String response = EntityUtils.toString(resp.getEntity());
+//		
+//		if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+//			// Succesfully connected to the samplesyncadapter server and
+//			// authenticated.
+//			// Extract wallets data in json format.
+//			final JSONArray wallets = new JSONArray(response);
+//			Log.d(TAG, response);
+//			for (int i = 0; i < wallets.length(); i++) {
+//				walletList.add(Wallet.valueOf(wallets.getJSONObject(i)));
+//			}
+//		} else {
+//			if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
+//				Log.e(TAG, "Authentication exception in fetching remote data");
+//				throw new AuthenticationException();
+//			} else {
+//				Log.e(TAG, "Server error in fetching remote data: " + resp.getStatusLine());
+//				throw new IOException();
+//			}
+//		}
+//		return walletList;
+//	}
 
 	/**
-	 * Fetches the list of wallets from the server
+	 * Fetches the list of entities from the server
 	 * 
 	 * @param account
 	 *            The account being synced.
@@ -223,33 +277,29 @@ public class NetworkUtilities {
 	 *            The last time that sync was performed
 	 * @return list The list of updates received from the server.
 	 */
-	public static List<Wallet> fetchWalletUpdates(Account account, String authtoken, Date lastUpdated)
+	public static List<BaseEntity> fetchEntityUpdates(Context ctxt, Account account, String authtoken, Date lastUpdated, String url,
+			Class<?> myClass)
 			throws JSONException, ParseException, IOException, AuthenticationException {
 
-		final ArrayList<Wallet> walletList = new ArrayList<Wallet>();
+		final ArrayList<BaseEntity> entityList = new ArrayList<BaseEntity>();
 		final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 
-		//params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
-		//params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
-		if (lastUpdated != null) {
-			final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-			//params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
-		}
+//		params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
+//		params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
+//		if (lastUpdated != null) {
+//			final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+//			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//			params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
+//		}
 		Log.i(TAG, params.toString());
 
 		HttpEntity entity = null;
 		entity = new UrlEncodedFormEntity(params);
-		//final HttpPost post = new HttpPost(FETCH_WALLET_UPDATES_URI);
-		//post.addHeader(entity.getContentType());
-		//post.setEntity(entity);
-		final HttpGet get = new HttpGet(FETCH_WALLET_UPDATES_URI);
+		final HttpGet get = new HttpGet(url);
 		get.addHeader(entity.getContentType());
-		//get.setEntity(entity);
 
 		maybeCreateHttpClient();
 
-		//final HttpResponse resp = mHttpClient.execute(post);
 		final HttpResponse resp = mHttpClient.execute(get);
 		final String response = EntityUtils.toString(resp.getEntity());
 		
@@ -257,10 +307,20 @@ public class NetworkUtilities {
 			// Succesfully connected to the samplesyncadapter server and
 			// authenticated.
 			// Extract wallets data in json format.
-			final JSONArray wallets = new JSONArray(response);
+			final JSONArray entities = new JSONArray(response);
 			Log.d(TAG, response);
-			for (int i = 0; i < wallets.length(); i++) {
-				walletList.add(Wallet.valueOf(wallets.getJSONObject(i)));
+			for (int i = 0; i < entities.length(); i++) {
+				if(myClass.getName() == Wallet.class.getName()){
+					entityList.add(Wallet.valueOf(ctxt, entities.getJSONObject(i)));					
+				}else if(myClass.getName() == Account.class.getName()){
+					entityList.add(AccountEntity.valueOf(ctxt, entities.getJSONObject(i)));
+//				}else if(myClass.getName() == Transaction.class.getName()){
+//					entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
+//				}else if(myClass.getName() == PeriodicTransaction.class.getName()){
+//					entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
+//				}else if(myClass.getName() == Report.class.getName()){
+//					entityList.add(Report.valueOf(ctxt, entities.getJSONObject(i)));
+				}
 			}
 		} else {
 			if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
@@ -271,46 +331,7 @@ public class NetworkUtilities {
 				throw new IOException();
 			}
 		}
-		return walletList;
+		return entityList;
 	}
-
-	/**
-	 * Fetches status messages for the user's friends from the server
-	 * 
-	 * @param account
-	 *            The account being synced.
-	 * @param authtoken
-	 *            The authtoken stored in the AccountManager for the account
-	 * @return list The list of status messages received from the server.
-	 */
-	/*
-	 * public static List<User.Status> fetchFriendStatuses(Account account,
-	 * String authtoken) throws JSONException, ParseException, IOException,
-	 * AuthenticationException { final ArrayList<User.Status> statusList = new
-	 * ArrayList<User.Status>(); final ArrayList<NameValuePair> params = new
-	 * ArrayList<NameValuePair>(); params.add(new
-	 * BasicNameValuePair(PARAM_USERNAME, account.name)); params.add(new
-	 * BasicNameValuePair(PARAM_PASSWORD, authtoken));
-	 * 
-	 * HttpEntity entity = null; entity = new UrlEncodedFormEntity(params);
-	 * final HttpPost post = new HttpPost(FETCH_STATUS_URI);
-	 * post.addHeader(entity.getContentType()); post.setEntity(entity);
-	 * maybeCreateHttpClient();
-	 * 
-	 * final HttpResponse resp = mHttpClient.execute(post); final String
-	 * response = EntityUtils.toString(resp.getEntity());
-	 * 
-	 * if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) { //
-	 * Succesfully connected to the samplesyncadapter server and //
-	 * authenticated. // Extract friends data in json format. final JSONArray
-	 * statuses = new JSONArray(response); for (int i = 0; i <
-	 * statuses.length(); i++) {
-	 * statusList.add(User.Status.valueOf(statuses.getJSONObject(i))); } } else
-	 * { if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED)
-	 * { Log.e(TAG, "Authentication exception in fetching friend status list");
-	 * throw new AuthenticationException(); } else { Log.e(TAG,
-	 * "Server error in fetching friend status list"); throw new IOException();
-	 * } } return statusList; }
-	 */
 
 }
