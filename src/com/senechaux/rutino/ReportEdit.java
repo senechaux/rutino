@@ -23,6 +23,7 @@ import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Wallet;
 import com.senechaux.rutino.utils.StringUtils;
 
+@SuppressWarnings("unchecked")
 public class ReportEdit extends Activity {
 	private static final String TAG = "ReportEdit"; 
 	protected static final int DATE_FROM_DIALOG_ID = 0;
@@ -80,11 +81,7 @@ public class ReportEdit extends Activity {
 				} else {
 					try {
 						saveToObj();
-						Dao<Report, Integer> dao = DatabaseHelper.getHelper(ReportEdit.this).getReportDao();
-						dao.createOrUpdate(report);
-						report.setGlobal_id(Constants.PREFIX_GLOBAL_ID + report.get_id());
-						dao.update(report);
-
+						DatabaseHelper.getHelper(ReportEdit.this).genericCreateOrUpdate(ReportEdit.this, report);
 						finish();
 					} catch (SQLException e) {
 						throw new RuntimeException(e);

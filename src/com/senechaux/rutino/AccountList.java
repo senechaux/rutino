@@ -30,6 +30,7 @@ import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.Wallet;
 
+@SuppressWarnings("unchecked")
 public class AccountList extends ListActivity {
 	private static final String TAG = "AccountList"; 
 	private Wallet walletFather;
@@ -97,7 +98,6 @@ public class AccountList extends ListActivity {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		ArrayAdapter<Account> adapter = (ArrayAdapter<Account>) getListAdapter();
@@ -139,7 +139,7 @@ public class AccountList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<Account, Integer> dao = DatabaseHelper.getHelper(this).getAccountDao();
+		Dao<Account, Integer> dao = (Dao<Account, Integer>)DatabaseHelper.getHelper(this).getMyDao(Account.class); 
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Account.WALLET_ID, walletFather.get_id());
 		List<Account> list = dao.query(qb.prepare());
@@ -171,7 +171,7 @@ public class AccountList extends ListActivity {
 			Currency prefCurrency = null;
 			fillText(v, R.id.accountName, account.getName());
 			try {
-				prefCurrency = DatabaseHelper.getHelper(AccountList.this).getCurrencyDao()
+				prefCurrency = ((Dao<Currency, Integer>)DatabaseHelper.getHelper(AccountList.this).getMyDao(Currency.class))
 						.queryForId(Integer.valueOf(prefs.getString("currency", "1")));
 				fillText(v, R.id.accountAmount, account.getTotal(AccountList.this, prefCurrency).toString());
 			} catch (NumberFormatException e) {
