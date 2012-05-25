@@ -60,11 +60,10 @@ public class NetworkUtilities {
 	public static final String PARAM_UPDATED = "timestamp";
 	public static final String USER_AGENT = "AuthenticationService/1.0";
 	public static final int REGISTRATION_TIMEOUT = 30 * 1000; // ms
-	public static final String BASE_URL = "http://192.168.1.129/api";
+	public static final String BASE_URL = "http://192.168.1.129/api.php";
 	// "http://samplesyncadapter2.appspot.com";
 	public static final String AUTH_URI = BASE_URL + "/auth";
-	public static final String FETCH_WALLET_UPDATES_URI = BASE_URL + "/wallet/list";
-	public static final String FETCH_STATUS_URI = BASE_URL + "/fetch_status";
+	public static final String FETCH_WALLET_UPDATES_URI = BASE_URL + "/wallet.json";
 	private static HttpClient mHttpClient;
 
 	/**
@@ -137,9 +136,12 @@ public class NetworkUtilities {
 
 		try {
 			resp = mHttpClient.execute(post);
+			if (Log.isLoggable(TAG, Log.VERBOSE)) {
+				Log.v(TAG, "Resp: " + resp.toString());
+			}
 			if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				if (Log.isLoggable(TAG, Log.VERBOSE)) {
-					Log.v(TAG, "Successful authentication");
+					Log.v(TAG, "Successful authentication, resp: " + resp.toString());
 				}
 				sendResult(true, handler, context);
 				return true;
@@ -226,12 +228,12 @@ public class NetworkUtilities {
 		final ArrayList<Wallet> walletList = new ArrayList<Wallet>();
 		final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 
-		params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
-		params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
+		//params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
+		//params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
 		if (lastUpdated != null) {
 			final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-			params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
+			//params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
 		}
 		Log.i(TAG, params.toString());
 
