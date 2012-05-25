@@ -127,9 +127,10 @@ public class WalletList extends ListActivity {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<Wallet, Integer> dao = DatabaseHelper.getHelper(this).getWalletDao();
+		Dao<Wallet, Integer> dao = (Dao<Wallet, Integer>)DatabaseHelper.getHelper(this).getMyDao(Wallet.class);
 		List<Wallet> list = dao.queryForAll();
 		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this, R.layout.wallet_row, list);
 		setListAdapter(arrayAdapter);

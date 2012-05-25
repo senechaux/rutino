@@ -14,6 +14,7 @@ import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
+@SuppressWarnings("unchecked")
 public class WalletEdit extends Activity {
 	private static final String TAG = "WalletEdit"; 
 
@@ -47,11 +48,7 @@ public class WalletEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					Dao<Wallet, Integer> dao = DatabaseHelper.getHelper(WalletEdit.this).getWalletDao(); 
-					dao.createOrUpdate(wallet);
-					wallet.setGlobal_id(Constants.PREFIX_GLOBAL_ID + wallet.get_id());
-					dao.update(wallet);
-					
+					DatabaseHelper.getHelper(WalletEdit.this).genericCreateOrUpdate(WalletEdit.this, wallet);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);

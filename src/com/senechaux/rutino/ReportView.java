@@ -18,6 +18,7 @@ import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Transaction;
 
+@SuppressWarnings("unchecked")
 public class ReportView extends Activity {
 	private static final String TAG = "ReportView";
 
@@ -82,12 +83,12 @@ public class ReportView extends Activity {
 		reportDateFrom.setText(df.format(report.getDateFrom()));
 		reportDateTo.setText(df.format(report.getDateTo()));
 
-		Dao<Account, Integer> dao = DatabaseHelper.getHelper(this).getAccountDao();
+		Dao<Account, Integer> dao = (Dao<Account, Integer>)DatabaseHelper.getHelper(this).getMyDao(Account.class);
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Account.WALLET_ID, report.getWallet().get_id());
 		List<Account> accountList = dao.query(qb.prepare());
 		
-		Dao<Transaction, Integer> daoTrans = DatabaseHelper.getHelper(this).getTransactionDao();
+		Dao<Transaction, Integer> daoTrans = (Dao<Transaction, Integer>)DatabaseHelper.getHelper(this).getMyDao(Transaction.class);
 		QueryBuilder<Transaction, Integer> qbTrans = daoTrans.queryBuilder();
 		qbTrans.where().in(Transaction.ACCOUNT_ID, accountList).and().ge(Transaction.AMOUNT, 0);
 		qbTrans.selectRaw("SUM("+Transaction.AMOUNT+")");

@@ -20,6 +20,7 @@ import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.AccountType;
 import com.senechaux.rutino.db.entities.Wallet;
 
+@SuppressWarnings("unchecked")
 public class AccountEdit extends Activity {
 	private static final String TAG = "AccountEdit"; 
 
@@ -62,10 +63,7 @@ public class AccountEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					Dao<Account, Integer> dao = DatabaseHelper.getHelper(AccountEdit.this).getAccountDao(); 
-					dao.createOrUpdate(account);
-					account.setGlobal_id(Constants.PREFIX_GLOBAL_ID + account.get_id());
-					dao.update(account);
+					DatabaseHelper.getHelper(AccountEdit.this).genericCreateOrUpdate(AccountEdit.this, account);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -75,7 +73,7 @@ public class AccountEdit extends Activity {
 
 		// Rellenar spinner Currency
 		try {
-			Dao<AccountType, Integer> dao = DatabaseHelper.getHelper(this).getAccountTypeDao();
+			Dao<AccountType, Integer> dao = (Dao<AccountType, Integer>)DatabaseHelper.getHelper(this).getMyDao(AccountType.class); 
 			List<AccountType> list = dao.queryForAll();
 			final ArrayAdapter<AccountType> adapter = new ArrayAdapter<AccountType>(this,
 					android.R.layout.simple_spinner_item, list);
@@ -131,7 +129,6 @@ public class AccountEdit extends Activity {
 		return;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void loadFromObj() throws SQLException {
 		accountName.setText(account.getName());
 		accountDesc.setText(account.getDesc());

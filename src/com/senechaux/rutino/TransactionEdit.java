@@ -38,8 +38,9 @@ import com.senechaux.rutino.utils.AlarmUtils;
 import com.senechaux.rutino.utils.GeoUtils;
 import com.senechaux.rutino.utils.StringUtils;
 
+@SuppressWarnings("unchecked")
 public class TransactionEdit extends Activity {
-	private static final String TAG = "TransactionEdit"; 
+	private static final String TAG = "TransactionEdit";
 	protected static final int DATE_DIALOG_ID = 0;
 	protected static final int TIME_DIALOG_ID = 1;
 
@@ -124,13 +125,8 @@ public class TransactionEdit extends Activity {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-
 					if (!isPeriodic.isChecked()) {
-						Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(TransactionEdit.this)
-								.getTransactionDao();
-						dao.createOrUpdate(transaction);
-						transaction.setGlobal_id(Constants.PREFIX_GLOBAL_ID + transaction.get_id());
-						dao.update(transaction);
+						DatabaseHelper.getHelper(TransactionEdit.this).genericCreateOrUpdate(TransactionEdit.this, transaction);
 					} else {
 						insertPeriodic();
 					}
@@ -145,7 +141,8 @@ public class TransactionEdit extends Activity {
 		StringUtils.updateTimeDate(mPickDate, mPickTime, transactionDateTime);
 
 		try {
-			Dao<Currency, Integer> dao = DatabaseHelper.getHelper(this).getCurrencyDao();
+			Dao<Currency, Integer> dao = (Dao<Currency, Integer>) DatabaseHelper.getHelper(this).getMyDao(
+					Currency.class);
 			List<Currency> list = dao.queryForAll();
 			final ArrayAdapter<Currency> adapter = new ArrayAdapter<Currency>(this,
 					android.R.layout.simple_spinner_item, list);
@@ -220,13 +217,13 @@ public class TransactionEdit extends Activity {
 		transaction.setName(transactionName.getText().toString());
 		transaction.setDesc(transactionDesc.getText().toString());
 		transaction.setCurrency(currency);
-		
+
 		String amount = transactionAmount.getText().toString();
 		if (amount.trim().equals(""))
 			transaction.setAmount(0.0);
 		else
 			transaction.setAmount(Double.parseDouble(amount));
-		
+
 		if (geotag.isChecked()) {
 			transaction.setLatitude(latitude);
 			transaction.setLongitude(longitude);
@@ -235,16 +232,15 @@ public class TransactionEdit extends Activity {
 		if (isPeriodic.isChecked()) {
 			String p = periodicity.getText().toString();
 			if (p.trim().equals(""))
-				((PeriodicTransaction)transaction).setPeriodicity(1);
+				((PeriodicTransaction) transaction).setPeriodicity(1);
 			else
-				((PeriodicTransaction)transaction).setPeriodicity(Integer.parseInt(p));
+				((PeriodicTransaction) transaction).setPeriodicity(Integer.parseInt(p));
 		}
 
 		transaction.setDate(transactionDateTime.getTime());
 		return;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void loadFromObj() throws SQLException {
 		accountFather = transaction.getAccount();
 		transactionName.setText(transaction.getName());
@@ -291,16 +287,13 @@ public class TransactionEdit extends Activity {
 	};
 
 	private void insertPeriodic() throws SQLException {
-		PeriodicTransaction perTrans = (PeriodicTransaction)transaction;
+		PeriodicTransaction perTrans = (PeriodicTransaction) transaction;
 		// Si existe se borra la anterior alarma
 		if (perTrans.get_id() != null) {
 			AlarmUtils.cancelAlarm(this, perTrans);
 		}
 		// Inserta en BBDD
-		Dao<PeriodicTransaction, Integer> dao = DatabaseHelper.getHelper(this).getPeriodicTransactionDao();
-		dao.createOrUpdate(perTrans);
-		perTrans.setGlobal_id(Constants.PREFIX_GLOBAL_ID + perTrans.get_id());
-		dao.update(perTrans);
+		DatabaseHelper.getHelper(TransactionEdit.this).genericCreateOrUpdate(TransactionEdit.this, perTrans);
 
 		AlarmUtils.setAlarm(this, perTrans);
 	}

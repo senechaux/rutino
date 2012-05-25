@@ -28,8 +28,9 @@ import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Wallet;
 
+@SuppressWarnings("unchecked")
 public class ReportList extends ListActivity {
-	private static final String TAG = "ReportList"; 
+	private static final String TAG = "ReportList";
 	private Wallet walletFather;
 
 	public static void callMe(Context c, Wallet wallet) {
@@ -83,7 +84,6 @@ public class ReportList extends ListActivity {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		ArrayAdapter<Report> adapter = (ArrayAdapter<Report>) getListAdapter();
@@ -95,7 +95,7 @@ public class ReportList extends ListActivity {
 			return true;
 		case R.id.delete_report:
 			try {
-				DatabaseHelper.getHelper(this).getReportDao().delete(report);
+				((Dao<Report, Integer>) DatabaseHelper.getHelper(this).getMyDao(Report.class)).delete(report);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -125,7 +125,7 @@ public class ReportList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<Report, Integer> dao = DatabaseHelper.getHelper(this).getReportDao();
+		Dao<Report, Integer> dao = (Dao<Report, Integer>) DatabaseHelper.getHelper(this).getMyDao(Report.class);
 		QueryBuilder<Report, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Report.WALLET_ID, walletFather.get_id());
 		List<Report> list = dao.query(qb.prepare());

@@ -16,7 +16,6 @@
 
 package com.senechaux.rutino.platform;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -24,12 +23,14 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
 /**
  * Class for managing contacts sync related mOperations
  */
+@SuppressWarnings("unchecked")
 public class WalletManager {
 	/**
 	 * Custom IM protocol used when storing status messages.
@@ -76,7 +77,7 @@ public class WalletManager {
 	 */
 	private static void addWallet(Context context, String accountName, Wallet wallet, BatchOperation batchOperation) {
 		try {
-			DatabaseHelper.getHelper(context).getWalletDao().createOrUpdate(wallet);
+			DatabaseHelper.getHelper(context).genericCreateOrUpdate(context, wallet);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQL error in adding wallet", e);
 		}
@@ -98,7 +99,7 @@ public class WalletManager {
 		// query for all accounts that have that password
 		Wallet wallet;
 		try {
-			wallet = DatabaseHelper.getHelper(context).getWalletDao().queryForId(walletId);
+			wallet = ((Dao<Wallet, Integer>)DatabaseHelper.getHelper(context).getMyDao(Wallet.class)).queryForId(walletId);
 			if (wallet != null) {
 				id = walletId;
 			}

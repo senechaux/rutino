@@ -26,8 +26,10 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
 
+@SuppressWarnings("unchecked")
 public class PeriodicTransactionList extends ListActivity {
 	private static final String TAG = "PeriodicTransactionList"; 
 	private Account accountFather;
@@ -87,7 +89,6 @@ public class PeriodicTransactionList extends ListActivity {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		ArrayAdapter<PeriodicTransaction> adapter = (ArrayAdapter<PeriodicTransaction>) getListAdapter();
@@ -129,7 +130,7 @@ public class PeriodicTransactionList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<PeriodicTransaction, Integer> dao = DatabaseHelper.getHelper(this).getPeriodicTransactionDao();
+		Dao<PeriodicTransaction, Integer> dao = (Dao<PeriodicTransaction, Integer>)DatabaseHelper.getHelper(this).getMyDao(PeriodicTransaction.class);
 		QueryBuilder<PeriodicTransaction, Integer> qb = dao.queryBuilder();
 		qb.where().eq(PeriodicTransaction.ACCOUNT_ID, accountFather.get_id());
 		// false: más reciente primero
@@ -163,7 +164,7 @@ public class PeriodicTransactionList extends ListActivity {
 			fillText(v, R.id.periodicTransactionName, transaction.getName());
 			fillText(v, R.id.periodicTransactionAmount, transaction.getAmount().toString());
 			try {
-				fillText(v, R.id.periodicTransactionCurrency, DatabaseHelper.getHelper(PeriodicTransactionList.this).getCurrencyDao()
+				fillText(v, R.id.periodicTransactionCurrency, ((Dao<Currency, Integer>)DatabaseHelper.getHelper(PeriodicTransactionList.this).getMyDao(Currency.class))
 						.queryForId(transaction.getCurrency().get_id()).getName());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

@@ -75,8 +75,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			wallets = NetworkUtilities.fetchWalletUpdates(account, authtoken, mLastUpdated);
 
 			// for (Wallet wallet : wallets) {
-			// DatabaseHelper.getHelper(this.mContext).getWalletDao()
-			// .createOrUpdate(wallet);
+			// DatabaseHelper.getHelper(this.mContext).genericCreateOrUpdate(this.mContext, wallet);
 			// }
 
 			// update the last synced date.
