@@ -119,11 +119,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return false;
 	}
 
-	public Dao<?, Integer> getMyDao(Class<?> entityClass) throws SQLException {
-		if (daos.get(entityClass.getName()) == null) {
-			daos.put(entityClass.getName(), (Dao<BaseEntity, Integer>) getDao(entityClass));
+	public Dao<?, ?> getMyDao(Class<?> entityClass) throws SQLException {
+		if (this.daos.get(entityClass.getName()) == null) {
+			this.daos.put(entityClass.getName(), (Dao<BaseEntity, Integer>) getDao(entityClass));
 		}
-		return daos.get(entityClass.getName());
+		return this.daos.get(entityClass.getName());
 	}
 
 	public int genericCreateOrUpdate(Context ctxt, BaseEntity entity) throws SQLException {
