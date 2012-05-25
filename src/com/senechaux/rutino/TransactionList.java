@@ -28,6 +28,7 @@ import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.Transaction;
 
 public class TransactionList extends ListActivity {
+	private static final String TAG = "TransactionList"; 
 	private Account accountFather;
 
 	public static void callMe(Context c, Account account) {
@@ -125,7 +126,7 @@ public class TransactionList extends ListActivity {
 	}
 
 	private void fillList() throws SQLException {
-		Log.i(TransactionList.class.getName(), "Show list again");
+		Log.i(TAG, "Show list again");
 		Dao<Transaction, Integer> dao = DatabaseHelper.getHelper(this).getTransactionDao();
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.get_id());

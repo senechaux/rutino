@@ -3,7 +3,7 @@
 
     <PreferenceCategory android:title="@string/prefs_currency" >
         <ListPreference
-            android:dialogTitle="Choose a Pennsylvania city"
+            android:dialogTitle="@string/prefs_currencyText"
             android:entries="@array/currency"
             android:entryValues="@array/currency_values"
             android:key="currency"

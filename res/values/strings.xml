@@ -36,6 +36,9 @@
     <string name="geotag">Geotag</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
+    <string name="inputs">Inputs</string>
+    <string name="outputs">Outputs</string>
+    <string name="total">Total</string>
     <string name="confirm">Confirm</string>
     <string name="preferences">Preferences</string>
     <string name="backup">Backup</string>
@@ -45,7 +48,13 @@
     <string name="backupProgress">Exporting database…</string>
     <string name="backupOK">Export successful!!</string>
     <string name="backupKO">Export failed</string>
-
+    <string name="restoreProgress">Importing database…</string>
+    <string name="restoreOK">Import successful!!</string>
+    <string name="restoreKO">Import failed</string>
+    
+    <!-- Message shown if the provided account doesn't support the current activity. -->
+    <string name="report_date_validation_dialog">\'From\' date must be lower then \'To\' Date.</string>
+    
     <!-- Label for this package -->
     <string name="label">RutinoAdapter</string>
 
@@ -84,10 +93,7 @@
         Please re-enter your password.</string>
     <!-- Message shown in dialog to prompt the user for their password -->
     <string name="login_activity_loginfail_text_pwmissing">Type the password for this account.</string>
-    <!--
-        Message shown if the provided account doesn't support the current
-        activity.
-    -->
+    <!-- Message shown if the provided account doesn't support the current activity. -->
     <string name="login_activity_newaccount_text">Sign in to your Sample SyncAdapter account. </string>
 
     <!-- Button that takes the user to the "sign in" screen -->
@@ -96,6 +102,7 @@
     <string name="back_button_label">Back</string>
     <!-- Button to cancel the current operation -->
     <string name="cancel_button_label">Cancel</string>
+    <string name="ok">Ok</string>
     <string name="profile_action">Sample profile</string>
     <string name="view_profile">View Profile</string>
 

@@ -15,6 +15,7 @@ import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class WalletEdit extends Activity {
+	private static final String TAG = "WalletEdit"; 
 
 	private EditText walletName;
 	private EditText walletDesc;

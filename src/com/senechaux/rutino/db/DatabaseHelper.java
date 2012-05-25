@@ -30,8 +30,7 @@ import com.senechaux.rutino.utils.AlarmUtils;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static volatile DatabaseHelper databaseHelper = null;
 
-	private static final String TAG = "DataBaseHelper"; // Tag just for the
-														// LogCat window
+	private static final String TAG = "DataBaseHelper"; 
 	private static final String DB_PATH = "/data/data/com.senechaux.rutino/databases/rutino.db";
 	private static final String DB_NAME = "rutino.db";
 	private static final int DATABASE_VERSION = 1;

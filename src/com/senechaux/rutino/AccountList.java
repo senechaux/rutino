@@ -31,6 +31,7 @@ import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class AccountList extends ListActivity {
+	private static final String TAG = "AccountList"; 
 	private Wallet walletFather;
 	private SharedPreferences prefs;
 
@@ -137,7 +138,7 @@ public class AccountList extends ListActivity {
 	}
 
 	private void fillList() throws SQLException {
-		Log.i(AccountList.class.getName(), "Show list again");
+		Log.i(TAG, "Show list again");
 		Dao<Account, Integer> dao = DatabaseHelper.getHelper(this).getAccountDao();
 		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Account.WALLET_ID, walletFather.get_id());

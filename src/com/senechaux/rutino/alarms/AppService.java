@@ -7,7 +7,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.senechaux.rutino.R;
 import com.senechaux.rutino.TransactionEdit;
@@ -18,16 +17,14 @@ import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.utils.AlarmUtils;
 
 public class AppService extends WakefulIntentService {
+	private static final String TAG = "AppService"; 
 	public AppService() {
 		super("AppService");
 	}
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
-		Log.i("AppService", "PASA POR AQUI --------------------------");
-
 		PeriodicTransaction perTrans = (PeriodicTransaction) intent.getSerializableExtra(PeriodicTransaction.OBJ);
-
 		Transaction trans = new Transaction(perTrans);
 		try {
 			// Insertamos la transacción en BBDD

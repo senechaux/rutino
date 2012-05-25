@@ -5,9 +5,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -22,8 +24,10 @@ import com.senechaux.rutino.db.entities.Wallet;
 import com.senechaux.rutino.utils.StringUtils;
 
 public class ReportEdit extends Activity {
+	private static final String TAG = "ReportEdit"; 
 	protected static final int DATE_FROM_DIALOG_ID = 0;
 	protected static final int DATE_TO_DIALOG_ID = 1;
+	protected static final int DATE_VALIDA_GREATER = 2;
 
 	private EditText reportName, reportDesc;
 	private Button createReport, mPickDateFrom, mPickDateTo;
@@ -71,20 +75,24 @@ public class ReportEdit extends Activity {
 
 		createReport.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				try {
-					saveToObj();
-					Dao<Report, Integer> dao = DatabaseHelper.getHelper(ReportEdit.this).getReportDao();
-					dao.createOrUpdate(report);
-					report.setGlobal_id(Constants.PREFIX_GLOBAL_ID + report.get_id());
-					dao.update(report);
+				if (reportDateTimeFrom.after(reportDateTimeTo)) {
+					showDialog(DATE_VALIDA_GREATER);
+				} else {
+					try {
+						saveToObj();
+						Dao<Report, Integer> dao = DatabaseHelper.getHelper(ReportEdit.this).getReportDao();
+						dao.createOrUpdate(report);
+						report.setGlobal_id(Constants.PREFIX_GLOBAL_ID + report.get_id());
+						dao.update(report);
 
-					finish();
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
+						finish();
+					} catch (SQLException e) {
+						throw new RuntimeException(e);
+					}
 				}
 			}
 		});
-		
+
 		reportDateTimeFrom = new GregorianCalendar();
 		reportDateTimeFrom.set(GregorianCalendar.HOUR_OF_DAY, 0);
 		reportDateTimeFrom.set(GregorianCalendar.MINUTE, 0);
@@ -119,6 +127,16 @@ public class ReportEdit extends Activity {
 			mMonth = reportDateTimeTo.get(Calendar.MONTH);
 			mDay = reportDateTimeTo.get(Calendar.DAY_OF_MONTH);
 			return new DatePickerDialog(this, mDateToSetListener, mYear, mMonth, mDay);
+		case DATE_VALIDA_GREATER:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.report_date_validation_dialog).setCancelable(false)
+					.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+			AlertDialog alert = builder.create();
+			return alert;
 		}
 		return null;
 	}
@@ -151,12 +169,11 @@ public class ReportEdit extends Activity {
 	private void loadFromObj() throws SQLException {
 		reportName.setText(report.getName());
 		reportDesc.setText(report.getDesc());
-		
+
 		reportDateTimeFrom.setTime(report.getDateFrom());
 		StringUtils.updateTimeDate(mPickDateFrom, null, reportDateTimeFrom);
 		reportDateTimeTo.setTime(report.getDateTo());
 		StringUtils.updateTimeDate(mPickDateTo, null, reportDateTimeTo);
-
 	}
 
 	// the callback received when the user "sets" the date in the dialog
@@ -172,10 +189,10 @@ public class ReportEdit extends Activity {
 	// the callback received when the user "sets" the date in the dialog
 	private DatePickerDialog.OnDateSetListener mDateToSetListener = new DatePickerDialog.OnDateSetListener() {
 		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-			reportDateTimeFrom.set(GregorianCalendar.YEAR, year);
-			reportDateTimeFrom.set(GregorianCalendar.MONTH, monthOfYear);
-			reportDateTimeFrom.set(GregorianCalendar.DAY_OF_MONTH, dayOfMonth);
-			StringUtils.updateTimeDate(mPickDateFrom, null, reportDateTimeFrom);
+			reportDateTimeTo.set(GregorianCalendar.YEAR, year);
+			reportDateTimeTo.set(GregorianCalendar.MONTH, monthOfYear);
+			reportDateTimeTo.set(GregorianCalendar.DAY_OF_MONTH, dayOfMonth);
+			StringUtils.updateTimeDate(mPickDateTo, null, reportDateTimeTo);
 		}
 	};
 

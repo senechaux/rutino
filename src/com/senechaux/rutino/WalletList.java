@@ -30,6 +30,7 @@ import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class WalletList extends ListActivity {
+	private static final String TAG = "WalletList"; 
 
 	public static void callMe(Context c) {
 		c.startActivity(new Intent(c, WalletList.class));
@@ -127,7 +128,7 @@ public class WalletList extends ListActivity {
 	}
 
 	private void fillList() throws SQLException {
-		Log.i(WalletList.class.getName(), "Show list again");
+		Log.i(TAG, "Show list again");
 		Dao<Wallet, Integer> dao = DatabaseHelper.getHelper(this).getWalletDao();
 		List<Wallet> list = dao.queryForAll();
 		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this, R.layout.wallet_row, list);
@@ -174,7 +175,7 @@ public class WalletList extends ListActivity {
 			try {
 				return DatabaseHelper.getHelper(WalletList.this).exportDatabase();
 			} catch (IOException e) {
-				Log.e("com.senechaux.com", e.getMessage(), e);
+				Log.e(TAG, e.getMessage(), e);
 				return false;
 			}
 		}
@@ -198,7 +199,7 @@ public class WalletList extends ListActivity {
 
 		// can use UI thread here
 		protected void onPreExecute() {
-			this.dialog.setMessage("IMPORTANDO");
+			this.dialog.setMessage(getString(R.string.restoreProgress));
 			this.dialog.show();
 		}
 
@@ -207,7 +208,7 @@ public class WalletList extends ListActivity {
 			try {
 				return DatabaseHelper.getHelper(WalletList.this).importDatabase();
 			} catch (IOException e) {
-				Log.e("com.senechaux.com", e.getMessage(), e);
+				Log.e(TAG, e.getMessage(), e);
 				return false;
 			}
 		}
@@ -218,9 +219,9 @@ public class WalletList extends ListActivity {
 				this.dialog.dismiss();
 			}
 			if (success) {
-				Toast.makeText(WalletList.this, R.string.backupOK, Toast.LENGTH_SHORT).show();
+				Toast.makeText(WalletList.this, R.string.restoreOK, Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(WalletList.this, R.string.backupKO, Toast.LENGTH_SHORT).show();
+				Toast.makeText(WalletList.this, R.string.restoreKO, Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

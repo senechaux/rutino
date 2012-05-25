@@ -21,6 +21,7 @@ import com.senechaux.rutino.db.entities.AccountType;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class AccountEdit extends Activity {
+	private static final String TAG = "AccountEdit"; 
 
 	private EditText accountName;
 	private EditText accountDesc;

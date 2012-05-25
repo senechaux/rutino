@@ -29,6 +29,7 @@ import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class ReportList extends ListActivity {
+	private static final String TAG = "ReportList"; 
 	private Wallet walletFather;
 
 	public static void callMe(Context c, Wallet wallet) {
@@ -57,7 +58,7 @@ public class ReportList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Report report = (Report) l.getAdapter().getItem(position);
-		ReportEdit.callMe(ReportList.this, report);
+		ReportView.callMe(ReportList.this, report);
 	}
 
 	@Override
@@ -123,7 +124,7 @@ public class ReportList extends ListActivity {
 	}
 
 	private void fillList() throws SQLException {
-		Log.i(ReportList.class.getName(), "Show list again");
+		Log.i(TAG, "Show list again");
 		Dao<Report, Integer> dao = DatabaseHelper.getHelper(this).getReportDao();
 		QueryBuilder<Report, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Report.WALLET_ID, walletFather.get_id());

@@ -44,6 +44,7 @@
         <activity android:name=".PeriodicTransactionList" />
         <activity android:name=".ReportList" />
         <activity android:name=".ReportEdit" />
+        <activity android:name=".ReportView" />
         <activity android:name=".Preferences" />
         <activity
             android:name=".authenticator.AuthenticatorActivity"

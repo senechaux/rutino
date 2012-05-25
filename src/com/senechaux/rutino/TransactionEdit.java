@@ -39,6 +39,7 @@ import com.senechaux.rutino.utils.GeoUtils;
 import com.senechaux.rutino.utils.StringUtils;
 
 public class TransactionEdit extends Activity {
+	private static final String TAG = "TransactionEdit"; 
 	protected static final int DATE_DIALOG_ID = 0;
 	protected static final int TIME_DIALOG_ID = 1;
 

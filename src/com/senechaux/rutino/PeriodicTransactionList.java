@@ -29,6 +29,7 @@ import com.senechaux.rutino.db.entities.Account;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
 
 public class PeriodicTransactionList extends ListActivity {
+	private static final String TAG = "PeriodicTransactionList"; 
 	private Account accountFather;
 	private Button createPeriodicTransaction;
 
@@ -127,7 +128,7 @@ public class PeriodicTransactionList extends ListActivity {
 	}
 
 	private void fillList() throws SQLException {
-		Log.i(PeriodicTransactionList.class.getName(), "Show list again");
+		Log.i(TAG, "Show list again");
 		Dao<PeriodicTransaction, Integer> dao = DatabaseHelper.getHelper(this).getPeriodicTransactionDao();
 		QueryBuilder<PeriodicTransaction, Integer> qb = dao.queryBuilder();
 		qb.where().eq(PeriodicTransaction.ACCOUNT_ID, accountFather.get_id());
