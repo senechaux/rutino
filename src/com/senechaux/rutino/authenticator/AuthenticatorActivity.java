@@ -36,7 +36,7 @@ import android.widget.TextView;
 
 import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.R;
-import com.senechaux.rutino.client.NetworkUtilities;
+import com.senechaux.rutino.utils.NetworkUtilities;
 
 /**
  * Activity which displays login screen to the user.

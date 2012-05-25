@@ -27,7 +27,7 @@ import android.util.Log;
 
 import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.R;
-import com.senechaux.rutino.client.NetworkUtilities;
+import com.senechaux.rutino.utils.NetworkUtilities;
 
 /**
  * This class is an implementation of AbstractAccountAuthenticator for

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.senechaux.rutino.client;
+package com.senechaux.rutino.utils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -32,6 +32,7 @@ import org.apache.http.ParseException;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -60,7 +61,7 @@ public class NetworkUtilities {
 	public static final String PARAM_UPDATED = "timestamp";
 	public static final String USER_AGENT = "AuthenticationService/1.0";
 	public static final int REGISTRATION_TIMEOUT = 30 * 1000; // ms
-	public static final String BASE_URL = "http://192.168.1.129/api.php";
+	public static final String BASE_URL = "http://192.168.1.129/api_dev.php";
 	// "http://samplesyncadapter2.appspot.com";
 	public static final String AUTH_URI = BASE_URL + "/auth";
 	public static final String FETCH_WALLET_UPDATES_URI = BASE_URL + "/wallet.json";
@@ -240,13 +241,18 @@ public class NetworkUtilities {
 		HttpEntity entity = null;
 		entity = new UrlEncodedFormEntity(params);
 		final HttpPost post = new HttpPost(FETCH_WALLET_UPDATES_URI);
-		post.addHeader(entity.getContentType());
-		post.setEntity(entity);
+		//post.addHeader(entity.getContentType());
+		//post.setEntity(entity);
+		final HttpGet get = new HttpGet(FETCH_WALLET_UPDATES_URI);
+		get.addHeader(entity.getContentType());
+		//get.setEntity(entity);
+
 		maybeCreateHttpClient();
 
-		final HttpResponse resp = mHttpClient.execute(post);
+		//final HttpResponse resp = mHttpClient.execute(post);
+		final HttpResponse resp = mHttpClient.execute(get);
 		final String response = EntityUtils.toString(resp.getEntity());
-
+		
 		if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 			// Succesfully connected to the samplesyncadapter server and
 			// authenticated.

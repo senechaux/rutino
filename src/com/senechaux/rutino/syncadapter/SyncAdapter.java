@@ -37,9 +37,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.senechaux.rutino.Constants;
-import com.senechaux.rutino.client.NetworkUtilities;
 import com.senechaux.rutino.db.entities.Wallet;
 import com.senechaux.rutino.platform.WalletManager;
+import com.senechaux.rutino.utils.NetworkUtilities;
 
 /**
  * SyncAdapter implementation for syncing sample SyncAdapter contacts to the
