@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.Wallet;
 
@@ -69,8 +69,8 @@ public class AccountList extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Account account = (Account) l.getAdapter().getItem(position);
-		TransactionList.callMe(AccountList.this, account);
+		AccountEntity accountEntity = (AccountEntity) l.getAdapter().getItem(position);
+		TransactionList.callMe(AccountList.this, accountEntity);
 	}
 
 	@Override
@@ -100,21 +100,21 @@ public class AccountList extends ListActivity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		ArrayAdapter<Account> adapter = (ArrayAdapter<Account>) getListAdapter();
-		Account account = adapter.getItem(info.position);
+		ArrayAdapter<AccountEntity> adapter = (ArrayAdapter<AccountEntity>) getListAdapter();
+		AccountEntity accountEntity = adapter.getItem(info.position);
 
 		switch (item.getItemId()) {
 		case R.id.edit_account:
-			AccountEdit.callMe(AccountList.this, account);
+			AccountEdit.callMe(AccountList.this, accountEntity);
 			return true;
 		case R.id.delete_account:
 			try {
-				DatabaseHelper.getHelper(this).deleteAccount(this, account);
+				DatabaseHelper.getHelper(this).deleteAccount(this, accountEntity);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
-			adapter.remove(account);
+			adapter.remove(accountEntity);
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -139,11 +139,11 @@ public class AccountList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<Account, Integer> dao = (Dao<Account, Integer>)DatabaseHelper.getHelper(this).getMyDao(Account.class); 
-		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Account.WALLET_ID, walletFather.get_id());
-		List<Account> list = dao.query(qb.prepare());
-		ArrayAdapter<Account> arrayAdapter = new AccountAdapter(this, R.layout.account_row, list);
+		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>)DatabaseHelper.getHelper(this).getMyDao(AccountEntity.class); 
+		QueryBuilder<AccountEntity, Integer> qb = dao.queryBuilder();
+		qb.where().eq(AccountEntity.WALLET_ID, walletFather.get_id());
+		List<AccountEntity> list = dao.query(qb.prepare());
+		ArrayAdapter<AccountEntity> arrayAdapter = new AccountAdapter(this, R.layout.account_row, list);
 		setListAdapter(arrayAdapter);
 	}
 
@@ -154,9 +154,9 @@ public class AccountList extends ListActivity {
 	}
 
 	// CLASE PRIVADA PARA MOSTRAR LA LISTA
-	private class AccountAdapter extends ArrayAdapter<Account> {
+	private class AccountAdapter extends ArrayAdapter<AccountEntity> {
 
-		public AccountAdapter(Context context, int textViewResourceId, List<Account> items) {
+		public AccountAdapter(Context context, int textViewResourceId, List<AccountEntity> items) {
 			super(context, textViewResourceId, items);
 		}
 
@@ -167,13 +167,13 @@ public class AccountList extends ListActivity {
 				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				v = vi.inflate(R.layout.account_row, null);
 			}
-			Account account = getItem(position);
+			AccountEntity accountEntity = getItem(position);
 			Currency prefCurrency = null;
-			fillText(v, R.id.accountName, account.getName());
+			fillText(v, R.id.accountName, accountEntity.getName());
 			try {
 				prefCurrency = ((Dao<Currency, Integer>)DatabaseHelper.getHelper(AccountList.this).getMyDao(Currency.class))
 						.queryForId(Integer.valueOf(prefs.getString("currency", "1")));
-				fillText(v, R.id.accountAmount, account.getTotal(AccountList.this, prefCurrency).toString());
+				fillText(v, R.id.accountAmount, accountEntity.getTotal(AccountList.this, prefCurrency).toString());
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

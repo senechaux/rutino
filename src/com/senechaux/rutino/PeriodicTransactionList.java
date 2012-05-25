@@ -25,20 +25,20 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.PeriodicTransaction;
 
 @SuppressWarnings("unchecked")
 public class PeriodicTransactionList extends ListActivity {
 	private static final String TAG = "PeriodicTransactionList"; 
-	private Account accountFather;
+	private AccountEntity accountFather;
 	private Button createPeriodicTransaction;
 
 
-	public static void callMe(Context c, Account account) {
+	public static void callMe(Context c, AccountEntity accountEntity) {
 		Intent intent = new Intent(c, PeriodicTransactionList.class);
-		intent.putExtra(Account.OBJ, account);
+		intent.putExtra(AccountEntity.OBJ, accountEntity);
 		c.startActivity(intent);
 	}
 
@@ -48,7 +48,7 @@ public class PeriodicTransactionList extends ListActivity {
 		setContentView(R.layout.periodic_transaction_list);
 		createPeriodicTransaction = (Button) findViewById(R.id.createPeriodicTransaction);
 
-		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
+		accountFather = (AccountEntity) getIntent().getSerializableExtra(AccountEntity.OBJ);
 		registerForContextMenu(getListView());
 
 		createPeriodicTransaction.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +114,7 @@ public class PeriodicTransactionList extends ListActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(Account.OBJ, accountFather);
+		outState.putSerializable(AccountEntity.OBJ, accountFather);
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class PeriodicTransactionList extends ListActivity {
 
 	private void reInit(Bundle savedInstanceState) {
 		if (savedInstanceState != null) {
-			accountFather = (Account) savedInstanceState.get(Account.OBJ);
+			accountFather = (AccountEntity) savedInstanceState.get(AccountEntity.OBJ);
 		}
 	}
 

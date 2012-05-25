@@ -24,7 +24,7 @@ public class PeriodicTransaction extends Transaction {
 		this.date = transaction.getDate();
 		this.latitude = transaction.getLatitude();
 		this.longitude = transaction.getLongitude();
-		this.account = transaction.getAccount();
+		this.accountEntity = transaction.getAccount();
 		this.currency = transaction.getCurrency();
 		this.periodicity = periodicity;
 	}
@@ -44,7 +44,7 @@ public class PeriodicTransaction extends Transaction {
 	@Override
 	public String toString() {
 		return "PeriodicTransaction [periodicity=" + periodicity + ", name=" + name + ", desc=" + desc + ", amount="
-				+ amount + ", date=" + date + ", account=" + account + ", currency=" + currency + ", _id=" + _id + "]";
+				+ amount + ", date=" + date + ", account=" + accountEntity + ", currency=" + currency + ", _id=" + _id + "]";
 	}
 
 }

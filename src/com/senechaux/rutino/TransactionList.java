@@ -24,18 +24,18 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.Currency;
 import com.senechaux.rutino.db.entities.Transaction;
 
 @SuppressWarnings("unchecked")
 public class TransactionList extends ListActivity {
 	private static final String TAG = "TransactionList"; 
-	private Account accountFather;
+	private AccountEntity accountFather;
 
-	public static void callMe(Context c, Account account) {
+	public static void callMe(Context c, AccountEntity accountEntity) {
 		Intent intent = new Intent(c, TransactionList.class);
-		intent.putExtra(Account.OBJ, account);
+		intent.putExtra(AccountEntity.OBJ, accountEntity);
 		c.startActivity(intent);
 	}
 
@@ -43,7 +43,7 @@ public class TransactionList extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.transaction_list);
-		accountFather = (Account) getIntent().getSerializableExtra(Account.OBJ);
+		accountFather = (AccountEntity) getIntent().getSerializableExtra(AccountEntity.OBJ);
 		registerForContextMenu(getListView());
 
 		findViewById(R.id.createTransaction).setOnClickListener(new View.OnClickListener() {
@@ -112,7 +112,7 @@ public class TransactionList extends ListActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(Account.OBJ, accountFather);
+		outState.putSerializable(AccountEntity.OBJ, accountFather);
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class TransactionList extends ListActivity {
 
 	private void reInit(Bundle savedInstanceState) {
 		if (savedInstanceState != null) {
-			accountFather = (Account) savedInstanceState.get(Account.OBJ);
+			accountFather = (AccountEntity) savedInstanceState.get(AccountEntity.OBJ);
 		}
 	}
 

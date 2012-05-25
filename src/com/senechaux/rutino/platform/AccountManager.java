@@ -29,7 +29,8 @@ import com.senechaux.rutino.db.entities.BaseEntity;
 /**
  * Class for managing wallets sync related mOperations
  */
-public class WalletManager {
+@SuppressWarnings("unchecked")
+public class AccountManager {
 	/**
 	 * Custom IM protocol used when storing status messages.
 	 */

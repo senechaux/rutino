@@ -29,12 +29,12 @@ import com.senechaux.rutino.db.entities.BaseEntity;
 /**
  * Class for managing wallets sync related mOperations
  */
-public class WalletManager {
+public class AccountEntityManager {
 	/**
 	 * Custom IM protocol used when storing status messages.
 	 */
 	public static final String CUSTOM_IM_PROTOCOL = "RutinoSyncAdapter";
-	private static final String TAG = "WalletManager";
+	private static final String TAG = "AccountEntityManager";
 
 	/**
 	 * Synchronize raw wallets
@@ -44,14 +44,14 @@ public class WalletManager {
 	 * @param wallets
 	 *            The list of wallets
 	 */
-	public static synchronized void syncWallets(Context context, List<BaseEntity> wallets) {
+	public static synchronized void syncAccountEntities(Context context, List<BaseEntity> accountEntities) {
 		final ContentResolver resolver = context.getContentResolver();
 		final BatchOperation batchOperation = new BatchOperation(context, resolver);
 		Log.d(TAG, "In SyncWallets");
-		for (final BaseEntity wallet : wallets) {
+		for (final BaseEntity accountEntity : accountEntities) {
 			// add or update wallet
 			try {
-				DatabaseHelper.getHelper(context).genericCreateOrUpdate(context, wallet);
+				DatabaseHelper.getHelper(context).genericCreateOrUpdate(context, accountEntity);
 			} catch (SQLException e) {
 				Log.e(TAG, "SQL error in adding wallet", e);
 			}

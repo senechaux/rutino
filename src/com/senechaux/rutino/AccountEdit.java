@@ -16,7 +16,7 @@ import android.widget.Spinner;
 
 import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
-import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.AccountType;
 import com.senechaux.rutino.db.entities.Wallet;
 
@@ -29,7 +29,7 @@ public class AccountEdit extends Activity {
 	private AccountType accountType;
 	private Button createAccount;
 	private Spinner accountTypeSpinner;
-	private Account account;
+	private AccountEntity accountEntity;
 	private Wallet walletFather;
 
 	public static void callMe(Context c, Wallet wFather) {
@@ -38,9 +38,9 @@ public class AccountEdit extends Activity {
 		c.startActivity(intent);
 	}
 
-	public static void callMe(Context c, Account account) {
+	public static void callMe(Context c, AccountEntity accountEntity) {
 		Intent intent = new Intent(c, AccountEdit.class);
-		intent.putExtra(Account.OBJ, account);
+		intent.putExtra(AccountEntity.OBJ, accountEntity);
 		c.startActivity(intent);
 	}
 
@@ -56,14 +56,14 @@ public class AccountEdit extends Activity {
 		createAccount = (Button) findViewById(R.id.accountConfirm);
 
 		walletFather = (Wallet) getIntent().getSerializableExtra(Wallet.OBJ);
-		account = (Account) getIntent().getSerializableExtra(Account.OBJ);
+		accountEntity = (AccountEntity) getIntent().getSerializableExtra(AccountEntity.OBJ);
 
 		// Acción del botón Crear
 		createAccount.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				try {
 					saveToObj();
-					DatabaseHelper.getHelper(AccountEdit.this).genericCreateOrUpdate(AccountEdit.this, account);
+					DatabaseHelper.getHelper(AccountEdit.this).genericCreateOrUpdate(AccountEdit.this, accountEntity);
 					finish();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -102,15 +102,15 @@ public class AccountEdit extends Activity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		saveToObj();
-		outState.putSerializable(Account.OBJ, account);
+		outState.putSerializable(AccountEntity.OBJ, accountEntity);
 	}
 
 	private void reInit(Bundle savedInstanceState) {
 		try {
 			if (savedInstanceState != null) {
-				account = (Account) savedInstanceState.get(Account.OBJ);
+				accountEntity = (AccountEntity) savedInstanceState.get(AccountEntity.OBJ);
 			}
-			if (account != null) {
+			if (accountEntity != null) {
 				loadFromObj();
 			}
 		} catch (SQLException e) {
@@ -119,22 +119,22 @@ public class AccountEdit extends Activity {
 	}
 
 	private void saveToObj() {
-		if (account == null)
-			account = new Account();
+		if (accountEntity == null)
+			accountEntity = new AccountEntity();
 		if (walletFather != null)
-			account.setWallet(walletFather);
-		account.setName(accountName.getText().toString());
-		account.setDesc(accountDesc.getText().toString());
-		account.setAccountType(accountType);
+			accountEntity.setWallet(walletFather);
+		accountEntity.setName(accountName.getText().toString());
+		accountEntity.setDesc(accountDesc.getText().toString());
+		accountEntity.setAccountType(accountType);
 		return;
 	}
 
 	private void loadFromObj() throws SQLException {
-		accountName.setText(account.getName());
-		accountDesc.setText(account.getDesc());
+		accountName.setText(accountEntity.getName());
+		accountDesc.setText(accountEntity.getDesc());
 
 		ArrayAdapter<AccountType> adapter = (ArrayAdapter<AccountType>) accountTypeSpinner.getAdapter();
-		accountTypeSpinner.setSelection(adapter.getPosition(account.getAccountType()));
+		accountTypeSpinner.setSelection(adapter.getPosition(accountEntity.getAccountType()));
 	}
 
 }

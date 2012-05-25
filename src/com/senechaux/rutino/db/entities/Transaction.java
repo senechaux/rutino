@@ -32,7 +32,7 @@ public class Transaction extends BaseEntity {
 	@DatabaseField
 	protected Double longitude;
 	@DatabaseField(canBeNull = false, foreign = true)
-	protected Account account;
+	protected AccountEntity accountEntity;
 	@DatabaseField(canBeNull = false, foreign = true)
 	protected Currency currency;
 
@@ -100,12 +100,12 @@ public class Transaction extends BaseEntity {
 		this.longitude = longitude;
 	}
 
-	public Account getAccount() {
-		return account;
+	public AccountEntity getAccount() {
+		return accountEntity;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setAccount(AccountEntity accountEntity) {
+		this.accountEntity = accountEntity;
 	}
 
 	public Currency getCurrency() {
@@ -119,7 +119,7 @@ public class Transaction extends BaseEntity {
 	@Override
 	public String toString() {
 		return "Transaction [id=" + this.get_id() + ", name=" + name + ", desc=" + desc + ", amount=" + amount
-				+ ", account=" + account + "]";
+				+ ", account=" + accountEntity + "]";
 	}
 
 }

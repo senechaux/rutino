@@ -21,7 +21,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.R;
-import com.senechaux.rutino.db.entities.Account;
+import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.AccountType;
 import com.senechaux.rutino.db.entities.BaseEntity;
 import com.senechaux.rutino.db.entities.Currency;
@@ -58,7 +58,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
 		try {
 			TableUtils.createTable(connectionSource, Wallet.class);
-			TableUtils.createTable(connectionSource, Account.class);
+			TableUtils.createTable(connectionSource, AccountEntity.class);
 			TableUtils.createTable(connectionSource, AccountType.class);
 			TableUtils.createTable(connectionSource, Transaction.class);
 			TableUtils.createTable(connectionSource, PeriodicTransaction.class);
@@ -74,7 +74,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
 		try {
 			TableUtils.dropTable(connectionSource, Wallet.class, true);
-			TableUtils.dropTable(connectionSource, Account.class, true);
+			TableUtils.dropTable(connectionSource, AccountEntity.class, true);
 			TableUtils.dropTable(connectionSource, AccountType.class, true);
 			TableUtils.dropTable(connectionSource, Transaction.class, true);
 			TableUtils.dropTable(connectionSource, PeriodicTransaction.class, true);
@@ -145,40 +145,39 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return status.getNumLinesChanged();
 	}
 
-
 	public void deletePeriodicTransaction(Context ctxt, PeriodicTransaction perTrans) throws SQLException {
 		((Dao<PeriodicTransaction, Integer>) getMyDao(PeriodicTransaction.class)).deleteById(perTrans.get_id());
 		AlarmUtils.cancelAlarm(ctxt, perTrans);
 	}
 
-	public void deleteAccount(Context ctxt, Account account) throws SQLException {
+	public void deleteAccount(Context ctxt, AccountEntity accountEntity) throws SQLException {
 		// Borramos las transacciones asociadas a la cuenta
 		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>) getMyDao(Transaction.class);
 		DeleteBuilder<Transaction, Integer> db = dao.deleteBuilder();
-		db.where().eq(Transaction.ACCOUNT_ID, account.get_id());
+		db.where().eq(Transaction.ACCOUNT_ID, accountEntity.get_id());
 		dao.delete(db.prepare());
 
 		// Borramos las transacciones periódicas asociadas a la cuenta
 		Dao<PeriodicTransaction, Integer> daoPer = (Dao<PeriodicTransaction, Integer>) getMyDao(PeriodicTransaction.class);
 		QueryBuilder<PeriodicTransaction, Integer> qbPer = daoPer.queryBuilder();
-		qbPer.where().eq(PeriodicTransaction.ACCOUNT_ID, account.get_id());
+		qbPer.where().eq(PeriodicTransaction.ACCOUNT_ID, accountEntity.get_id());
 		List<PeriodicTransaction> list = daoPer.query(qbPer.prepare());
 		for (PeriodicTransaction periodicTransaction : list) {
 			this.deletePeriodicTransaction(ctxt, periodicTransaction);
 		}
 
 		// Borramos la cuenta
-		((Dao<Account, Integer>) getMyDao(Account.class)).deleteById(account.get_id());
+		((Dao<AccountEntity, Integer>) getMyDao(AccountEntity.class)).deleteById(accountEntity.get_id());
 	}
 
 	public void deleteWallet(Context ctxt, Wallet wallet) throws SQLException {
 		// Borramos las cuentas asociadas a la cartera
-		Dao<Account, Integer> dao = (Dao<Account, Integer>) getMyDao(Account.class);
-		QueryBuilder<Account, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Account.WALLET_ID, wallet.get_id());
-		List<Account> list = dao.query(qb.prepare());
-		for (Account account : list) {
-			this.deleteAccount(ctxt, account);
+		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>) getMyDao(AccountEntity.class);
+		QueryBuilder<AccountEntity, Integer> qb = dao.queryBuilder();
+		qb.where().eq(AccountEntity.WALLET_ID, wallet.get_id());
+		List<AccountEntity> list = dao.query(qb.prepare());
+		for (AccountEntity accountEntity : list) {
+			this.deleteAccount(ctxt, accountEntity);
 		}
 
 		// Borramos la cuenta

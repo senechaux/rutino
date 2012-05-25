@@ -17,7 +17,6 @@
 package com.senechaux.rutino.syncadapter;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +36,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.senechaux.rutino.Constants;
+import com.senechaux.rutino.db.entities.AccountEntity;
+import com.senechaux.rutino.db.entities.BaseEntity;
 import com.senechaux.rutino.db.entities.Wallet;
 import com.senechaux.rutino.platform.WalletManager;
 import com.senechaux.rutino.utils.NetworkUtilities;
@@ -62,7 +63,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider,
 			SyncResult syncResult) {
-		List<Wallet> wallets;
+		List<BaseEntity> wallets;
+		List<BaseEntity> accounts;
+//		List<Transaction> transactions;
+//		List<PeriodicTransaction> periodicTransactions;
+//		List<Report> reports;
 
 		String authtoken = null;
 		Log.d(TAG, "Rutino onPerformSync");
@@ -72,17 +77,28 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					.blockingGetAuthToken(account, Constants.AUTHTOKEN_TYPE, true /* notifyAuthFailure */);
 
 			// fetch updates from server
-			wallets = NetworkUtilities.fetchWalletUpdates(account, authtoken, mLastUpdated);
-
-			// for (Wallet wallet : wallets) {
-			// DatabaseHelper.getHelper(this.mContext).genericCreateOrUpdate(this.mContext, wallet);
-			// }
+			// wallets = NetworkUtilities.fetchWalletUpdates(account, authtoken,
+			// mLastUpdated);
+			wallets = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated, Constants.GET_WALLET_LIST, Wallet.class);
+			accounts = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated, Constants.GET_ACCOUNT_LIST, AccountEntity.class);
+//			transactions = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated);
+//			periodicTransactions = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated);
+//			reports = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated);
 
 			// update the last synced date.
 			mLastUpdated = new Date();
 			// update platform wallets.
-			Log.d(TAG, "Calling walletManager's sync wallets");
-			WalletManager.syncWallets(mContext, account.name, wallets);
+			Log.d(TAG, "Calling WalletManager's sync wallets");
+			WalletManager.syncWallets(mContext, wallets);
+			Log.d(TAG, "Calling AccountManager's sync accounts");
+//			AccountManager.syncAccounts(mContext, accounts);
+//			Log.d(TAG, "Calling TransactionManager's sync transactions");
+//			TransactionManager.syncTransactions(mContext, account.name, transactions);
+//			Log.d(TAG, "Calling PeriodicTransactionManager's sync periodic transactions");
+//			PeriodicTransactionManager.syncPeriodicTransactions(mContext, account.name, periodicTransactions);
+//			Log.d(TAG, "Calling ReportManager's sync reports");
+//			ReportManager.syncReports(mContext, account.name, reports);
+
 		} catch (final AuthenticatorException e) {
 			syncResult.stats.numParseExceptions++;
 			Log.e(TAG, "AuthenticatorException", e);

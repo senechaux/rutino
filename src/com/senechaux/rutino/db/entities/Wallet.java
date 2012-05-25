@@ -3,6 +3,7 @@ package com.senechaux.rutino.db.entities;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -61,7 +62,7 @@ public class Wallet extends BaseEntity {
 	 * @return wallet The new instance of Voiper user created from the JSON
 	 *         data.
 	 */
-	public static Wallet valueOf(JSONObject wallet) {
+	public static Wallet valueOf(Context ctxt, JSONObject wallet) {
 		try {
 			String globalId = wallet.has("global_id") ? wallet.getString("global_id") : null;
 			String name = wallet.has("name") ? wallet.getString("name") : null;
@@ -70,7 +71,7 @@ public class Wallet extends BaseEntity {
 			walletEntity.setGlobal_id(globalId);
 			return walletEntity;
 		} catch (JSONException ex) {
-			Log.i("User", "Error parsing JSON user object" + ex.toString());
+			Log.i("Wallet", "Error parsing JSON wallet object" + ex.toString());
 
 		}
 		return null;
