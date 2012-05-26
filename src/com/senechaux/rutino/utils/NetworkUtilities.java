@@ -289,10 +289,12 @@ public class NetworkUtilities {
 		// params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
 		// }
 		Log.i(TAG, params.toString());
+		
+		Log.v(TAG, "authtoken: " + authtoken);
 
 		HttpEntity entity = null;
 		entity = new UrlEncodedFormEntity(params);
-		final HttpGet get = new HttpGet(url);
+		final HttpGet get = new HttpGet(url + "?user_id=" + authtoken);
 		get.addHeader(entity.getContentType());
 
 		maybeCreateHttpClient();
