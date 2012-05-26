@@ -67,7 +67,7 @@ public class AccountType extends BaseEntity {
 			accountTypeEntity.setGlobal_id(globalId);
 			return accountTypeEntity;
 		} catch (Exception ex) {
-			Log.i("Wallet", "Error parsing JSON AccountType object" + ex.toString());
+			Log.i("AccountType", "Error parsing JSON AccountType object" + ex.toString());
 		}
 		return null;
 	}
