@@ -8,9 +8,8 @@ import android.location.LocationManager;
 
 public class GeoUtils {
 	/**
-	 * This is a fast code to get the last known location of the phone. If there
-	 * is no exact gps-information it falls back to the network-based location
-	 * info. This code is using LocationManager. Code from:
+	 * This is a fast code to get the last known location of the phone. If there is no exact gps-information it falls
+	 * back to the network-based location info. This code is using LocationManager. Code from:
 	 * http://www.androidsnippets.org/snippets/21/
 	 * 
 	 * @param ctx
@@ -21,8 +20,7 @@ public class GeoUtils {
 		List<String> providers = lm.getProviders(true);
 
 		/*
-		 * Loop over the array backwards, and if you get an accurate location,
-		 * then break out the loop
+		 * Loop over the array backwards, and if you get an accurate location, then break out the loop
 		 */
 		Location l = null;
 

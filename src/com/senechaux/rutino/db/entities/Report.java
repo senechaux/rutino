@@ -1,9 +1,18 @@
 package com.senechaux.rutino.db.entities;
 
+import java.text.DateFormat;
 import java.util.Date;
 
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.DatabaseTable;
+import com.senechaux.rutino.db.DatabaseHelper;
 
 @DatabaseTable
 public class Report extends BaseEntity {
@@ -29,6 +38,15 @@ public class Report extends BaseEntity {
 
 	public Report() {
 		super();
+	}
+
+	public Report(String name, String desc, Date dateFrom, Date dateTo, Wallet wallet) {
+		super();
+		this.name = name;
+		this.desc = desc;
+		this.dateFrom = dateFrom;
+		this.dateTo = dateTo;
+		this.wallet = wallet;
 	}
 
 	public String getName() {
@@ -74,6 +92,38 @@ public class Report extends BaseEntity {
 	@Override
 	public String toString() {
 		return "Report [id=" + this.get_id() + ", name=" + name + ", desc=" + desc + ", wallet=" + wallet + "]";
+	}
+	
+	/**
+	 * Creates and returns an instance of the account from the provided JSON data.
+	 * 
+	 * @param account The JSONObject containing account data
+	 * @return account The new instance of Voiper user created from the JSON data.
+	 */
+	@SuppressWarnings("unchecked")
+	public static Report valueOf(Context ctxt, JSONObject report) {
+		try {
+			String globalId = report.has("global_id") ? report.getString("global_id") : null;
+			String name = report.has("name") ? report.getString("name") : null;
+			String description = report.has("description") ? report.getString("description") : null;
+			String dateFrom = report.has("date_from") ? report.getString("date_from") : null;
+			String dateTo = report.has("date_to") ? report.getString("date_to") : null;
+			String walletGlobalId = report.has("wallet_global_id") ? report.getString("wallet_global_id") : null;
+
+			Dao<Wallet, Integer> daoWallet = (Dao<Wallet, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
+					Wallet.class);
+			QueryBuilder<Wallet, Integer> qbWallet = daoWallet.queryBuilder();
+			qbWallet.where().eq(Wallet.GLOBAL_ID, walletGlobalId);
+			Wallet wallet = daoWallet.queryForFirst(qbWallet.prepare());
+			
+			DateFormat df = DateFormat.getDateInstance();
+			Report reportEntity = new Report(name, description, df.parse(dateFrom), df.parse(dateTo), wallet);
+			reportEntity.setGlobal_id(globalId);
+			return reportEntity;
+		} catch (Exception ex) {
+			Log.i("Wallet", "Error parsing JSON wallet object" + ex.toString());
+		}
+		return null;
 	}
 
 }

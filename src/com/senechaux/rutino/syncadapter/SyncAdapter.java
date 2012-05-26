@@ -37,14 +37,18 @@ import android.util.Log;
 
 import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.db.entities.AccountEntity;
+import com.senechaux.rutino.db.entities.AccountType;
 import com.senechaux.rutino.db.entities.BaseEntity;
+import com.senechaux.rutino.db.entities.Currency;
+import com.senechaux.rutino.db.entities.PeriodicTransaction;
+import com.senechaux.rutino.db.entities.Report;
+import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.db.entities.Wallet;
-import com.senechaux.rutino.platform.WalletManager;
+import com.senechaux.rutino.platform.EntityManager;
 import com.senechaux.rutino.utils.NetworkUtilities;
 
 /**
- * SyncAdapter implementation for syncing sample SyncAdapter contacts to the
- * platform ContactOperations provider.
+ * SyncAdapter implementation for syncing sample SyncAdapter contacts to the platform ContactOperations provider.
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private static final String TAG = "SyncAdapter";
@@ -63,11 +67,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider,
 			SyncResult syncResult) {
-		List<BaseEntity> wallets;
-		List<BaseEntity> accounts;
-//		List<Transaction> transactions;
-//		List<PeriodicTransaction> periodicTransactions;
-//		List<Report> reports;
+		List<BaseEntity> entities;
 
 		String authtoken = null;
 		Log.d(TAG, "Rutino onPerformSync");
@@ -79,25 +79,64 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			// fetch updates from server
 			// wallets = NetworkUtilities.fetchWalletUpdates(account, authtoken,
 			// mLastUpdated);
-			wallets = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated, Constants.GET_WALLET_LIST, Wallet.class);
-			accounts = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated, Constants.GET_ACCOUNT_LIST, AccountEntity.class);
-//			transactions = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated);
-//			periodicTransactions = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated);
-//			reports = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated);
+
+			// SINCRONIZAMOS Wallet
+			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
+					Constants.GET_WALLET_LIST, Wallet.class);
+			Log.d(TAG, "Calling EntityManager sync Wallet");
+			EntityManager.syncEntities(mContext, entities);
+
+			// SINCRONIZAMOS Report
+			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
+					Constants.GET_REPORT_LIST, Report.class);
+			Log.d(TAG, "Calling EntityManager sync Report");
+			EntityManager.syncEntities(mContext, entities);
+
+			// SINCRONIZAMOS AccountType
+			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
+					Constants.GET_ACCOUNTTYPE_LIST, AccountType.class);
+			Log.d(TAG, "Calling EntityManager sync AccountType");
+			EntityManager.syncEntities(mContext, entities);
+
+			// SINCRONIZAMOS Currency
+			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
+					Constants.GET_CURRENCY_LIST, Currency.class);
+			Log.d(TAG, "Calling EntityManager sync Currency");
+			EntityManager.syncEntities(mContext, entities);
+
+			// SINCRONIZAMOS AccountEntity
+			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
+					Constants.GET_ACCOUNT_LIST, AccountEntity.class);
+			Log.d(TAG, "Calling EntityManager sync AccountEntity");
+			EntityManager.syncEntities(mContext, entities);
+
+			// SINCRONIZAMOS Transaction
+			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
+					Constants.GET_TRANSACTION_LIST, Transaction.class);
+			Log.d(TAG, "Calling EntityManager sync Transaction");
+			EntityManager.syncEntities(mContext, entities);
+
+			// SINCRONIZAMOS PeriodicTransaction
+			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
+					Constants.GET_PERIODIC_TRANSACTION_LIST, PeriodicTransaction.class);
+			Log.d(TAG, "Calling EntityManager sync PeriodicTransaction");
+			EntityManager.syncEntities(mContext, entities);
+
+			// transactions = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated);
+			// periodicTransactions = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken,
+			// mLastUpdated);
+			// reports = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated);
 
 			// update the last synced date.
 			mLastUpdated = new Date();
 			// update platform wallets.
-			Log.d(TAG, "Calling WalletManager's sync wallets");
-			WalletManager.syncWallets(mContext, wallets);
-			Log.d(TAG, "Calling AccountManager's sync accounts");
-//			AccountManager.syncAccounts(mContext, accounts);
-//			Log.d(TAG, "Calling TransactionManager's sync transactions");
-//			TransactionManager.syncTransactions(mContext, account.name, transactions);
-//			Log.d(TAG, "Calling PeriodicTransactionManager's sync periodic transactions");
-//			PeriodicTransactionManager.syncPeriodicTransactions(mContext, account.name, periodicTransactions);
-//			Log.d(TAG, "Calling ReportManager's sync reports");
-//			ReportManager.syncReports(mContext, account.name, reports);
+			// AccountManager.syncAccounts(mContext, accounts);
+			// Log.d(TAG, "Calling TransactionManager's sync transactions");
+			// TransactionManager.syncTransactions(mContext, account.name, transactions);
+			// Log.d(TAG, "Calling PeriodicTransactionManager's sync periodic transactions");
+			// PeriodicTransactionManager.syncPeriodicTransactions(mContext, account.name, periodicTransactions);
+			// Log.d(TAG, "Calling ReportManager's sync reports");
+			// ReportManager.syncReports(mContext, account.name, reports);
 
 		} catch (final AuthenticatorException e) {
 			syncResult.stats.numParseExceptions++;

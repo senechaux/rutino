@@ -1,5 +1,10 @@
 package com.senechaux.rutino.db.entities;
 
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.util.Log;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -45,6 +50,26 @@ public class AccountType extends BaseEntity {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	/**
+	 * Creates and returns an instance of the account from the provided JSON data.
+	 * 
+	 * @param account The JSONObject containing account data
+	 * @return account The new instance of Voiper user created from the JSON data.
+	 */
+	public static AccountType valueOf(Context ctxt, JSONObject accountType) {
+		try {
+			String globalId = accountType.has("global_id") ? accountType.getString("global_id") : null;
+			String name = accountType.has("name") ? accountType.getString("name") : null;
+			String description = accountType.has("description") ? accountType.getString("description") : null;
+			AccountType accountTypeEntity = new AccountType(name, description);
+			accountTypeEntity.setGlobal_id(globalId);
+			return accountTypeEntity;
+		} catch (Exception ex) {
+			Log.i("Wallet", "Error parsing JSON AccountType object" + ex.toString());
+		}
+		return null;
 	}
 
 }

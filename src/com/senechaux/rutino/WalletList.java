@@ -30,7 +30,7 @@ import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class WalletList extends ListActivity {
-	private static final String TAG = "WalletList"; 
+	private static final String TAG = "WalletList";
 
 	public static void callMe(Context c) {
 		c.startActivity(new Intent(c, WalletList.class));
@@ -130,7 +130,7 @@ public class WalletList extends ListActivity {
 	@SuppressWarnings("unchecked")
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<Wallet, Integer> dao = (Dao<Wallet, Integer>)DatabaseHelper.getHelper(this).getMyDao(Wallet.class);
+		Dao<Wallet, Integer> dao = (Dao<Wallet, Integer>) DatabaseHelper.getHelper(this).getMyDao(Wallet.class);
 		List<Wallet> list = dao.queryForAll();
 		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this, R.layout.wallet_row, list);
 		setListAdapter(arrayAdapter);

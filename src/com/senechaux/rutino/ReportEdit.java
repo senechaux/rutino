@@ -24,7 +24,7 @@ import com.senechaux.rutino.utils.StringUtils;
 
 @SuppressWarnings("unchecked")
 public class ReportEdit extends Activity {
-	private static final String TAG = "ReportEdit"; 
+	private static final String TAG = "ReportEdit";
 	protected static final int DATE_FROM_DIALOG_ID = 0;
 	protected static final int DATE_TO_DIALOG_ID = 1;
 	protected static final int DATE_VALIDA_GREATER = 2;

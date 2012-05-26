@@ -30,7 +30,7 @@ import com.senechaux.rutino.db.entities.Transaction;
 
 @SuppressWarnings("unchecked")
 public class TransactionList extends ListActivity {
-	private static final String TAG = "TransactionList"; 
+	private static final String TAG = "TransactionList";
 	private AccountEntity accountFather;
 
 	public static void callMe(Context c, AccountEntity accountEntity) {
@@ -98,7 +98,8 @@ public class TransactionList extends ListActivity {
 			return true;
 		case R.id.delete_transaction:
 			try {
-				((Dao<Transaction, Integer>)DatabaseHelper.getHelper(this).getMyDao(Transaction.class)).deleteById(transaction.get_id());
+				((Dao<Transaction, Integer>) DatabaseHelper.getHelper(this).getMyDao(Transaction.class))
+						.deleteById(transaction.get_id());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -128,9 +129,10 @@ public class TransactionList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>)DatabaseHelper.getHelper(this).getMyDao(Transaction.class);
+		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>) DatabaseHelper.getHelper(this).getMyDao(
+				Transaction.class);
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Transaction.ACCOUNT_ID, accountFather.get_id());
+		qb.where().eq(Transaction.ACCOUNTENTITY_ID, accountFather.get_id());
 		// false: más reciente primero
 		qb.orderBy(Transaction.DATE, false);
 		List<Transaction> list = dao.query(qb.prepare());
@@ -162,8 +164,11 @@ public class TransactionList extends ListActivity {
 			fillText(v, R.id.transactionName, transaction.getName());
 			fillText(v, R.id.transactionAmount, transaction.getAmount().toString());
 			try {
-				fillText(v, R.id.transactionCurrency, ((Dao<Currency, Integer>)DatabaseHelper.getHelper(TransactionList.this).getMyDao(Currency.class))
-						.queryForId(transaction.getCurrency().get_id()).getName());
+				fillText(
+						v,
+						R.id.transactionCurrency,
+						((Dao<Currency, Integer>) DatabaseHelper.getHelper(TransactionList.this).getMyDao(
+								Currency.class)).queryForId(transaction.getCurrency().get_id()).getName());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

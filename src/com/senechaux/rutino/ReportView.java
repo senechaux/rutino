@@ -83,27 +83,29 @@ public class ReportView extends Activity {
 		reportDateFrom.setText(df.format(report.getDateFrom()));
 		reportDateTo.setText(df.format(report.getDateTo()));
 
-		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>)DatabaseHelper.getHelper(this).getMyDao(AccountEntity.class);
+		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>) DatabaseHelper.getHelper(this).getMyDao(
+				AccountEntity.class);
 		QueryBuilder<AccountEntity, Integer> qb = dao.queryBuilder();
 		qb.where().eq(AccountEntity.WALLET_ID, report.getWallet().get_id());
 		List<AccountEntity> accountList = dao.query(qb.prepare());
-		
-		Dao<Transaction, Integer> daoTrans = (Dao<Transaction, Integer>)DatabaseHelper.getHelper(this).getMyDao(Transaction.class);
+
+		Dao<Transaction, Integer> daoTrans = (Dao<Transaction, Integer>) DatabaseHelper.getHelper(this).getMyDao(
+				Transaction.class);
 		QueryBuilder<Transaction, Integer> qbTrans = daoTrans.queryBuilder();
-		qbTrans.where().in(Transaction.ACCOUNT_ID, accountList).and().ge(Transaction.AMOUNT, 0);
-		qbTrans.selectRaw("SUM("+Transaction.AMOUNT+")");
+		qbTrans.where().in(Transaction.ACCOUNTENTITY_ID, accountList).and().ge(Transaction.AMOUNT, 0);
+		qbTrans.selectRaw("SUM(" + Transaction.AMOUNT + ")");
 
 		GenericRawResults<String[]> results = daoTrans.queryRaw(qbTrans.prepareStatementString());
 		String[] suma = results.getFirstResult();
 		Double inputs = Double.parseDouble(suma[0]);
 		reportInputs.setText(String.valueOf(inputs));
-		
-		qbTrans.where().in(Transaction.ACCOUNT_ID, accountList).and().lt(Transaction.AMOUNT, 0);
+
+		qbTrans.where().in(Transaction.ACCOUNTENTITY_ID, accountList).and().lt(Transaction.AMOUNT, 0);
 		results = daoTrans.queryRaw(qbTrans.prepareStatementString());
 		suma = results.getFirstResult();
 		Double outputs = Double.parseDouble(suma[0]);
 		reportOutputs.setText(String.valueOf(outputs));
-		
+
 		reportTotal.setText(String.valueOf(inputs + outputs));
 	}
 

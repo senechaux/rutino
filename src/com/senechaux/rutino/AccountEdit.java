@@ -22,7 +22,7 @@ import com.senechaux.rutino.db.entities.Wallet;
 
 @SuppressWarnings("unchecked")
 public class AccountEdit extends Activity {
-	private static final String TAG = "AccountEdit"; 
+	private static final String TAG = "AccountEdit";
 
 	private EditText accountName;
 	private EditText accountDesc;
@@ -73,7 +73,8 @@ public class AccountEdit extends Activity {
 
 		// Rellenar spinner Currency
 		try {
-			Dao<AccountType, Integer> dao = (Dao<AccountType, Integer>)DatabaseHelper.getHelper(this).getMyDao(AccountType.class); 
+			Dao<AccountType, Integer> dao = (Dao<AccountType, Integer>) DatabaseHelper.getHelper(this).getMyDao(
+					AccountType.class);
 			List<AccountType> list = dao.queryForAll();
 			final ArrayAdapter<AccountType> adapter = new ArrayAdapter<AccountType>(this,
 					android.R.layout.simple_spinner_item, list);

@@ -3,7 +3,6 @@ package com.senechaux.rutino.db.entities;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -23,7 +22,7 @@ public class AccountEntity extends BaseEntity {
 	public static final String NAME = "name";
 	public static final String DESC = "desc";
 	public static final String WALLET_ID = "wallet_id";
-	public static final String ACCOUNTTYPE_ID = "accounttype_id";
+	public static final String ACCOUNTTYPE_ID = "accountType_id";
 
 	@DatabaseField(canBeNull = false)
 	private String name;
@@ -89,7 +88,7 @@ public class AccountEntity extends BaseEntity {
 		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
 				Transaction.class);
 		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Transaction.ACCOUNT_ID, this.get_id());
+		qb.where().eq(Transaction.ACCOUNTENTITY_ID, this.get_id());
 		List<Transaction> list = dao.query(qb.prepare());
 
 		Dao<Currency, Integer> daoCurrency = (Dao<Currency, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
@@ -108,13 +107,11 @@ public class AccountEntity extends BaseEntity {
 	}
 
 	/**
-	 * Creates and returns an instance of the account from the provided JSON
-	 * data.
+	 * Creates and returns an instance of the account from the provided JSON data.
 	 * 
 	 * @param account
 	 *            The JSONObject containing account data
-	 * @return account The new instance of Voiper user created from the JSON
-	 *         data.
+	 * @return account The new instance of Voiper user created from the JSON data.
 	 */
 	@SuppressWarnings("unchecked")
 	public static AccountEntity valueOf(Context ctxt, JSONObject account) {
@@ -141,11 +138,8 @@ public class AccountEntity extends BaseEntity {
 			AccountEntity accountEntity = new AccountEntity(name, description, wallet, accountType);
 			accountEntity.setGlobal_id(globalId);
 			return accountEntity;
-		} catch (JSONException ex) {
-			Log.i("Account", "Error parsing JSON account object" + ex.toString());
-
-		} catch (SQLException e) {
-			Log.i("Account", "Error parsing JSON account object" + e.toString());
+		} catch (Exception ex) {
+			Log.i("AccountEntity", "Error parsing JSON account object" + ex.toString());
 		}
 		return null;
 	}

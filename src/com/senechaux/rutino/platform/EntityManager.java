@@ -29,31 +29,31 @@ import com.senechaux.rutino.db.entities.BaseEntity;
 /**
  * Class for managing wallets sync related mOperations
  */
-public class WalletManager {
+public class EntityManager {
 	/**
 	 * Custom IM protocol used when storing status messages.
 	 */
 	public static final String CUSTOM_IM_PROTOCOL = "RutinoSyncAdapter";
-	private static final String TAG = "WalletManager";
+	private static final String TAG = "EntityManager";
 
 	/**
 	 * Synchronize raw wallets
 	 * 
 	 * @param context
 	 *            The context of Authenticator Activity
-	 * @param wallets
-	 *            The list of wallets
+	 * @param entities
+	 *            The list of entities
 	 */
-	public static synchronized void syncWallets(Context context, List<BaseEntity> wallets) {
+	public static synchronized void syncEntities(Context context, List<BaseEntity> entities) {
 		final ContentResolver resolver = context.getContentResolver();
 		final BatchOperation batchOperation = new BatchOperation(context, resolver);
-		Log.d(TAG, "In SyncWallets");
-		for (final BaseEntity wallet : wallets) {
+		Log.d(TAG, "In EntityManager");
+		for (final BaseEntity entity : entities) {
 			// add or update wallet
 			try {
-				DatabaseHelper.getHelper(context).genericCreateOrUpdate(context, wallet);
+				DatabaseHelper.getHelper(context).genericCreateOrUpdate(context, entity);
 			} catch (SQLException e) {
-				Log.e(TAG, "SQL error in adding wallet", e);
+				Log.e(TAG, "SQL error in adding " + entity.getClass().getName(), e);
 			}
 			// A sync adapter should batch operations on multiple contacts,
 			// because it will make a dramatic performance difference.

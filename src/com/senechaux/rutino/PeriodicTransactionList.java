@@ -31,10 +31,9 @@ import com.senechaux.rutino.db.entities.PeriodicTransaction;
 
 @SuppressWarnings("unchecked")
 public class PeriodicTransactionList extends ListActivity {
-	private static final String TAG = "PeriodicTransactionList"; 
+	private static final String TAG = "PeriodicTransactionList";
 	private AccountEntity accountFather;
 	private Button createPeriodicTransaction;
-
 
 	public static void callMe(Context c, AccountEntity accountEntity) {
 		Intent intent = new Intent(c, PeriodicTransactionList.class);
@@ -130,13 +129,15 @@ public class PeriodicTransactionList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<PeriodicTransaction, Integer> dao = (Dao<PeriodicTransaction, Integer>)DatabaseHelper.getHelper(this).getMyDao(PeriodicTransaction.class);
+		Dao<PeriodicTransaction, Integer> dao = (Dao<PeriodicTransaction, Integer>) DatabaseHelper.getHelper(this)
+				.getMyDao(PeriodicTransaction.class);
 		QueryBuilder<PeriodicTransaction, Integer> qb = dao.queryBuilder();
-		qb.where().eq(PeriodicTransaction.ACCOUNT_ID, accountFather.get_id());
+		qb.where().eq(PeriodicTransaction.ACCOUNTENTITY_ID, accountFather.get_id());
 		// false: más reciente primero
 		qb.orderBy(PeriodicTransaction.DATE, false);
 		List<PeriodicTransaction> list = dao.query(qb.prepare());
-		ArrayAdapter<PeriodicTransaction> arrayAdapter = new PeriodicTransactionAdapter(this, R.layout.transaction_row, list);
+		ArrayAdapter<PeriodicTransaction> arrayAdapter = new PeriodicTransactionAdapter(this, R.layout.transaction_row,
+				list);
 		setListAdapter(arrayAdapter);
 	}
 
@@ -164,8 +165,11 @@ public class PeriodicTransactionList extends ListActivity {
 			fillText(v, R.id.periodicTransactionName, transaction.getName());
 			fillText(v, R.id.periodicTransactionAmount, transaction.getAmount().toString());
 			try {
-				fillText(v, R.id.periodicTransactionCurrency, ((Dao<Currency, Integer>)DatabaseHelper.getHelper(PeriodicTransactionList.this).getMyDao(Currency.class))
-						.queryForId(transaction.getCurrency().get_id()).getName());
+				fillText(
+						v,
+						R.id.periodicTransactionCurrency,
+						((Dao<Currency, Integer>) DatabaseHelper.getHelper(PeriodicTransactionList.this).getMyDao(
+								Currency.class)).queryForId(transaction.getCurrency().get_id()).getName());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

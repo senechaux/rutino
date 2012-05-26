@@ -126,7 +126,8 @@ public class TransactionEdit extends Activity {
 				try {
 					saveToObj();
 					if (!isPeriodic.isChecked()) {
-						DatabaseHelper.getHelper(TransactionEdit.this).genericCreateOrUpdate(TransactionEdit.this, transaction);
+						DatabaseHelper.getHelper(TransactionEdit.this).genericCreateOrUpdate(TransactionEdit.this,
+								transaction);
 					} else {
 						insertPeriodic();
 					}

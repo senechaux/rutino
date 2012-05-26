@@ -81,8 +81,7 @@ public class NetworkUtilities {
 	 * Executes the network requests on a separate thread.
 	 * 
 	 * @param runnable
-	 *            The runnable instance containing network mOperations to be
-	 *            executed.
+	 *            The runnable instance containing network mOperations to be executed.
 	 */
 	public static Thread performOnBackgroundThread(final Runnable runnable) {
 		final Thread t = new Thread() {
@@ -100,8 +99,7 @@ public class NetworkUtilities {
 	}
 
 	/**
-	 * Connects to the Voiper server, authenticates the provided username and
-	 * password.
+	 * Connects to the Voiper server, authenticates the provided username and password.
 	 * 
 	 * @param username
 	 *            The user's username
@@ -111,8 +109,7 @@ public class NetworkUtilities {
 	 *            The hander instance from the calling UI thread.
 	 * @param context
 	 *            The context of the calling Activity.
-	 * @return boolean The boolean result indicating whether the user was
-	 *         successfully authenticated.
+	 * @return boolean The boolean result indicating whether the user was successfully authenticated.
 	 */
 	public static boolean authenticate(String username, String password, Handler handler, final Context context) {
 		final HttpResponse resp;
@@ -164,8 +161,7 @@ public class NetworkUtilities {
 	}
 
 	/**
-	 * Sends the authentication response from server back to the caller main UI
-	 * thread through its handler.
+	 * Sends the authentication response from server back to the caller main UI thread through its handler.
 	 * 
 	 * @param result
 	 *            The boolean holding authentication result
@@ -208,63 +204,64 @@ public class NetworkUtilities {
 		// run on background thread.
 		return NetworkUtilities.performOnBackgroundThread(runnable);
 	}
-//
-//	/**
-//	 * Fetches the list of wallets from the server
-//	 * 
-//	 * @param account
-//	 *            The account being synced.
-//	 * @param authtoken
-//	 *            The authtoken stored in AccountManager for this account
-//	 * @param lastUpdated
-//	 *            The last time that sync was performed
-//	 * @return list The list of updates received from the server.
-//	 */
-//	public static List<Wallet> fetchWalletUpdates(Account account, String authtoken, Date lastUpdated)
-//			throws JSONException, ParseException, IOException, AuthenticationException {
-//
-//		final ArrayList<Wallet> walletList = new ArrayList<Wallet>();
-//		final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-//
-//		//params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
-//		//params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
-//		if (lastUpdated != null) {
-//			final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-//			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-//			//params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
-//		}
-//		Log.i(TAG, params.toString());
-//
-//		HttpEntity entity = null;
-//		entity = new UrlEncodedFormEntity(params);
-//		final HttpGet get = new HttpGet(Constants.GET_WALLET_LIST);
-//		get.addHeader(entity.getContentType());
-//
-//		maybeCreateHttpClient();
-//
-//		final HttpResponse resp = mHttpClient.execute(get);
-//		final String response = EntityUtils.toString(resp.getEntity());
-//		
-//		if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-//			// Succesfully connected to the samplesyncadapter server and
-//			// authenticated.
-//			// Extract wallets data in json format.
-//			final JSONArray wallets = new JSONArray(response);
-//			Log.d(TAG, response);
-//			for (int i = 0; i < wallets.length(); i++) {
-//				walletList.add(Wallet.valueOf(wallets.getJSONObject(i)));
-//			}
-//		} else {
-//			if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
-//				Log.e(TAG, "Authentication exception in fetching remote data");
-//				throw new AuthenticationException();
-//			} else {
-//				Log.e(TAG, "Server error in fetching remote data: " + resp.getStatusLine());
-//				throw new IOException();
-//			}
-//		}
-//		return walletList;
-//	}
+
+	//
+	// /**
+	// * Fetches the list of wallets from the server
+	// *
+	// * @param account
+	// * The account being synced.
+	// * @param authtoken
+	// * The authtoken stored in AccountManager for this account
+	// * @param lastUpdated
+	// * The last time that sync was performed
+	// * @return list The list of updates received from the server.
+	// */
+	// public static List<Wallet> fetchWalletUpdates(Account account, String authtoken, Date lastUpdated)
+	// throws JSONException, ParseException, IOException, AuthenticationException {
+	//
+	// final ArrayList<Wallet> walletList = new ArrayList<Wallet>();
+	// final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+	//
+	// //params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
+	// //params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
+	// if (lastUpdated != null) {
+	// final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+	// formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+	// //params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
+	// }
+	// Log.i(TAG, params.toString());
+	//
+	// HttpEntity entity = null;
+	// entity = new UrlEncodedFormEntity(params);
+	// final HttpGet get = new HttpGet(Constants.GET_WALLET_LIST);
+	// get.addHeader(entity.getContentType());
+	//
+	// maybeCreateHttpClient();
+	//
+	// final HttpResponse resp = mHttpClient.execute(get);
+	// final String response = EntityUtils.toString(resp.getEntity());
+	//
+	// if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+	// // Succesfully connected to the samplesyncadapter server and
+	// // authenticated.
+	// // Extract wallets data in json format.
+	// final JSONArray wallets = new JSONArray(response);
+	// Log.d(TAG, response);
+	// for (int i = 0; i < wallets.length(); i++) {
+	// walletList.add(Wallet.valueOf(wallets.getJSONObject(i)));
+	// }
+	// } else {
+	// if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
+	// Log.e(TAG, "Authentication exception in fetching remote data");
+	// throw new AuthenticationException();
+	// } else {
+	// Log.e(TAG, "Server error in fetching remote data: " + resp.getStatusLine());
+	// throw new IOException();
+	// }
+	// }
+	// return walletList;
+	// }
 
 	/**
 	 * Fetches the list of entities from the server
@@ -277,20 +274,20 @@ public class NetworkUtilities {
 	 *            The last time that sync was performed
 	 * @return list The list of updates received from the server.
 	 */
-	public static List<BaseEntity> fetchEntityUpdates(Context ctxt, Account account, String authtoken, Date lastUpdated, String url,
-			Class<?> myClass)
-			throws JSONException, ParseException, IOException, AuthenticationException {
+	public static List<BaseEntity> fetchEntityUpdates(Context ctxt, Account account, String authtoken,
+			Date lastUpdated, String url, Class<?> myClass) throws JSONException, ParseException, IOException,
+			AuthenticationException {
 
 		final ArrayList<BaseEntity> entityList = new ArrayList<BaseEntity>();
 		final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 
-//		params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
-//		params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
-//		if (lastUpdated != null) {
-//			final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-//			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-//			params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
-//		}
+		// params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
+		// params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
+		// if (lastUpdated != null) {
+		// final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+		// formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		// params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
+		// }
 		Log.i(TAG, params.toString());
 
 		HttpEntity entity = null;
@@ -302,7 +299,7 @@ public class NetworkUtilities {
 
 		final HttpResponse resp = mHttpClient.execute(get);
 		final String response = EntityUtils.toString(resp.getEntity());
-		
+
 		if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 			// Succesfully connected to the samplesyncadapter server and
 			// authenticated.
@@ -310,16 +307,16 @@ public class NetworkUtilities {
 			final JSONArray entities = new JSONArray(response);
 			Log.d(TAG, response);
 			for (int i = 0; i < entities.length(); i++) {
-				if(myClass.getName() == Wallet.class.getName()){
-					entityList.add(Wallet.valueOf(ctxt, entities.getJSONObject(i)));					
-				}else if(myClass.getName() == Account.class.getName()){
+				if (myClass.getName() == Wallet.class.getName()) {
+					entityList.add(Wallet.valueOf(ctxt, entities.getJSONObject(i)));
+				} else if (myClass.getName() == AccountEntity.class.getName()) {
 					entityList.add(AccountEntity.valueOf(ctxt, entities.getJSONObject(i)));
-//				}else if(myClass.getName() == Transaction.class.getName()){
-//					entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
-//				}else if(myClass.getName() == PeriodicTransaction.class.getName()){
-//					entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
-//				}else if(myClass.getName() == Report.class.getName()){
-//					entityList.add(Report.valueOf(ctxt, entities.getJSONObject(i)));
+					// }else if(myClass.getName() == Transaction.class.getName()){
+					// entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
+					// }else if(myClass.getName() == PeriodicTransaction.class.getName()){
+					// entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
+					// }else if(myClass.getName() == Report.class.getName()){
+					// entityList.add(Report.valueOf(ctxt, entities.getJSONObject(i)));
 				}
 			}
 		} else {

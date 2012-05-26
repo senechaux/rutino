@@ -29,8 +29,8 @@ import com.senechaux.rutino.R;
 import com.senechaux.rutino.utils.NetworkUtilities;
 
 /**
- * This class is an implementation of AbstractAccountAuthenticator for
- * authenticating accounts in the com.example.android.samplesync domain.
+ * This class is an implementation of AbstractAccountAuthenticator for authenticating accounts in the
+ * com.example.android.samplesync domain.
  */
 class Authenticator extends AbstractAccountAuthenticator {
 	// Authentication Service context

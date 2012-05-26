@@ -17,7 +17,8 @@ import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.utils.AlarmUtils;
 
 public class AppService extends WakefulIntentService {
-	private static final String TAG = "AppService"; 
+	private static final String TAG = "AppService";
+
 	public AppService() {
 		super("AppService");
 	}

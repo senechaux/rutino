@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 public class Preferences extends PreferenceActivity {
-	private static final String TAG = "Preferences"; 
+	private static final String TAG = "Preferences";
 
 	public static void callMe(Context c) {
 		Intent intent = new Intent(c, Preferences.class);

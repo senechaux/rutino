@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 import android.widget.Button;
 
 public class StringUtils {
-	
+
 	public static String pad(int c) {
 		if (c >= 10)
 			return String.valueOf(c);

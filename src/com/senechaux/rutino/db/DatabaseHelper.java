@@ -154,13 +154,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		// Borramos las transacciones asociadas a la cuenta
 		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>) getMyDao(Transaction.class);
 		DeleteBuilder<Transaction, Integer> db = dao.deleteBuilder();
-		db.where().eq(Transaction.ACCOUNT_ID, accountEntity.get_id());
+		db.where().eq(Transaction.ACCOUNTENTITY_ID, accountEntity.get_id());
 		dao.delete(db.prepare());
 
 		// Borramos las transacciones periódicas asociadas a la cuenta
 		Dao<PeriodicTransaction, Integer> daoPer = (Dao<PeriodicTransaction, Integer>) getMyDao(PeriodicTransaction.class);
 		QueryBuilder<PeriodicTransaction, Integer> qbPer = daoPer.queryBuilder();
-		qbPer.where().eq(PeriodicTransaction.ACCOUNT_ID, accountEntity.get_id());
+		qbPer.where().eq(PeriodicTransaction.ACCOUNTENTITY_ID, accountEntity.get_id());
 		List<PeriodicTransaction> list = daoPer.query(qbPer.prepare());
 		for (PeriodicTransaction periodicTransaction : list) {
 			this.deletePeriodicTransaction(ctxt, periodicTransaction);
@@ -187,12 +187,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private void fillTables() {
 		try {
 			Dao<AccountType, Integer> accountTypeDao = (Dao<AccountType, Integer>) getMyDao(AccountType.class);
-			accountTypeDao.create(new AccountType("Cuenta", "Descripción Cuenta corriente"));
-			accountTypeDao.create(new AccountType("Tarjeta Crédito", "Descripción Tarjeta Crédito"));
+			AccountType at = new AccountType("Cuenta", "Descripción Cuenta corriente");
+			at.setGlobal_id("w_1");
+			accountTypeDao.create(at);
+			at = new AccountType("Tarjeta Crédito", "Descripción Tarjeta Crédito");
+			at.setGlobal_id("w_2");
+			accountTypeDao.create(at);
 			Dao<Currency, Integer> currencyDao = (Dao<Currency, Integer>) getMyDao(Currency.class);
-			currencyDao.create(new Currency("EUR", "Euro", 1.0));
-			currencyDao.create(new Currency("ESP", "Peseta", 166.386));
-			currencyDao.create(new Currency("USD", "United States Dollar", 1.3165));
+			Currency curr = new Currency("EUR", "Euro", 1.0);
+			curr.setGlobal_id("w_1");
+			currencyDao.create(curr);
+			curr = new Currency("ESP", "Peseta", 166.386);
+			curr.setGlobal_id("w_2");
+			currencyDao.create(curr);
+			curr = new Currency("USD", "United States Dollar", 1.3165);
+			curr.setGlobal_id("w_3");
+			currencyDao.create(curr);
 		} catch (SQLException e) {
 			Log.e(TAG, "Unable to generate Account Types", e);
 		}

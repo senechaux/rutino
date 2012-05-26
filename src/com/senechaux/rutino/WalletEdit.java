@@ -15,7 +15,7 @@ import com.senechaux.rutino.db.entities.Wallet;
 
 @SuppressWarnings("unchecked")
 public class WalletEdit extends Activity {
-	private static final String TAG = "WalletEdit"; 
+	private static final String TAG = "WalletEdit";
 
 	private EditText walletName;
 	private EditText walletDesc;

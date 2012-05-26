@@ -1,5 +1,10 @@
 package com.senechaux.rutino.db.entities;
 
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.util.Log;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -57,6 +62,27 @@ public class Currency extends BaseEntity {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	/**
+	 * Creates and returns an instance of the account from the provided JSON data.
+	 * 
+	 * @param account The JSONObject containing account data
+	 * @return account The new instance of Voiper user created from the JSON data.
+	 */
+	public static Currency valueOf(Context ctxt, JSONObject currency) {
+		try {
+			String globalId = currency.has("global_id") ? currency.getString("global_id") : null;
+			String name = currency.has("name") ? currency.getString("name") : null;
+			String description = currency.has("description") ? currency.getString("description") : null;
+			String change = currency.has("change") ? currency.getString("change") : null;
+			Currency currencyEntity = new Currency(name, description, Double.parseDouble(change));
+			currencyEntity.setGlobal_id(globalId);
+			return currencyEntity;
+		} catch (Exception ex) {
+			Log.i("Wallet", "Error parsing JSON AccountType object" + ex.toString());
+		}
+		return null;
 	}
 
 }

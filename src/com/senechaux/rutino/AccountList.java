@@ -32,7 +32,7 @@ import com.senechaux.rutino.db.entities.Wallet;
 
 @SuppressWarnings("unchecked")
 public class AccountList extends ListActivity {
-	private static final String TAG = "AccountList"; 
+	private static final String TAG = "AccountList";
 	private Wallet walletFather;
 	private SharedPreferences prefs;
 
@@ -139,7 +139,8 @@ public class AccountList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>)DatabaseHelper.getHelper(this).getMyDao(AccountEntity.class); 
+		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>) DatabaseHelper.getHelper(this).getMyDao(
+				AccountEntity.class);
 		QueryBuilder<AccountEntity, Integer> qb = dao.queryBuilder();
 		qb.where().eq(AccountEntity.WALLET_ID, walletFather.get_id());
 		List<AccountEntity> list = dao.query(qb.prepare());
@@ -171,8 +172,8 @@ public class AccountList extends ListActivity {
 			Currency prefCurrency = null;
 			fillText(v, R.id.accountName, accountEntity.getName());
 			try {
-				prefCurrency = ((Dao<Currency, Integer>)DatabaseHelper.getHelper(AccountList.this).getMyDao(Currency.class))
-						.queryForId(Integer.valueOf(prefs.getString("currency", "1")));
+				prefCurrency = ((Dao<Currency, Integer>) DatabaseHelper.getHelper(AccountList.this).getMyDao(
+						Currency.class)).queryForId(Integer.valueOf(prefs.getString("currency", "1")));
 				fillText(v, R.id.accountAmount, accountEntity.getTotal(AccountList.this, prefCurrency).toString());
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block

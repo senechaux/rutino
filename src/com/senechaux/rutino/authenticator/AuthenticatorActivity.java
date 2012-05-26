@@ -55,8 +55,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	private String mAuthtokenType;
 
 	/**
-	 * If set we are just checking that the user knows their credentials; this
-	 * doesn't cause the user's password to be changed on the device.
+	 * If set we are just checking that the user knows their credentials; this doesn't cause the user's password to be
+	 * changed on the device.
 	 */
 	private Boolean mConfirmCredentials = false;
 
@@ -122,8 +122,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	}
 
 	/**
-	 * Handles onClick event on the Submit button. Sends username/password to
-	 * the server for authentication.
+	 * Handles onClick event on the Submit button. Sends username/password to the server for authentication.
 	 * 
 	 * @param view
 	 *            The Submit button for which this method is invoked
@@ -143,9 +142,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	}
 
 	/**
-	 * Called when response is received from the server for confirm credentials
-	 * request. See onAuthenticationResult(). Sets the
-	 * AccountAuthenticatorResult which is sent back to the caller.
+	 * Called when response is received from the server for confirm credentials request. See onAuthenticationResult().
+	 * Sets the AccountAuthenticatorResult which is sent back to the caller.
 	 * 
 	 * @param the
 	 *            confirmCredentials result.
@@ -163,10 +161,9 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
 	/**
 	 * 
-	 * Called when response is received from the server for authentication
-	 * request. See onAuthenticationResult(). Sets the
-	 * AccountAuthenticatorResult which is sent back to the caller. Also sets
-	 * the authToken in AccountManager for this account.
+	 * Called when response is received from the server for authentication request. See onAuthenticationResult(). Sets
+	 * the AccountAuthenticatorResult which is sent back to the caller. Also sets the authToken in AccountManager for
+	 * this account.
 	 * 
 	 * @param the
 	 *            confirmCredentials result.
