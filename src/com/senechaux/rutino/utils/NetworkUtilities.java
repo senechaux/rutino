@@ -49,7 +49,12 @@ import android.util.Log;
 import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.authenticator.AuthenticatorActivity;
 import com.senechaux.rutino.db.entities.AccountEntity;
+import com.senechaux.rutino.db.entities.AccountType;
 import com.senechaux.rutino.db.entities.BaseEntity;
+import com.senechaux.rutino.db.entities.Currency;
+import com.senechaux.rutino.db.entities.PeriodicTransaction;
+import com.senechaux.rutino.db.entities.Report;
+import com.senechaux.rutino.db.entities.Transaction;
 import com.senechaux.rutino.db.entities.Wallet;
 
 /**
@@ -309,14 +314,18 @@ public class NetworkUtilities {
 			for (int i = 0; i < entities.length(); i++) {
 				if (myClass.getName() == Wallet.class.getName()) {
 					entityList.add(Wallet.valueOf(ctxt, entities.getJSONObject(i)));
+				} else if (myClass.getName() == Report.class.getName()) {
+					entityList.add(Report.valueOf(ctxt, entities.getJSONObject(i)));
+				} else if (myClass.getName() == AccountType.class.getName()) {
+					entityList.add(AccountType.valueOf(ctxt, entities.getJSONObject(i)));
+				} else if (myClass.getName() == Currency.class.getName()) {
+					entityList.add(Currency.valueOf(ctxt, entities.getJSONObject(i)));
 				} else if (myClass.getName() == AccountEntity.class.getName()) {
 					entityList.add(AccountEntity.valueOf(ctxt, entities.getJSONObject(i)));
-					// }else if(myClass.getName() == Transaction.class.getName()){
-					// entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
-					// }else if(myClass.getName() == PeriodicTransaction.class.getName()){
-					// entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
-					// }else if(myClass.getName() == Report.class.getName()){
-					// entityList.add(Report.valueOf(ctxt, entities.getJSONObject(i)));
+				} else if (myClass.getName() == Transaction.class.getName()) {
+					entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
+				} else if (myClass.getName() == PeriodicTransaction.class.getName()) {
+					entityList.add(PeriodicTransaction.valueOf(ctxt, entities.getJSONObject(i)));
 				}
 			}
 		} else {

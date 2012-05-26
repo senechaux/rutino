@@ -1,6 +1,7 @@
 package com.senechaux.rutino.db.entities;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.json.JSONObject;
@@ -12,6 +13,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.DatabaseTable;
+import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.db.DatabaseHelper;
 
 @DatabaseTable
@@ -116,12 +118,12 @@ public class Report extends BaseEntity {
 			qbWallet.where().eq(Wallet.GLOBAL_ID, walletGlobalId);
 			Wallet wallet = daoWallet.queryForFirst(qbWallet.prepare());
 			
-			DateFormat df = DateFormat.getDateInstance();
+			DateFormat df = new SimpleDateFormat(Constants.API_DATE_FORMAT);
 			Report reportEntity = new Report(name, description, df.parse(dateFrom), df.parse(dateTo), wallet);
 			reportEntity.setGlobal_id(globalId);
 			return reportEntity;
 		} catch (Exception ex) {
-			Log.i("Wallet", "Error parsing JSON wallet object" + ex.toString());
+			Log.i("Report", "Error parsing JSON Report object" + ex.toString());
 		}
 		return null;
 	}

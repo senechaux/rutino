@@ -27,4 +27,6 @@ public class Constants {
 	public static final String GET_REPORT_LIST = BASE_URL + "/report.json";
 	public static final String GET_ACCOUNTTYPE_LIST = BASE_URL + "/account_type.json";
 	public static final String GET_CURRENCY_LIST = BASE_URL + "/currency.json";
+	
+	public static final String API_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 }

@@ -1,6 +1,7 @@
 package com.senechaux.rutino.db.entities;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.json.JSONObject;
@@ -12,6 +13,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.DatabaseTable;
+import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.db.DatabaseHelper;
 
 @DatabaseTable
@@ -156,8 +158,7 @@ public class Transaction extends BaseEntity {
 		try {
 			String globalId = transaction.has("global_id") ? transaction.getString("global_id") : null;
 			String name = transaction.has("name") ? transaction.getString("name") : null;
-			String description = transaction.has("description") ? transaction.getString("description")
-					: null;
+			String description = transaction.has("description") ? transaction.getString("description") : null;
 			String amount = transaction.has("amount") ? transaction.getString("amount") : null;
 			String date = transaction.has("date") ? transaction.getString("date") : null;
 			String latitude = transaction.has("latitude") ? transaction.getString("latitude") : null;
@@ -179,14 +180,18 @@ public class Transaction extends BaseEntity {
 			qbCurrency.where().eq(Currency.GLOBAL_ID, currencyGlobalId);
 			Currency currency = daoCurrency.queryForFirst(qbCurrency.prepare());
 
-			DateFormat df = DateFormat.getDateInstance();
-			Transaction periodicTransactionEntity = new Transaction(name, description,
-					Double.parseDouble(amount), df.parse(date), Double.parseDouble(latitude),
-					Double.parseDouble(longitude), accountEntity, currency);
+			DateFormat df = new SimpleDateFormat(Constants.API_DATE_FORMAT);
+			Double lat = null, lon = null;
+			if (latitude != null)
+				lat = Double.parseDouble(latitude);
+			if (longitude != null)
+				lon = Double.parseDouble(longitude);
+			Transaction periodicTransactionEntity = new Transaction(name, description, Double.parseDouble(amount),
+					df.parse(date), lat, lon, accountEntity, currency);
 			periodicTransactionEntity.setGlobal_id(globalId);
 			return periodicTransactionEntity;
 		} catch (Exception ex) {
-			Log.i("Wallet", "Error parsing JSON AccountType object" + ex.toString());
+			Log.i("Transaction", "Error parsing JSON Transaction object" + ex.toString());
 		}
 		return null;
 	}

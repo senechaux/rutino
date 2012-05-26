@@ -97,13 +97,13 @@ public class AccountEntity extends BaseEntity {
 		Double res = 0.0;
 		for (Transaction t : list) {
 			if (t.getCurrency().get_id() != 1) {
-				res += t.getAmount() / daoCurrency.queryForId(t.getCurrency().get_id()).getChange();
+				res += t.getAmount() / daoCurrency.queryForId(t.getCurrency().get_id()).getExchange();
 			} else {
 				res += t.getAmount();
 			}
 		}
 
-		return res * currency.getChange();
+		return res * currency.getExchange();
 	}
 
 	/**
