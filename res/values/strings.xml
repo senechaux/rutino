@@ -56,7 +56,7 @@
     <string name="report_date_validation_dialog">\'From\' date must be lower than \'To\' Date.</string>
     
     <!-- Label for this package -->
-    <string name="label">RutinoAdapter</string>
+    <string name="label">Rutino</string>
 
     <!-- Permission label -->
     <string name="permlab_samplesyncadapterAuthPassword">access to passwords for Sample SyncAdapter accounts</string>

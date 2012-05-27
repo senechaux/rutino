@@ -169,19 +169,20 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	 *            confirmCredentials result.
 	 */
 
-	protected void finishLogin() {
-		Log.i(TAG, "finishLogin()");
+	protected void finishLogin(String response) {
+		Log.i(TAG, "finishLogin(" + response + ")");
 		final Account account = new Account(mUsername, Constants.ACCOUNT_TYPE);
 
 		if (mRequestNewAccount) {
 			mAccountManager.addAccountExplicitly(account, mPassword, null);
+			mAccountManager.setAuthToken(account, AccountManager.KEY_ACCOUNT_TYPE, response);
 			// Set contacts sync for this account.
 			ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true);
 		} else {
 			mAccountManager.setPassword(account, mPassword);
 		}
 		final Intent intent = new Intent();
-		mAuthtoken = mPassword;
+		mAuthtoken = response;
 		intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
 		intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
 		if (mAuthtokenType != null && mAuthtokenType.equals(Constants.AUTHTOKEN_TYPE)) {
@@ -202,13 +203,13 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	/**
 	 * Called when the authentication process completes (see attemptLogin()).
 	 */
-	public void onAuthenticationResult(boolean result) {
-		Log.i(TAG, "onAuthenticationResult(" + result + ")");
+	public void onAuthenticationResult(boolean result, String response) {
+		Log.i(TAG, "onAuthenticationResult(" + result + ", " + response + ")");
 		// Hide the progress dialog
 		hideProgress();
 		if (result) {
 			if (!mConfirmCredentials) {
-				finishLogin();
+				finishLogin(response);
 			} else {
 				finishConfirmCredentials(true);
 			}

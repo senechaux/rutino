@@ -20,9 +20,12 @@ import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.senechaux.rutino.Constants;
 import com.senechaux.rutino.R;
@@ -63,8 +66,10 @@ class Authenticator extends AbstractAccountAuthenticator {
 		if (options != null && options.containsKey(AccountManager.KEY_PASSWORD)) {
 			final String password = options.getString(AccountManager.KEY_PASSWORD);
 			final boolean verified = onlineConfirmPassword(account.name, password);
+			final String token = onlineConfirmPasswordAndGetToken(account.name, password);
 			final Bundle result = new Bundle();
 			result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, verified);
+			result.putString(AccountManager.KEY_AUTHTOKEN, token);
 			return result;
 		}
 		// Launch AuthenticatorActivity to confirm credentials
@@ -98,13 +103,16 @@ class Authenticator extends AbstractAccountAuthenticator {
 		}
 		final AccountManager am = AccountManager.get(mContext);
 		final String password = am.getPassword(account);
+		final Bundle options = new Bundle();
+		options.putString(AccountManager.KEY_PASSWORD, password);
+		Bundle authToken = confirmCredentials(response, account, options);
 		if (password != null) {
 			final boolean verified = onlineConfirmPassword(account.name, password);
 			if (verified) {
 				final Bundle result = new Bundle();
 				result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
 				result.putString(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
-				result.putString(AccountManager.KEY_AUTHTOKEN, password);
+				result.putString(AccountManager.KEY_AUTHTOKEN, authToken.getString(AccountManager.KEY_AUTHTOKEN));
 				return result;
 			}
 		}
@@ -146,6 +154,10 @@ class Authenticator extends AbstractAccountAuthenticator {
 	 */
 	private boolean onlineConfirmPassword(String username, String password) {
 		return NetworkUtilities.authenticate(username, password, null/* Handler */, null/* Context */);
+	}
+
+	private String onlineConfirmPasswordAndGetToken(String username, String password) {
+		return NetworkUtilities.authenticateGetToken(username, password, null/* Handler */, null/* Context */);
 	}
 
 	/**
