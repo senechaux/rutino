@@ -182,9 +182,9 @@ public class Transaction extends BaseEntity {
 
 			DateFormat df = new SimpleDateFormat(Constants.API_DATE_FORMAT);
 			Double lat = null, lon = null;
-			if (latitude != null)
+			if (latitude != null && !latitude.equals("null"))
 				lat = Double.parseDouble(latitude);
-			if (longitude != null)
+			if (longitude != null && !longitude.equals("null"))
 				lon = Double.parseDouble(longitude);
 			Transaction periodicTransactionEntity = new Transaction(name, description, Double.parseDouble(amount),
 					df.parse(date), lat, lon, accountEntity, currency);

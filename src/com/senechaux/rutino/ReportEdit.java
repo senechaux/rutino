@@ -22,7 +22,6 @@ import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Wallet;
 import com.senechaux.rutino.utils.StringUtils;
 
-@SuppressWarnings("unchecked")
 public class ReportEdit extends Activity {
 	private static final String TAG = "ReportEdit";
 	protected static final int DATE_FROM_DIALOG_ID = 0;
@@ -126,7 +125,7 @@ public class ReportEdit extends Activity {
 		case DATE_VALIDA_GREATER:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.report_date_validation_dialog).setCancelable(false)
-					.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							dialog.cancel();
 						}
