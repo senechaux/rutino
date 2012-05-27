@@ -59,17 +59,17 @@
     <string name="label">Rutino</string>
 
     <!-- Permission label -->
-    <string name="permlab_samplesyncadapterAuthPassword">access to passwords for Sample SyncAdapter accounts</string>
+    <string name="permlab_samplesyncadapterAuthPassword">access to passwords for Rutino accounts</string>
     <!-- Permission description -->
     <string name="permdesc_samplesyncadapterAuthPassword">Allows applications direct access to the passwords for the
-        Sample SyncAdapter account(s) you have configured.</string>
+        Rutino account(s) you have configured.</string>
 
     <!-- Permission label -->
     <string name="permlab_samplesyncadapterAuth">view configured accounts</string>
     <!-- Permission description -->
     <string name="permdesc_samplesyncadapterAuth">Allows applications to see the usernames (email addresses) of
-        the Sample SyncAdapter account(s) you have configured.</string>
-    <string name="notification_login_error">Touch to sign into your Sample SyncAdapter account.</string>
+        the Rutino account(s) you have configured.</string>
+    <string name="notification_login_error">Touch to sign into your Rutino account.</string>
 
     <!-- Title string for Login activity -->
     <string name="ui_activity_title">Sign-in</string>
@@ -86,7 +86,7 @@
     <string name="login_activity_ok_button">Sign in</string>
 
     <!-- Message shown in dialog if the username or password is invalid. -->
-    <string name="login_activity_loginfail_text_both">The username or password isn\'t valid. A Sample SyncAdapter account is
+    <string name="login_activity_loginfail_text_both">The username or password isn\'t valid. A Rutino account is
         required. Please try again. </string>
     <!-- Message shown in dialog if the password is invalid -->
     <string name="login_activity_loginfail_text_pwonly">You entered the wrong password or your account has changed.
@@ -94,7 +94,7 @@
     <!-- Message shown in dialog to prompt the user for their password -->
     <string name="login_activity_loginfail_text_pwmissing">Type the password for this account.</string>
     <!-- Message shown if the provided account doesn't support the current activity. -->
-    <string name="login_activity_newaccount_text">Sign in to your Sample SyncAdapter account. </string>
+    <string name="login_activity_newaccount_text">Sign in to your Rutino account. </string>
 
     <!-- Button that takes the user to the "sign in" screen -->
     <string name="sign_in_button_label">Sign in</string>
@@ -102,7 +102,6 @@
     <string name="back_button_label">Back</string>
     <!-- Button to cancel the current operation -->
     <string name="cancel_button_label">Cancel</string>
-    <string name="ok">Ok</string>
     <string name="profile_action">Sample profile</string>
     <string name="view_profile">View Profile</string>
 

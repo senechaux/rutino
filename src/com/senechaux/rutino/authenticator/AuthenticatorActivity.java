@@ -231,7 +231,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 	 * Returns the message to be displayed at the top of the login dialog box.
 	 */
 	private CharSequence getMessage() {
-		getString(R.string.label);
+		getString(R.string.app_name);
 		if (TextUtils.isEmpty(mUsername)) {
 			// If no username, then we ask the user to log in using an
 			// appropriate service.

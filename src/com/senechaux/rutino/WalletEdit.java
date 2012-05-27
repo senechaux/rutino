@@ -13,7 +13,6 @@ import android.widget.EditText;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Wallet;
 
-@SuppressWarnings("unchecked")
 public class WalletEdit extends Activity {
 	private static final String TAG = "WalletEdit";
 

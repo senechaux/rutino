@@ -133,7 +133,7 @@ class Authenticator extends AbstractAccountAuthenticator {
 	@Override
 	public String getAuthTokenLabel(String authTokenType) {
 		if (authTokenType.equals(Constants.AUTHTOKEN_TYPE)) {
-			return mContext.getString(R.string.label);
+			return mContext.getString(R.string.app_name);
 		}
 		return null;
 

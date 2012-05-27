@@ -81,45 +81,45 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			// mLastUpdated);
 
 			// SINCRONIZAMOS Wallet
+			Log.d(TAG, "Sync Wallet");
 			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
 					Constants.GET_WALLET_LIST, Wallet.class);
-			Log.d(TAG, "Calling EntityManager sync Wallet");
 			EntityManager.syncEntities(mContext, entities);
 
 			// SINCRONIZAMOS Report
+			Log.d(TAG, "Sync Report");
 			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
 					Constants.GET_REPORT_LIST, Report.class);
-			Log.d(TAG, "Calling EntityManager sync Report");
 			EntityManager.syncEntities(mContext, entities);
 
 			// SINCRONIZAMOS AccountType
+			Log.d(TAG, "Sync AccountType");
 			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
 					Constants.GET_ACCOUNTTYPE_LIST, AccountType.class);
-			Log.d(TAG, "Calling EntityManager sync AccountType");
 			EntityManager.syncEntities(mContext, entities);
 
 			// SINCRONIZAMOS Currency
+			Log.d(TAG, "Calling EntityManager sync Currency");
 			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
 					Constants.GET_CURRENCY_LIST, Currency.class);
-			Log.d(TAG, "Calling EntityManager sync Currency");
 			EntityManager.syncEntities(mContext, entities);
 
 			// SINCRONIZAMOS AccountEntity
+			Log.d(TAG, "Sync AccountEntity");
 			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
 					Constants.GET_ACCOUNT_LIST, AccountEntity.class);
-			Log.d(TAG, "Calling EntityManager sync AccountEntity");
 			EntityManager.syncEntities(mContext, entities);
 
 			// SINCRONIZAMOS Transaction
+			Log.d(TAG, "Sync Transaction");
 			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
 					Constants.GET_TRANSACTION_LIST, Transaction.class);
-			Log.d(TAG, "Calling EntityManager sync Transaction");
 			EntityManager.syncEntities(mContext, entities);
 
 			// SINCRONIZAMOS PeriodicTransaction
+			Log.d(TAG, "Sync PeriodicTransaction");
 			entities = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated,
 					Constants.GET_PERIODIC_TRANSACTION_LIST, PeriodicTransaction.class);
-			Log.d(TAG, "Calling EntityManager sync PeriodicTransaction");
 			EntityManager.syncEntities(mContext, entities);
 
 			// transactions = NetworkUtilities.fetchEntityUpdates(this.mContext, account, authtoken, mLastUpdated);
