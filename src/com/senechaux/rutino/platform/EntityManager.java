@@ -19,7 +19,6 @@ package com.senechaux.rutino.platform;
 import java.sql.SQLException;
 import java.util.List;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.util.Log;
 
@@ -45,8 +44,6 @@ public class EntityManager {
 	 *            The list of entities
 	 */
 	public static synchronized void syncEntities(Context context, List<BaseEntity> entities) {
-		final ContentResolver resolver = context.getContentResolver();
-		final BatchOperation batchOperation = new BatchOperation(context, resolver);
 		Log.d(TAG, "In EntityManager");
 		for (final BaseEntity entity : entities) {
 			// add or update wallet
@@ -55,13 +52,7 @@ public class EntityManager {
 			} catch (SQLException e) {
 				Log.e(TAG, "SQL error in adding " + entity.getClass().getName(), e);
 			}
-			// A sync adapter should batch operations on multiple contacts,
-			// because it will make a dramatic performance difference.
-			if (batchOperation.size() >= 50) {
-				batchOperation.execute();
-			}
 		}
-		batchOperation.execute();
 	}
 
 }
