@@ -118,6 +118,7 @@ public class NetworkUtilities {
 	 */
 	public static boolean authenticate(String username, String password, Handler handler, final Context context) {
 		final HttpResponse resp;
+		String response = "";
 		final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(PARAM_USERNAME, username));
 		params.add(new BasicNameValuePair(PARAM_PASSWORD, password));
@@ -136,6 +137,7 @@ public class NetworkUtilities {
 
 		try {
 			resp = mHttpClient.execute(post);
+			response = EntityUtils.toString(resp.getEntity());
 			if (Log.isLoggable(TAG, Log.VERBOSE)) {
 				Log.v(TAG, "Resp: " + resp.toString());
 			}
@@ -143,21 +145,73 @@ public class NetworkUtilities {
 				if (Log.isLoggable(TAG, Log.VERBOSE)) {
 					Log.v(TAG, "Successful authentication, resp: " + resp.toString());
 				}
-				sendResult(true, handler, context);
+				sendResult(true, handler, context, response);
 				return true;
 			} else {
 				if (Log.isLoggable(TAG, Log.VERBOSE)) {
 					Log.v(TAG, "Error authenticating" + resp.getStatusLine());
 				}
-				sendResult(false, handler, context);
+				sendResult(false, handler, context, response);
 				return false;
 			}
 		} catch (final IOException e) {
 			if (Log.isLoggable(TAG, Log.VERBOSE)) {
 				Log.v(TAG, "IOException when getting authtoken", e);
 			}
-			sendResult(false, handler, context);
+			sendResult(false, handler, context, response);
 			return false;
+		} finally {
+			if (Log.isLoggable(TAG, Log.VERBOSE)) {
+				Log.v(TAG, "getAuthtoken completing");
+			}
+		}
+	}
+
+	public static String authenticateGetToken(String username, String password, Handler handler, final Context context) {
+		final HttpResponse resp;
+		String response = "";
+		final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair(PARAM_USERNAME, username));
+		params.add(new BasicNameValuePair(PARAM_PASSWORD, password));
+		HttpEntity entity = null;
+		try {
+			entity = new UrlEncodedFormEntity(params);
+		} catch (final UnsupportedEncodingException e) {
+			// this should never happen.
+			throw new AssertionError(e);
+		}
+
+		final HttpPost post = new HttpPost(Constants.AUTH_URI);
+		post.addHeader(entity.getContentType());
+		post.setEntity(entity);
+		maybeCreateHttpClient();
+
+		try {
+			resp = mHttpClient.execute(post);
+			response = EntityUtils.toString(resp.getEntity());
+			response = response.replace("\"", "");
+			if (Log.isLoggable(TAG, Log.VERBOSE)) {
+				Log.v(TAG, "Resp: " + resp.toString());
+			}
+			if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				if (Log.isLoggable(TAG, Log.VERBOSE)) {
+					Log.v(TAG, "Successful authentication, resp: " + resp.toString());
+				}
+				sendResult(true, handler, context, response);
+				return response;
+			} else {
+				if (Log.isLoggable(TAG, Log.VERBOSE)) {
+					Log.v(TAG, "Error authenticating" + resp.getStatusLine());
+				}
+				sendResult(false, handler, context, response);
+				return response;
+			}
+		} catch (final IOException e) {
+			if (Log.isLoggable(TAG, Log.VERBOSE)) {
+				Log.v(TAG, "IOException when getting authtoken", e);
+			}
+			sendResult(false, handler, context, response);
+			return response;
 		} finally {
 			if (Log.isLoggable(TAG, Log.VERBOSE)) {
 				Log.v(TAG, "getAuthtoken completing");
@@ -175,13 +229,13 @@ public class NetworkUtilities {
 	 * @param context
 	 *            The caller Activity's context.
 	 */
-	private static void sendResult(final Boolean result, final Handler handler, final Context context) {
+	private static void sendResult(final Boolean result, final Handler handler, final Context context, final String response) {
 		if (handler == null || context == null) {
 			return;
 		}
 		handler.post(new Runnable() {
 			public void run() {
-				((AuthenticatorActivity) context).onAuthenticationResult(result);
+				((AuthenticatorActivity) context).onAuthenticationResult(result, response);
 			}
 		});
 	}
@@ -210,63 +264,6 @@ public class NetworkUtilities {
 		return NetworkUtilities.performOnBackgroundThread(runnable);
 	}
 
-	//
-	// /**
-	// * Fetches the list of wallets from the server
-	// *
-	// * @param account
-	// * The account being synced.
-	// * @param authtoken
-	// * The authtoken stored in AccountManager for this account
-	// * @param lastUpdated
-	// * The last time that sync was performed
-	// * @return list The list of updates received from the server.
-	// */
-	// public static List<Wallet> fetchWalletUpdates(Account account, String authtoken, Date lastUpdated)
-	// throws JSONException, ParseException, IOException, AuthenticationException {
-	//
-	// final ArrayList<Wallet> walletList = new ArrayList<Wallet>();
-	// final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-	//
-	// //params.add(new BasicNameValuePair(PARAM_USERNAME, account.name));
-	// //params.add(new BasicNameValuePair(PARAM_PASSWORD, authtoken));
-	// if (lastUpdated != null) {
-	// final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-	// formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-	// //params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
-	// }
-	// Log.i(TAG, params.toString());
-	//
-	// HttpEntity entity = null;
-	// entity = new UrlEncodedFormEntity(params);
-	// final HttpGet get = new HttpGet(Constants.GET_WALLET_LIST);
-	// get.addHeader(entity.getContentType());
-	//
-	// maybeCreateHttpClient();
-	//
-	// final HttpResponse resp = mHttpClient.execute(get);
-	// final String response = EntityUtils.toString(resp.getEntity());
-	//
-	// if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-	// // Succesfully connected to the samplesyncadapter server and
-	// // authenticated.
-	// // Extract wallets data in json format.
-	// final JSONArray wallets = new JSONArray(response);
-	// Log.d(TAG, response);
-	// for (int i = 0; i < wallets.length(); i++) {
-	// walletList.add(Wallet.valueOf(wallets.getJSONObject(i)));
-	// }
-	// } else {
-	// if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
-	// Log.e(TAG, "Authentication exception in fetching remote data");
-	// throw new AuthenticationException();
-	// } else {
-	// Log.e(TAG, "Server error in fetching remote data: " + resp.getStatusLine());
-	// throw new IOException();
-	// }
-	// }
-	// return walletList;
-	// }
 
 	/**
 	 * Fetches the list of entities from the server
@@ -294,9 +291,13 @@ public class NetworkUtilities {
 		// params.add(new BasicNameValuePair(PARAM_UPDATED, formatter.format(lastUpdated)));
 		// }
 		Log.i(TAG, params.toString());
+		
+		Log.v(TAG, "authtoken: " + authtoken);
 
 		HttpEntity entity = null;
 		entity = new UrlEncodedFormEntity(params);
+		url = url + "?user_id=" + authtoken;
+		Log.v(TAG, "url: " + url);
 		final HttpGet get = new HttpGet(url);
 		get.addHeader(entity.getContentType());
 

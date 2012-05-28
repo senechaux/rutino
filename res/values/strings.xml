@@ -55,6 +55,9 @@
     <!-- Message shown if the provided account doesn't support the current activity. -->
     <string name="report_date_validation_dialog">\'From\' date must be lower than \'To\' Date.</string>
     
+    <!-- Label for this package -->
+    <string name="label">Rutino</string>
+
     <!-- Permission label -->
     <string name="permlab_samplesyncadapterAuthPassword">access to passwords for Rutino accounts</string>
     <!-- Permission description -->
