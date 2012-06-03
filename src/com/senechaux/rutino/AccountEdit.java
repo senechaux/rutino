@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.AccountType;
@@ -71,11 +70,11 @@ public class AccountEdit extends Activity {
 			}
 		});
 
-		// Rellenar spinner Currency
 		try {
-			Dao<AccountType, Integer> dao = (Dao<AccountType, Integer>) DatabaseHelper.getHelper(this).getMyDao(
-					AccountType.class);
-			List<AccountType> list = dao.queryForAll();
+//			Dao<AccountType, Integer> dao = (Dao<AccountType, Integer>) DatabaseHelper.getHelper(this).getMyDao(
+//					AccountType.class);
+//			List<AccountType> list = dao.queryForAll();
+			List<AccountType> list = AccountType.dameListadoAccountTypes(AccountEdit.this);
 			final ArrayAdapter<AccountType> adapter = new ArrayAdapter<AccountType>(this,
 					android.R.layout.simple_spinner_item, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

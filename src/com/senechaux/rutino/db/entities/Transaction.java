@@ -1,8 +1,10 @@
 package com.senechaux.rutino.db.entities;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -194,6 +196,18 @@ public class Transaction extends BaseEntity {
 			Log.i("Transaction", "Error parsing JSON Transaction object" + ex.toString());
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Transaction> dameListadoTransacciones(Context ctxt, AccountEntity accountFather)
+			throws SQLException {
+		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
+				Transaction.class);
+		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
+		qb.where().eq(Transaction.ACCOUNTENTITY_ID, accountFather.get_id());
+		// false: más reciente primero
+		qb.orderBy(Transaction.DATE, false);
+		return dao.query(qb.prepare());
 	}
 
 }

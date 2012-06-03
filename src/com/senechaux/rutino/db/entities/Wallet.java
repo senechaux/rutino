@@ -1,12 +1,17 @@
 package com.senechaux.rutino.db.entities;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.senechaux.rutino.db.DatabaseHelper;
 
 @DatabaseTable
 public class Wallet extends BaseEntity {
@@ -70,6 +75,12 @@ public class Wallet extends BaseEntity {
 			Log.i("Wallet", "Error parsing JSON wallet object" + ex.toString());
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Wallet> dameListadoCarteras(Context ctxt) throws SQLException {
+		Dao<Wallet, Integer> dao = (Dao<Wallet, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(Wallet.class);
+		return dao.queryForAll();
 	}
 
 }

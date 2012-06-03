@@ -1,14 +1,19 @@
 package com.senechaux.rutino.db.entities;
 
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.DatabaseTable;
+import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.utils.DateUtils;
 
 @DatabaseTable
@@ -88,6 +93,18 @@ public class PeriodicTransaction extends Transaction {
 			Log.i("PeriodicTransaction", "Error parsing JSON PeriodicTransaction object" + ex.toString());
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<PeriodicTransaction> dameListadoTransaccionesPeriodicas(
+			Context ctxt, AccountEntity accountFather) throws SQLException {
+		Dao<PeriodicTransaction, Integer> dao = (Dao<PeriodicTransaction, Integer>) DatabaseHelper.getHelper(ctxt)
+				.getMyDao(PeriodicTransaction.class);
+		QueryBuilder<PeriodicTransaction, Integer> qb = dao.queryBuilder();
+		qb.where().eq(PeriodicTransaction.ACCOUNTENTITY_ID, accountFather.get_id());
+		// false: más reciente primero
+		qb.orderBy(PeriodicTransaction.DATE, false);
+		return dao.query(qb.prepare());
 	}
 
 }

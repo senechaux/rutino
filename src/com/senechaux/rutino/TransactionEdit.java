@@ -144,7 +144,8 @@ public class TransactionEdit extends Activity {
 		try {
 			Dao<Currency, Integer> dao = (Dao<Currency, Integer>) DatabaseHelper.getHelper(this).getMyDao(
 					Currency.class);
-			List<Currency> list = dao.queryForAll();
+//			List<Currency> list = dao.queryForAll();
+			List<Currency> list = Currency.dameListadoCurrency(TransactionEdit.this);
 			final ArrayAdapter<Currency> adapter = new ArrayAdapter<Currency>(this,
 					android.R.layout.simple_spinner_item, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

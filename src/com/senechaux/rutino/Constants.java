@@ -17,7 +17,8 @@ public class Constants {
 
 	public static final String PREFIX_GLOBAL_ID = "m_";
 
-	public static final String BASE_URL = "http://192.168.1.129/api.php";
+	public static final String BASE_URL = "http://192.168.1.33" +
+			"/api.php";
 	// "http://samplesyncadapter2.appspot.com";
 	public static final String AUTH_URI = BASE_URL + "/auth";
 	public static final String GET_WALLET_LIST = BASE_URL + "/wallet.json";

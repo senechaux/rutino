@@ -1,12 +1,17 @@
 package com.senechaux.rutino.db.entities;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.senechaux.rutino.db.DatabaseHelper;
 
 @DatabaseTable
 public class Currency extends BaseEntity {
@@ -83,6 +88,13 @@ public class Currency extends BaseEntity {
 			Log.i("Currency", "Error parsing JSON Currency object" + ex.toString());
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Currency> dameListadoCurrency(Context ctxt) throws SQLException {
+		Dao<Currency, Integer> dao = (Dao<Currency, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
+				Currency.class);
+		return dao.queryForAll();
 	}
 
 }

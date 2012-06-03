@@ -23,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.Report;
 import com.senechaux.rutino.db.entities.Wallet;
@@ -125,10 +124,11 @@ public class ReportList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<Report, Integer> dao = (Dao<Report, Integer>) DatabaseHelper.getHelper(this).getMyDao(Report.class);
-		QueryBuilder<Report, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Report.WALLET_ID, walletFather.get_id());
-		List<Report> list = dao.query(qb.prepare());
+//		Dao<Report, Integer> dao = (Dao<Report, Integer>) DatabaseHelper.getHelper(this).getMyDao(Report.class);
+//		QueryBuilder<Report, Integer> qb = dao.queryBuilder();
+//		qb.where().eq(Report.WALLET_ID, walletFather.get_id());
+//		List<Report> list = dao.query(qb.prepare());
+		List<Report> list = Report.dameListadoReportes(this, walletFather);
 		ArrayAdapter<Report> arrayAdapter = new ReportAdapter(this, R.layout.report_row, list);
 		setListAdapter(arrayAdapter);
 	}

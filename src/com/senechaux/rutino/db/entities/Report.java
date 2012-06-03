@@ -1,8 +1,10 @@
 package com.senechaux.rutino.db.entities;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -126,6 +128,14 @@ public class Report extends BaseEntity {
 			Log.i("Report", "Error parsing JSON Report object" + ex.toString());
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Report> dameListadoReportes(Context ctxt, Wallet walletFather) throws SQLException {
+		Dao<Report, Integer> dao = (Dao<Report, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(Report.class);
+		QueryBuilder<Report, Integer> qb = dao.queryBuilder();
+		qb.where().eq(Report.WALLET_ID, walletFather.get_id());
+		return dao.query(qb.prepare());
 	}
 
 }

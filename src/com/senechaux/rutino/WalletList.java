@@ -25,8 +25,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.Dao;
 import com.senechaux.rutino.db.DatabaseHelper;
+import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.Wallet;
 
 public class WalletList extends ListActivity {
@@ -127,11 +127,11 @@ public class WalletList extends ListActivity {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<Wallet, Integer> dao = (Dao<Wallet, Integer>) DatabaseHelper.getHelper(this).getMyDao(Wallet.class);
-		List<Wallet> list = dao.queryForAll();
+//		Dao<Wallet, Integer> dao = (Dao<Wallet, Integer>) DatabaseHelper.getHelper(this).getMyDao(Wallet.class);
+//		List<Wallet> list = dao.queryForAll();
+		List<Wallet> list = Wallet.dameListadoCarteras(this);
 		ArrayAdapter<Wallet> arrayAdapter = new WalletAdapter(this, R.layout.wallet_row, list);
 		setListAdapter(arrayAdapter);
 	}

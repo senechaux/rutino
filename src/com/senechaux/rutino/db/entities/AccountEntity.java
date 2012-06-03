@@ -143,4 +143,13 @@ public class AccountEntity extends BaseEntity {
 		}
 		return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	public static List<AccountEntity> dameListadoCuentas(Context ctxt, Wallet walletFather) throws SQLException {
+		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
+				AccountEntity.class);
+		QueryBuilder<AccountEntity, Integer> qb = dao.queryBuilder();
+		qb.where().eq(AccountEntity.WALLET_ID, walletFather.get_id());
+		return dao.query(qb.prepare());
+	}
 }

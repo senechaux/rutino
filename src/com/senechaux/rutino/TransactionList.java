@@ -22,7 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.Currency;
@@ -129,13 +128,14 @@ public class TransactionList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>) DatabaseHelper.getHelper(this).getMyDao(
-				Transaction.class);
-		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
-		qb.where().eq(Transaction.ACCOUNTENTITY_ID, accountFather.get_id());
-		// false: más reciente primero
-		qb.orderBy(Transaction.DATE, false);
-		List<Transaction> list = dao.query(qb.prepare());
+//		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>) DatabaseHelper.getHelper(this).getMyDao(
+//				Transaction.class);
+//		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
+//		qb.where().eq(Transaction.ACCOUNTENTITY_ID, accountFather.get_id());
+//		// false: más reciente primero
+//		qb.orderBy(Transaction.DATE, false);
+//		List<Transaction> list = dao.query(qb.prepare());
+		List<Transaction> list = Transaction.dameListadoTransacciones(this, accountFather);
 		ArrayAdapter<Transaction> arrayAdapter = new TransactionAdapter(this, R.layout.transaction_row, list);
 		setListAdapter(arrayAdapter);
 	}

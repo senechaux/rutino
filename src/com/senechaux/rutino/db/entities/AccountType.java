@@ -1,12 +1,17 @@
 package com.senechaux.rutino.db.entities;
 
+import java.sql.SQLException;
+import java.util.List;
+
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.senechaux.rutino.db.DatabaseHelper;
 
 @DatabaseTable
 public class AccountType extends BaseEntity {
@@ -70,6 +75,13 @@ public class AccountType extends BaseEntity {
 			Log.i("AccountType", "Error parsing JSON AccountType object" + ex.toString());
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<AccountType> dameListadoAccountTypes(Context ctxt) throws SQLException {
+		Dao<AccountType, Integer> dao = (Dao<AccountType, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
+				AccountType.class);
+		return dao.queryForAll();
 	}
 
 }
