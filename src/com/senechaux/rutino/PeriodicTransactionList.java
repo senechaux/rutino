@@ -23,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.senechaux.rutino.db.DatabaseHelper;
 import com.senechaux.rutino.db.entities.AccountEntity;
 import com.senechaux.rutino.db.entities.Currency;
@@ -129,14 +128,7 @@ public class PeriodicTransactionList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-//		Dao<PeriodicTransaction, Integer> dao = (Dao<PeriodicTransaction, Integer>) DatabaseHelper.getHelper(this)
-//				.getMyDao(PeriodicTransaction.class);
-//		QueryBuilder<PeriodicTransaction, Integer> qb = dao.queryBuilder();
-//		qb.where().eq(PeriodicTransaction.ACCOUNTENTITY_ID, accountFather.get_id());
-//		// false: más reciente primero
-//		qb.orderBy(PeriodicTransaction.DATE, false);
-//		List<PeriodicTransaction> list = dao.query(qb.prepare());
-		List<PeriodicTransaction> list = PeriodicTransaction.dameListadoTransaccionesPeriodicas(this, accountFather);
+		List<PeriodicTransaction> list = PeriodicTransaction.getPeriodicTransactionList(this, accountFather);
 		ArrayAdapter<PeriodicTransaction> arrayAdapter = new PeriodicTransactionAdapter(this, R.layout.transaction_row,
 				list);
 		setListAdapter(arrayAdapter);

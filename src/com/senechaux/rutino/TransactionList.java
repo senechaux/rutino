@@ -128,14 +128,7 @@ public class TransactionList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-//		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>) DatabaseHelper.getHelper(this).getMyDao(
-//				Transaction.class);
-//		QueryBuilder<Transaction, Integer> qb = dao.queryBuilder();
-//		qb.where().eq(Transaction.ACCOUNTENTITY_ID, accountFather.get_id());
-//		// false: más reciente primero
-//		qb.orderBy(Transaction.DATE, false);
-//		List<Transaction> list = dao.query(qb.prepare());
-		List<Transaction> list = Transaction.dameListadoTransacciones(this, accountFather);
+		List<Transaction> list = Transaction.getTransactionList(this, accountFather);
 		ArrayAdapter<Transaction> arrayAdapter = new TransactionAdapter(this, R.layout.transaction_row, list);
 		setListAdapter(arrayAdapter);
 	}

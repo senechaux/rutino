@@ -78,7 +78,7 @@ public class Wallet extends BaseEntity {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Wallet> dameListadoCarteras(Context ctxt) throws SQLException {
+	public static List<Wallet> getWalletList(Context ctxt) throws SQLException {
 		Dao<Wallet, Integer> dao = (Dao<Wallet, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(Wallet.class);
 		return dao.queryForAll();
 	}

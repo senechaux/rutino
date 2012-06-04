@@ -71,10 +71,7 @@ public class AccountEdit extends Activity {
 		});
 
 		try {
-//			Dao<AccountType, Integer> dao = (Dao<AccountType, Integer>) DatabaseHelper.getHelper(this).getMyDao(
-//					AccountType.class);
-//			List<AccountType> list = dao.queryForAll();
-			List<AccountType> list = AccountType.dameListadoAccountTypes(AccountEdit.this);
+			List<AccountType> list = AccountType.getAccountTypeList(AccountEdit.this);
 			final ArrayAdapter<AccountType> adapter = new ArrayAdapter<AccountType>(this,
 					android.R.layout.simple_spinner_item, list);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

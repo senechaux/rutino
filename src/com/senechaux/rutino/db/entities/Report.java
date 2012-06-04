@@ -131,7 +131,7 @@ public class Report extends BaseEntity {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Report> dameListadoReportes(Context ctxt, Wallet walletFather) throws SQLException {
+	public static List<Report> getReportList(Context ctxt, Wallet walletFather) throws SQLException {
 		Dao<Report, Integer> dao = (Dao<Report, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(Report.class);
 		QueryBuilder<Report, Integer> qb = dao.queryBuilder();
 		qb.where().eq(Report.WALLET_ID, walletFather.get_id());

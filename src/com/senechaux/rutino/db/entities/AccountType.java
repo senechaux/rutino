@@ -78,7 +78,7 @@ public class AccountType extends BaseEntity {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<AccountType> dameListadoAccountTypes(Context ctxt) throws SQLException {
+	public static List<AccountType> getAccountTypeList(Context ctxt) throws SQLException {
 		Dao<AccountType, Integer> dao = (Dao<AccountType, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
 				AccountType.class);
 		return dao.queryForAll();

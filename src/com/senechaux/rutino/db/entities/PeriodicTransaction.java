@@ -96,7 +96,7 @@ public class PeriodicTransaction extends Transaction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<PeriodicTransaction> dameListadoTransaccionesPeriodicas(
+	public static List<PeriodicTransaction> getPeriodicTransactionList(
 			Context ctxt, AccountEntity accountFather) throws SQLException {
 		Dao<PeriodicTransaction, Integer> dao = (Dao<PeriodicTransaction, Integer>) DatabaseHelper.getHelper(ctxt)
 				.getMyDao(PeriodicTransaction.class);

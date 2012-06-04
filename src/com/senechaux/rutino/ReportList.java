@@ -124,11 +124,7 @@ public class ReportList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-//		Dao<Report, Integer> dao = (Dao<Report, Integer>) DatabaseHelper.getHelper(this).getMyDao(Report.class);
-//		QueryBuilder<Report, Integer> qb = dao.queryBuilder();
-//		qb.where().eq(Report.WALLET_ID, walletFather.get_id());
-//		List<Report> list = dao.query(qb.prepare());
-		List<Report> list = Report.dameListadoReportes(this, walletFather);
+		List<Report> list = Report.getReportList(this, walletFather);
 		ArrayAdapter<Report> arrayAdapter = new ReportAdapter(this, R.layout.report_row, list);
 		setListAdapter(arrayAdapter);
 	}

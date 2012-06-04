@@ -138,12 +138,7 @@ public class AccountList extends ListActivity {
 
 	private void fillList() throws SQLException {
 		Log.i(TAG, "Show list again");
-//		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>) DatabaseHelper.getHelper(this).getMyDao(
-//				AccountEntity.class);
-//		QueryBuilder<AccountEntity, Integer> qb = dao.queryBuilder();
-//		qb.where().eq(AccountEntity.WALLET_ID, walletFather.get_id());
-//		List<AccountEntity> list = dao.query(qb.prepare());
-		List<AccountEntity> list = AccountEntity.dameListadoCuentas(this, walletFather);
+		List<AccountEntity> list = AccountEntity.getAccountList(this, walletFather);
 		ArrayAdapter<AccountEntity> arrayAdapter = new AccountAdapter(this, R.layout.account_row, list);
 		setListAdapter(arrayAdapter);
 	}

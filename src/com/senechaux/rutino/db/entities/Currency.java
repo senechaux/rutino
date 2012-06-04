@@ -91,7 +91,7 @@ public class Currency extends BaseEntity {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Currency> dameListadoCurrency(Context ctxt) throws SQLException {
+	public static List<Currency> getCurrencyList(Context ctxt) throws SQLException {
 		Dao<Currency, Integer> dao = (Dao<Currency, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
 				Currency.class);
 		return dao.queryForAll();

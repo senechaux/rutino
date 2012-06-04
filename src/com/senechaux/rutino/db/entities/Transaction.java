@@ -199,7 +199,7 @@ public class Transaction extends BaseEntity {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Transaction> dameListadoTransacciones(Context ctxt, AccountEntity accountFather)
+	public static List<Transaction> getTransactionList(Context ctxt, AccountEntity accountFather)
 			throws SQLException {
 		Dao<Transaction, Integer> dao = (Dao<Transaction, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
 				Transaction.class);

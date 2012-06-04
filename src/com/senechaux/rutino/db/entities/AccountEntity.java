@@ -145,7 +145,7 @@ public class AccountEntity extends BaseEntity {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<AccountEntity> dameListadoCuentas(Context ctxt, Wallet walletFather) throws SQLException {
+	public static List<AccountEntity> getAccountList(Context ctxt, Wallet walletFather) throws SQLException {
 		Dao<AccountEntity, Integer> dao = (Dao<AccountEntity, Integer>) DatabaseHelper.getHelper(ctxt).getMyDao(
 				AccountEntity.class);
 		QueryBuilder<AccountEntity, Integer> qb = dao.queryBuilder();
