@@ -64,16 +64,9 @@ public class ReportView extends Activity {
 	}
 
 	private void reInit(Bundle savedInstanceState) {
-		// try {
 		if (savedInstanceState != null) {
 			report = (Report) savedInstanceState.get(Report.OBJ);
 		}
-		// if (report != null) {
-		// loadFromObj();
-		// }
-		// } catch (SQLException e) {
-		// throw new RuntimeException(e);
-		// }
 	}
 
 	private void fillData() throws SQLException {

@@ -104,6 +104,8 @@ public class WalletList extends ListActivity {
 			return true;
 		case R.id.delete_wallet:
 			try {
+				// Habría que hacer una llamada tipo Wallet.delete(wallet) que haga la lógica de borrardo, para respetar
+				// los diagramas de la memoria
 				DatabaseHelper.getHelper(this).deleteWallet(this, wallet);
 			} catch (SQLException e) {
 				e.printStackTrace();
