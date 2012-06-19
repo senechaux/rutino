@@ -115,6 +115,9 @@ public class AccountList extends ListActivity {
 			}
 			adapter.remove(accountEntity);
 			return true;
+		case R.id.periodic_transaction_list:
+			PeriodicTransactionList.callMe(AccountList.this, accountEntity);
+			return true;
 		}
 		return super.onContextItemSelected(item);
 	}

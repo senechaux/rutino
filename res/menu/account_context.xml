@@ -7,5 +7,8 @@
     <item
         android:id="@+id/delete_account"
         android:title="@string/delete_account"/>
-
+    <item
+        android:id="@+id/periodic_transaction_list"
+        android:title="@string/list_periodic_transaction"/>
+    
 </menu>

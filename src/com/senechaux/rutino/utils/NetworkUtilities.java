@@ -313,19 +313,19 @@ public class NetworkUtilities {
 			final JSONArray entities = new JSONArray(response);
 			Log.d(TAG, response);
 			for (int i = 0; i < entities.length(); i++) {
-				if (myClass.getName() == Wallet.class.getName()) {
+				if (myClass == Wallet.class) {
 					entityList.add(Wallet.valueOf(ctxt, entities.getJSONObject(i)));
-				} else if (myClass.getName() == Report.class.getName()) {
+				} else if (myClass == Report.class) {
 					entityList.add(Report.valueOf(ctxt, entities.getJSONObject(i)));
-				} else if (myClass.getName() == AccountType.class.getName()) {
+				} else if (myClass == AccountType.class) {
 					entityList.add(AccountType.valueOf(ctxt, entities.getJSONObject(i)));
-				} else if (myClass.getName() == Currency.class.getName()) {
+				} else if (myClass == Currency.class) {
 					entityList.add(Currency.valueOf(ctxt, entities.getJSONObject(i)));
-				} else if (myClass.getName() == AccountEntity.class.getName()) {
+				} else if (myClass == AccountEntity.class) {
 					entityList.add(AccountEntity.valueOf(ctxt, entities.getJSONObject(i)));
-				} else if (myClass.getName() == Transaction.class.getName()) {
+				} else if (myClass == Transaction.class) {
 					entityList.add(Transaction.valueOf(ctxt, entities.getJSONObject(i)));
-				} else if (myClass.getName() == PeriodicTransaction.class.getName()) {
+				} else if (myClass == PeriodicTransaction.class) {
 					entityList.add(PeriodicTransaction.valueOf(ctxt, entities.getJSONObject(i)));
 				}
 			}
